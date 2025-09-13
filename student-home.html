@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts for modern look -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+      background: transparent;
+    }
+    .background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-image: url('https://www.nottingham.edu.my/events/images-multimedia/25th-anniversary/banner-homepage-25th-anniversary.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(6px) brightness(0.7);
+      z-index: -1;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: rgba(255,255,255,0.90);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      padding: 36px 24px 28px 24px;
+      max-width: 370px;
+      width: 100%;
+      text-align: center;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #e3eafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+      font-size: 2.2rem;
+      color: #005f73;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    }
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #005f73;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .info {
+      margin: 16px 0;
+      font-size: 1rem;
+      color: #444;
+    }
+    .points {
+      background: #f1f8e9;
+      color: #388e3c;
+      display: inline-block;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      font-size: 1rem;
+    }
+    .actions {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .actions button {
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 0;
+      font-size: 1.08em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      transition: background 0.2s, transform 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .actions button:hover {
+      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
+      transform: scale(0.98);
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 18px 4px;
+        max-width: 98vw;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+      .avatar {
+        width: 54px;
+        height: 54px;
+        font-size: 1.5rem;
+      }
+      .points {
+        font-size: 0.95rem;
+        padding: 6px 10px;
+      }
+      .actions button {
+        font-size: 1em;
+        padding: 12px 0;
+      }
+    }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.firebasestorage.app",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Please log in first.");
+        window.location.href = "student-login.html";
+      } else {
+        document.getElementById("user-email").textContent = user.email;
+        document.getElementById("avatar").textContent = user.email ? user.email[0].toUpperCase() : "U";
+        const studentRef = doc(db, "students", user.uid);
+        const docSnap = await getDoc(studentRef);
+        if (docSnap.exists()) {
+          document.getElementById("points").textContent = docSnap.data().points || 0;
+        } else {
+          document.getElementById("points").textContent = "0";
+        }
+      }
+    });
+
+    window.goToShopList = function() {
+      window.location.href = 'shop-list.html';
+    }
+    window.logout = function() {
+      signOut(auth).then(() => {
+        window.location.href = "student-login.html";
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="background"></div>
+  <div class="container">
+    <div class="avatar" id="avatar">U</div>
+    <h1>Welcome Back!</h1>
+    <div class="info">
+      <strong>Email:</strong> <span id="user-email">Loading...</span>
+    </div>
+    <div class="points">
+      Points: <span id="points">Loading...</span>
+    </div>
+    <div class="actions">
+      <button onclick="goToShopList()">Go to Shop List</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+</body>
+</html>

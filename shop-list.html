@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UNM Cafeteria – Food Shops</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+      background: transparent;
+    }
+    .background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-image: url('https://www.nottingham.edu.my/events/images-multimedia/25th-anniversary/banner-homepage-25th-anniversary.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(6px) brightness(0.7);
+      z-index: -1;
+    }
+    h1 {
+      text-align: center;
+      padding: 18px 0 14px 0;
+      margin: 32px auto 0 auto;
+      max-width: 900px;
+      background: rgba(255,255,255,0.70); /* More transparent */
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(31,38,135,0.12);
+      font-size: 2rem;
+      font-weight: 700;
+      color: #005f73;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    h1::before {
+      content: "🍴";
+      font-size: 1.7rem;
+      color: #b7b7d7;
+      margin-right: 8px;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .container {
+      background: rgba(255,255,255,0.70); /* More transparent */
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      padding: 32px 18px 24px 18px;
+      max-width: 900px;
+      width: 100%;
+      margin: 24px auto 0 auto;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 22px;
+    }
+    .shop-card {
+      width: 260px;
+      background: linear-gradient(120deg, #e3eafcbb 80%, #f1f8e9bb 100%); /* More transparent */
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(31, 38, 135, 0.10);
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.18s, box-shadow 0.18s;
+      cursor: pointer;
+      position: relative;
+      border: 2px solid #005f7322;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .shop-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 24px rgba(31, 38, 135, 0.18);
+      border-color: #005f7355;
+    }
+    .shop-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+      background: #e3eafcbb;
+    }
+    .shop-card h3 {
+      margin: 12px 0 6px 0;
+      color: #005f73;
+      font-size: 1.18rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .shop-card p {
+      color: #444;
+      padding: 0 12px 14px;
+      font-size: 0.98rem;
+      min-height: 38px;
+    }
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 1.3rem;
+        padding: 10px 0 8px 0;
+        margin-top: 12px;
+      }
+      .container {
+        padding: 12px 2px;
+        max-width: 98vw;
+        gap: 14px;
+      }
+      .shop-card {
+        width: 98vw;
+        max-width: 340px;
+      }
+      .shop-card img {
+        height: 110px;
+      }
+    }
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 1.1rem;
+        padding: 7px 0 5px 0;
+        margin-top: 8px;
+      }
+      .container {
+        padding: 8px 0;
+        gap: 10px;
+      }
+      .shop-card {
+        width: 98vw;
+        max-width: 98vw;
+      }
+      .shop-card img {
+        height: 80px;
+      }
+      .shop-card h3 {
+        font-size: 1rem;
+      }
+      .shop-card p {
+        font-size: 0.92rem;
+        padding: 0 7px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <h1>UNM Cafeteria – Choose a Shop</h1>
+  <div class="container" id="shopList">
+    <!-- Shops will load here -->
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQzrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.appspot.com",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const loadShops = async () => {
+      const shopList = document.getElementById("shopList");
+      const vendorsRef = collection(db, "vendors");
+      const snapshot = await getDocs(vendorsRef);
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const div = document.createElement("div");
+        div.className = "shop-card";
+        div.innerHTML = `
+          <img src="${data.imageURL || 'https://via.placeholder.com/300'}" alt="${data.name}">
+          <h3>${data.name}</h3>
+          <p>${data.description || 'No description yet'}</p>
+        `;
+        div.onclick = () => {
+          window.location.href = `menu.html?vendor=${doc.id}`;
+        };
+        shopList.appendChild(div);
+      });
+    };
+
+    loadShops();
+  </script>
+</body>
+</html>

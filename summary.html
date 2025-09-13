@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Summary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+      background: transparent;
+    }
+    .background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-image: url('https://www.nottingham.edu.my/events/images-multimedia/25th-anniversary/banner-homepage-25th-anniversary.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(6px) brightness(0.7);
+      z-index: -1;
+    }
+    #summary-container {
+      background: rgba(255,255,255,0.75);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.16), 0 1.5px 0 0 #e5e5e5 inset;
+      border-radius: 18px;
+      max-width: 600px;
+      margin: 48px auto 0 auto;
+      padding: 2.2rem 1.5rem 2rem 1.5rem;
+      position: relative;
+      backdrop-filter: blur(2px);
+    }
+    #summary-container h1 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #005f73;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.75rem 0;
+      font-size: 1.08rem;
+      color: #222;
+      font-weight: 500;
+      border-bottom: 1px solid #e3eafc;
+      padding-bottom: 0.5rem;
+    }
+    .item:last-child {
+      border-bottom: none;
+    }
+    .total {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+      text-align: right;
+      color: #005f73;
+      letter-spacing: 0.5px;
+    }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 18px;
+    }
+    .actions button {
+      flex: 1;
+      padding: 0.85rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.08rem;
+      cursor: pointer;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .confirm {
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      color: white;
+      margin-left: 8px;
+    }
+    .confirm:active {
+      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
+      transform: scale(0.98);
+    }
+    .cancel {
+      background: linear-gradient(90deg, #dc3545 60%, #ff6f6f 100%);
+      color: white;
+      margin-right: 8px;
+    }
+    .cancel:active {
+      background: linear-gradient(90deg, #b71c1c 60%, #dc3545 100%);
+      transform: scale(0.98);
+    }
+    @media (max-width: 700px) {
+      #summary-container {
+        max-width: 98vw;
+        margin-top: 18px;
+        padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+      }
+      #summary-container h1 {
+        font-size: 1.3rem;
+      }
+      .actions button {
+        font-size: 1rem;
+        padding: 0.7rem 0.5rem;
+      }
+    }
+    @media (max-width: 500px) {
+      #summary-container {
+        max-width: 99vw;
+        margin-top: 8px;
+        padding: 0.7rem 0.2rem 0.7rem 0.2rem;
+      }
+      #summary-container h1 {
+        font-size: 1.1rem;
+      }
+      .actions {
+        gap: 8px;
+      }
+      .actions button {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <div id="summary-container">
+    <h1>Order Summary</h1>
+    <div id="order-items"></div>
+    <p class="total" id="total-price">Total: RM 0.00</p>
+    <div class="actions">
+      <button class="cancel" onclick="window.history.back()">Cancel</button>
+      <button class="confirm" onclick="submitOrder()">Confirm Order</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.firebasestorage.app",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const vendorId = localStorage.getItem('vendorId');
+    const orderItemsContainer = document.getElementById("order-items");
+    const totalPriceContainer = document.getElementById("total-price");
+
+    let total = 0;
+    cart.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "item";
+      const itemTotal = item.qty * item.price;
+      total += itemTotal;
+      row.innerHTML = `<span>${item.name} × ${item.qty}</span><span>RM ${itemTotal.toFixed(2)}</span>`;
+      orderItemsContainer.appendChild(row);
+    });
+    totalPriceContainer.textContent = `Total: RM ${total.toFixed(2)}`;
+
+    // ✅ Single clean function
+    window.submitOrder = function () {
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          alert("You must be logged in to place an order.");
+          window.location.href = "student-login.html";
+          return;
+        }
+
+        try {
+          // Save new order
+          const docRef = await addDoc(collection(db, "orders"), {
+            items: cart,
+            vendorId,
+            timestamp: serverTimestamp(),
+            status: "Pending",
+            studentId: user.uid,
+            email: user.email
+          });
+
+          // Award points
+          const studentRef = doc(db, "students", user.uid);
+          await updateDoc(studentRef, { points: increment(1) });
+
+          alert("✅ Order submitted! 1 point awarded.");
+
+          // Save orderId for order-status.html
+          localStorage.setItem("lastOrderId", docRef.id);
+
+          // Cleanup
+          localStorage.removeItem('cart');
+          localStorage.removeItem('vendorId');
+
+          // Redirect
+          window.location.href = "order-status.html";
+
+        } catch (error) {
+          console.error("Order error:", error);
+          alert("Something went wrong. Please try again.");
+        }
+      });
+    };
+  </script>
+</body>
+</html>

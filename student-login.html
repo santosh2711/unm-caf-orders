@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Login</title>
+  <link rel="icon" href="https://www.nottingham.edu.my/SiteAssets/Images/favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+      background: transparent;
+      animation: fadeIn 1.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-image: url('https://www.nottingham.edu.my/events/images-multimedia/25th-anniversary/banner-homepage-25th-anniversary.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(6px) brightness(0.7);
+      z-index: -1;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .box {
+      background: rgba(255,255,255,0.90);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18);
+      padding: 32px 22px 24px 22px;
+      width: 100%;
+      max-width: 350px;
+      color: #222;
+      text-align: center;
+      margin: 0;
+      transition: box-shadow 0.3s;
+      border: 1px solid #e0e0e0;
+      position: relative;
+      z-index: 1;
+    }
+    .logo {
+      max-width: 110px;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      background: #fff;
+      padding: 8px;
+    }
+    h2#form-title {
+      font-size: 1.5em;
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+      font-weight: 700;
+      color: #005f73;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    label {
+      display: block;
+      text-align: left;
+      font-size: 0.95em;
+      font-weight: 600;
+      color: #005f73;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      display: block;
+      margin: 10px auto;
+      padding: 14px 12px;
+      border-radius: 8px;
+      border: 1px solid #b0bec5;
+      font-size: 1.05em;
+      background: #f7fafc;
+      color: #222;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: border 0.2s, background 0.2s;
+      box-sizing: border-box;
+    }
+    input:focus {
+      background: #e0f7fa;
+      border: 1.5px solid #005f73;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 13px 0;
+      margin: 18px 0 8px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 1.08em;
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      transition: background 0.2s, transform 0.2s;
+      letter-spacing: 0.5px;
+    }
+    button:active {
+      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
+      transform: scale(0.98);
+    }
+    .toggle {
+      margin-top: 8px;
+      font-size: 1em;
+      color: #005f73;
+    }
+    .toggle a {
+      color: #0077b6;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .toggle a:hover {
+      color: #00aaff;
+    }
+    .error {
+      color: #d32f2f;
+      font-size: 0.98em;
+      margin-top: 10px;
+      min-height: 22px;
+      font-weight: 500;
+    }
+    .spinner {
+      display: none;
+      margin: 12px auto;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #00aaff;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 480px) {
+      .box {
+        padding: 22px 8px 18px 8px;
+        max-width: 98vw;
+        margin: 0;
+      }
+      .logo {
+        max-width: 80px;
+      }
+      h2#form-title {
+        font-size: 1.2em;
+      }
+      input, button {
+        font-size: 1em;
+        padding: 12px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <div class="box">
+    <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRael_4f3Iv0L-t9WvqLQ8XBoMMa6m-L82gjg&s" alt="University of Nottingham Logo">
+    <h2 id="form-title">Student Login</h2>
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" />
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter your password" />
+    <button onclick="handleSubmit()">Login</button>
+    <div class="spinner" id="loading-spinner"></div>
+    <div class="toggle">or <a onclick="toggleMode()">Register</a></div>
+    <div class="error" id="error-message"></div>
+  </div>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.firebasestorage.app",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let isRegister = false;
+
+    window.toggleMode = function () {
+      isRegister = !isRegister;
+      document.getElementById("form-title").innerText = isRegister ? "Create Account" : "Student Login";
+      document.querySelector("button").innerText = isRegister ? "Register" : "Login";
+      document.querySelector(".toggle a").innerText = isRegister ? "Login" : "Register";
+      document.getElementById("error-message").innerText = "";
+    }
+
+    window.handleSubmit = async function () {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("error-message");
+      const spinner = document.getElementById("loading-spinner");
+
+      errorMsg.innerText = "";
+      spinner.style.display = "block";
+
+      try {
+        let userCredential;
+        if (isRegister) {
+          userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        } else {
+          userCredential = await signInWithEmailAndPassword(auth, email, password);
+        }
+
+        localStorage.setItem("studentEmail", userCredential.user.email);
+        window.location.href = "student-home.html";
+      } catch (err) {
+        errorMsg.innerText = err.message;
+      } finally {
+        spinner.style.display = "none";
+      }
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+      background: transparent;
+    }
+    .background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-image: url('https://www.nottingham.edu.my/events/images-multimedia/25th-anniversary/banner-homepage-25th-anniversary.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(6px) brightness(0.7);
+      z-index: -1;
+    }
+    .lux-box {
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.16), 0 1.5px 0 0 #e5e5e5 inset;
+      border-radius: 18px;
+      max-width: 900px;
+      margin: 32px auto 0 auto;
+      padding: 18px 0 14px 0;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #005f73;
+      letter-spacing: 0.5px;
+      position: relative;
+      backdrop-filter: blur(2px);
+    }
+    .lux-box .menu-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #005f73;
+      margin: 0;
+      letter-spacing: 0.5px;
+      font-family: 'Roboto', Arial, sans-serif;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .container {
+      background: rgba(255,255,255,0.72);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.16), 0 1.5px 0 0 #e5e5e5 inset;
+      padding: 32px 18px 24px 18px;
+      max-width: 900px;
+      width: 100%;
+      margin: 24px auto 0 auto;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 22px;
+      backdrop-filter: blur(2px);
+    }
+    .menu-card {
+      width: 260px;
+      background: linear-gradient(120deg, #f8fafc 80%, #e3eafc 100%);
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(31, 38, 135, 0.10);
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.18s, box-shadow 0.18s;
+      cursor: pointer;
+      position: relative;
+      border: 2px solid #005f7322;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 18px;
+    }
+    .menu-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 24px rgba(31, 38, 135, 0.18);
+      border-color: #005f7355;
+    }
+    .menu-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+      background: #e3eafc;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(31,38,135,0.08);
+    }
+    .menu-card h3 {
+      margin: 12px 0 6px 0;
+      color: #005f73;
+      font-size: 1.18rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .menu-card p {
+      color: #444;
+      padding: 0 12px 14px;
+      font-size: 0.98rem;
+      min-height: 38px;
+    }
+    .menu-card button {
+      margin-top: 8px;
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      color: #fff;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      transition: background 0.2s, transform 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .menu-card button:active {
+      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
+      transform: scale(0.98);
+    }
+    #cart-section {
+      background: rgba(255,255,255,0.80);
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      box-shadow: 0 -2px 24px rgba(31,38,135,0.10);
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: blur(2px);
+    }
+    #cart-items {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 8px auto;
+    }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 0 16px;
+      max-width: 600px;
+      width: 100%;
+      background: rgba(227,234,252,0.4);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(31,38,135,0.06);
+    }
+    .cart-item-name {
+      flex: 2;
+      text-align: left;
+      color: #005f73;
+      font-weight: 600;
+    }
+    .cart-item-price {
+      flex: 1;
+      text-align: right;
+      color: #333;
+      font-weight: 500;
+    }
+    .cart-item-controls {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+    }
+    .cart-item-controls button {
+      background: #005f73;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cart-item-controls button:hover {
+      background: #00aaff;
+    }
+    #cart-count, #cart-total {
+      margin: 2px 0;
+      color: #005f73;
+      font-weight: 700;
+      font-size: 1.08em;
+      text-align: center;
+    }
+    #cart-section button {
+      margin-top: 8px;
+      padding: 10px 28px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.08em;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      transition: background 0.2s, transform 0.2s;
+      letter-spacing: 0.5px;
+    }
+    #cart-section button:active {
+      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
+      transform: scale(0.98);
+    }
+    @media (max-width: 700px) {
+      .lux-box {
+        font-size: 1.3rem;
+        padding: 10px 0 8px 0;
+        margin-top: 12px;
+      }
+      .container {
+        padding: 12px 2px;
+        max-width: 98vw;
+        gap: 14px;
+      }
+      .menu-card {
+        width: 98vw;
+        max-width: 340px;
+      }
+      .menu-card img {
+        height: 110px;
+      }
+      #cart-section {
+        max-width: 98vw;
+        padding: 0.7rem;
+      }
+    }
+    @media (max-width: 500px) {
+      .lux-box {
+        font-size: 1.1rem;
+        padding: 7px 0 5px 0;
+        margin-top: 8px;
+      }
+      .container {
+        padding: 8px 0;
+        gap: 10px;
+      }
+      .menu-card {
+        width: 98vw;
+        max-width: 98vw;
+      }
+      .menu-card img {
+        height: 80px;
+      }
+      .menu-card h3 {
+        font-size: 1rem;
+      }
+      .menu-card p {
+        font-size: 0.92rem;
+        padding: 0 7px 10px;
+      }
+      #cart-section {
+        padding: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <div class="lux-box">
+    <span class="menu-title" id="menu-header">Menu</span>
+  </div>
+  <div class="container" id="menu-container"></div>
+  <div id="cart-section">
+    <div id="cart-items"></div>
+    <p id="cart-count">Cart: 0 items</p>
+    <p id="cart-total">Total: RM 0.00</p>
+    <button onclick="goToSummary()">Place Order</button>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQZrBURfwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.appspot.com",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const vendorId = urlParams.get("vendor");
+
+    let cart = [];
+
+    async function setHeader() {
+      if (!vendorId) {
+        document.getElementById("menu-header").textContent = " Menu – Unknown Shop";
+        return;
+      }
+      const vendorRef = doc(db, "vendors", vendorId);
+      const vendorSnap = await getDoc(vendorRef);
+      if (vendorSnap.exists()) {
+        document.getElementById("menu-header").textContent = ` Menu – ${vendorSnap.data().name}`;
+      } else {
+        document.getElementById("menu-header").textContent = " Menu – Unknown Shop";
+      }
+    }
+
+    function renderMenuItem(data) {
+      const menuContainer = document.getElementById("menu-container");
+      const card = document.createElement("div");
+      card.className = "menu-card";
+      card.innerHTML = `
+        <img src="${data.imageURL || 'https://via.placeholder.com/200x140'}" alt="${data.name}" />
+        <h3>${data.name || 'Unnamed Item'}</h3>
+        <p>RM ${parseFloat(data.price).toFixed(2)}</p>
+        <button onclick='addToCart(${JSON.stringify(data)})'>Add to Cart</button>
+      `;
+      menuContainer.appendChild(card);
+    }
+
+    function addToCart(item) {
+      const existing = cart.find(i => i.name === item.name);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...item, qty: 1 });
+      }
+      updateCartStatus();
+    }
+
+    function changeQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) cart.splice(index, 1);
+      updateCartStatus();
+    }
+
+    function updateCartStatus() {
+      const cartContainer = document.getElementById("cart-items");
+      cartContainer.innerHTML = "";
+      let total = 0;
+      if (cart.length === 0) {
+        cartContainer.innerHTML = "<p>Cart is empty</p>";
+      } else {
+        cart.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "cart-item";
+          total += item.price * item.qty;
+          div.innerHTML = `
+            <span class="cart-item-name">${item.name}</span>
+            <span class="cart-item-price">RM ${(item.price * item.qty).toFixed(2)}</span>
+            <div class="cart-item-controls">
+              <button onclick="changeQty(${index}, -1)">−</button>
+              <span>${item.qty}</span>
+              <button onclick="changeQty(${index}, 1)">+</button>
+            </div>
+          `;
+          cartContainer.appendChild(div);
+        });
+      }
+      document.getElementById("cart-count").textContent = `Cart: ${cart.reduce((a, i) => a + i.qty, 0)} items`;
+      document.getElementById("cart-total").textContent = `Total: RM ${total.toFixed(2)}`;
+    }
+
+    async function loadMenu() {
+      if (!vendorId) {
+        document.getElementById("menu-container").innerHTML = "<p>No shop selected. Please go back and choose a shop.</p>";
+        return;
+      }
+      const menuRef = collection(db, "vendors", vendorId, "menus");
+      const snapshot = await getDocs(menuRef);
+      console.log("Menu docs count:", snapshot.size); // <-- Add this line
+      if (snapshot.empty) {
+        document.getElementById("menu-container").innerHTML = "<p>No menu items found for this shop.</p>";
+      } else {
+        snapshot.forEach(doc => {
+          console.log("Menu item:", doc.data()); // <-- Add this line
+          renderMenuItem(doc.data());
+        });
+      }
+    }
+
+    function goToSummary() {
+      if (cart.length === 0) return alert("Cart is empty");
+      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem("vendorId", vendorId);
+      window.location.href = "summary.html";
+    }
+
+    window.addToCart = addToCart;
+    window.changeQty = changeQty;
+    window.goToSummary = goToSummary;
+
+    setHeader();
+    loadMenu();
+  </script>
+</body>
+</html>

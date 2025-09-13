@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vendor Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f4f4f4;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header img {
+      max-width: 100px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: #007bff;
+    }
+    .stats {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      color: #333;
+    }
+    .order-card {
+      background: white;
+      padding: 1rem;
+      margin: 1rem auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 600px;
+    }
+    .order-card ul {
+      padding-left: 20px;
+    }
+    .order-card button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .order-card button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img id="vendor-logo" src="https://via.placeholder.com/100" alt="Vendor Logo">
+    <h1 id="vendor-name">Vendor Dashboard</h1>
+  </header>
+  <div class="stats">
+    Orders Processed: <span id="orderCount">0</span>
+  </div>
+  <div id="orders-container"></div>
+
+  <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getFirestore, collection, query, where, onSnapshot, updateDoc, doc, getDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.appspot.com",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const vendorId = urlParams.get("vendor");
+    const ordersContainer = document.getElementById("orders-container");
+    const dingSound = document.getElementById("ding-sound");
+
+    const vendorRef = doc(db, "vendors", vendorId);
+
+    // Load vendor info
+    async function loadVendorInfo() {
+      const vendorSnap = await getDoc(vendorRef);
+      if (vendorSnap.exists()) {
+        const data = vendorSnap.data();
+        document.getElementById("vendor-name").textContent = data.name || "Vendor Dashboard";
+        if (data.imageURL) {
+          document.getElementById("vendor-logo").src = data.imageURL;
+        }
+        document.getElementById("orderCount").textContent = data.orderCount || 0;
+      }
+    }
+
+    // Render each order
+    function renderOrder(docSnap) {
+      const data = docSnap.data();
+      const div = document.createElement("div");
+      div.className = "order-card";
+
+      const items = (data.items || []).map(i => `<li>${i.name} × ${i.qty}</li>`).join("");
+      const isReady = data.status === "Ready";
+
+      div.innerHTML = `
+        <p><strong>Order ID:</strong> ${docSnap.id}</p>
+        <ul>${items}</ul>
+        <p><strong>Status:</strong> ${data.status}</p>
+        <button 
+          data-order="${docSnap.id}" 
+          onclick="markReady('${docSnap.id}')"
+          ${isReady ? "disabled" : ""}>
+          ${isReady ? "Marked as Ready ✅" : "Mark as Ready"}
+        </button>
+      `;
+      ordersContainer.appendChild(div);
+    }
+
+    // Mark order as ready
+    window.markReady = async function (orderId) {
+      console.log("🔄 Marking as ready:", orderId);
+      const orderRef = doc(db, "orders", orderId);
+      try {
+        await updateDoc(orderRef, { status: "Ready" });
+        console.log("✅ Order status updated in Firestore");
+
+        // Only increment order count (no revenue)
+        await updateDoc(vendorRef, {
+          orderCount: increment(1)
+        });
+        console.log("📊 Vendor order count updated");
+
+        loadVendorInfo();
+      } catch (err) {
+        console.error("❌ Failed to update order:", err);
+      }
+    }
+
+    // Listen for orders
+    let firstLoad = true;
+    const q = query(collection(db, "orders"), where("vendorId", "==", vendorId));
+    onSnapshot(q, (snapshot) => {
+      if (!firstLoad) {
+        dingSound.play();
+      }
+      firstLoad = false;
+
+      ordersContainer.innerHTML = "";
+      snapshot.forEach(doc => renderOrder(doc));
+    });
+
+    loadVendorInfo();
+  </script>
+</body>
+</html>

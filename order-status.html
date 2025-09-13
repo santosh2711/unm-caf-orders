@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Order Status</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #005f73;
+    }
+    .order-box {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      padding: 8px 0;
+    }
+    .status {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #00796b;
+    }
+    .back {
+      margin-top: 25px;
+      text-align: center;
+    }
+    .back button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Order Placed ✅</h1>
+  <div class="order-box">
+    <h3>Your Items:</h3>
+    <div id="order-items"></div>
+    <p class="status">Status: <span id="order-status">Pending</span></p>
+  </div>
+
+  <div class="back">
+    <button onclick="window.location.href='student-home.html'">Back to Home</button>
+  </div>
+
+  <!-- Ding sound -->
+  <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.appspot.com",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const itemsContainer = document.getElementById("order-items");
+    const statusEl = document.getElementById("order-status");
+    const dingSound = document.getElementById("ding-sound");
+
+    // Get orderId saved from summary.html
+    const orderId = localStorage.getItem("lastOrderId");
+    if (!orderId) {
+      itemsContainer.innerHTML = "<p>No order found. Please place an order again.</p>";
+    } else {
+      const orderRef = doc(db, "orders", orderId);
+      onSnapshot(orderRef, (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+
+        // Render items
+        itemsContainer.innerHTML = "";
+        (data.items || []).forEach(i => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `<span>${i.name} × ${i.qty}</span><span>RM ${(i.qty * i.price).toFixed(2)}</span>`;
+          itemsContainer.appendChild(div);
+        });
+
+        // Update status
+        const oldStatus = statusEl.textContent;
+        statusEl.textContent = data.status;
+
+        if (oldStatus !== "Ready" && data.status === "Ready") {
+          dingSound.play();
+          alert("🎉 Your order is ready! Please collect it from the shop.");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
