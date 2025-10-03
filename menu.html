@@ -287,7 +287,7 @@
   </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURfwenjWEEnQMMIH7sOSqPq0Qtx0",
@@ -382,8 +382,8 @@
         document.getElementById("menu-container").innerHTML = "<p>No shop selected. Please go back and choose a shop.</p>";
         return;
       }
-      const menuRef = collection(db, "vendors", vendorId, "menus");
-      const snapshot = await getDocs(menuRef);
+      const q = query(collection(db, "vendors", vendorId, "menus"), where("available", "==", true));
+      const snapshot = await getDocs(q);
       console.log("Menu docs count:", snapshot.size); // <-- Add this line
       if (snapshot.empty) {
         document.getElementById("menu-container").innerHTML = "<p>No menu items found for this shop.</p>";
