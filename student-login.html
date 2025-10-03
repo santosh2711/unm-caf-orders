@@ -2,11 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Student Login</title>
   <link rel="icon" href="https://www.nottingham.edu.my/SiteAssets/Images/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Modern, professional, mobile-first design + subtle animations */
+    :root{
+      --accent-1:#005f73;
+      --accent-2:#00aaff;
+      --muted:#6b7a8a;
+      --glass-bg: rgba(255,255,255,0.88);
+      --box-radius:18px;
+    }
+
     html, body {
       height: 100%;
       margin: 0;
@@ -15,12 +24,12 @@
       min-height: 100vh;
       box-sizing: border-box;
       background: transparent;
-      animation: fadeIn 1.2s;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-clip: padding-box;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+
+    /* background image kept as-is; add a slow moving overlay for subtle motion */
     .background {
       position: fixed;
       top: 0; left: 0;
@@ -30,144 +39,220 @@
       background-position: center;
       background-repeat: no-repeat;
       filter: blur(6px) brightness(0.7);
-      z-index: -1;
+      z-index: -2;
+      transform-origin: center;
+      animation: backgroundShift 18s cubic-bezier(.2,.8,.2,1) infinite alternate;
     }
+    .background::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.30));
+      mix-blend-mode: multiply;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    @keyframes backgroundShift {
+      from { transform: scale(1) translateY(0px); }
+      to { transform: scale(1.02) translateY(-8px); }
+    }
+
     body {
-      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
     }
+
+    /* Card */
     .box {
-      background: rgba(255,255,255,0.90);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18);
-      padding: 32px 22px 24px 22px;
       width: 100%;
-      max-width: 350px;
+      max-width: 420px;
+      background: var(--glass-bg);
+      border-radius: var(--box-radius);
+      padding: 34px 26px;
       color: #222;
       text-align: center;
       margin: 0;
-      transition: box-shadow 0.3s;
-      border: 1px solid #e0e0e0;
+      transition: box-shadow 280ms ease, transform 280ms ease, backdrop-filter 280ms ease;
+      box-shadow: 0 10px 30px rgba(8,20,40,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
       position: relative;
       z-index: 1;
+      backdrop-filter: blur(6px) saturate(110%);
+      -webkit-backdrop-filter: blur(6px) saturate(110%);
+      animation: slideUp 540ms cubic-bezier(.2,.9,.3,1) both;
     }
+
+    @keyframes slideUp {
+      0% { opacity:0; transform: translateY(18px) scale(.995); }
+      100% { opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    /* lift on pointer for larger screens */
+    @media (hover: hover) and (min-width: 560px) {
+      .box:hover { transform: translateY(-6px); box-shadow: 0 18px 48px rgba(8,20,40,0.24); }
+    }
+
     .logo {
-      max-width: 110px;
-      margin-bottom: 18px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-      background: #fff;
-      padding: 8px;
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 14px auto;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.9));
+      padding: 10px;
+      display: block;
+      object-fit: contain;
+      transition: transform 220ms ease;
     }
+    @media (hover:hover) {
+      .logo:hover { transform: translateY(-4px); }
+    }
+
     h2#form-title {
-      font-size: 1.5em;
-      margin-bottom: 18px;
-      letter-spacing: 1px;
+      font-size: 1.28rem;
+      margin: 6px 0 16px 0;
+      letter-spacing: 0.6px;
       font-weight: 700;
-      color: #005f73;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      color: var(--accent-1);
+      text-shadow: 0 4px 26px rgba(0,0,0,0.05);
     }
+
     label {
       display: block;
       text-align: left;
       font-size: 0.95em;
-      font-weight: 600;
-      color: #005f73;
+      font-weight: 700;
+      color: var(--accent-1);
       margin-top: 12px;
       margin-bottom: 6px;
+      letter-spacing: 0.2px;
     }
+
     input {
       width: 100%;
       display: block;
-      margin: 10px auto;
-      padding: 14px 12px;
-      border-radius: 8px;
-      border: 1px solid #b0bec5;
-      font-size: 1.05em;
-      background: #f7fafc;
-      color: #222;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      transition: border 0.2s, background 0.2s;
+      margin: 6px 0 0 0;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(100,115,130,0.18);
+      font-size: 1.02em;
+      background: linear-gradient(180deg, #fbfcfd, #f6fbff);
+      color: #0f1720;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
       box-sizing: border-box;
+      -webkit-appearance: none;
     }
+    input::placeholder { color: #9aa7b4; font-weight:500; }
     input:focus {
-      background: #e0f7fa;
-      border: 1.5px solid #005f73;
+      border: 1.8px solid var(--accent-1);
       outline: none;
+      box-shadow: 0 8px 28px rgba(0,95,115,0.08);
+      background: #ffffff;
+      transform: translateY(-1px);
     }
+
     button {
       width: 100%;
-      padding: 13px 0;
+      padding: 14px 0;
       margin: 18px 0 8px 0;
-      border-radius: 8px;
+      border-radius: 12px;
       border: none;
-      font-size: 1.08em;
-      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      font-size: 1.06em;
+      background: linear-gradient(90deg, var(--accent-1) 40%, var(--accent-2) 100%);
       color: #fff;
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      transition: background 0.2s, transform 0.2s;
-      letter-spacing: 0.5px;
+      box-shadow: 0 8px 24px rgba(0,95,115,0.12);
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+      letter-spacing: 0.4px;
     }
-    button:active {
-      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
-      transform: scale(0.98);
-    }
+    button:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,95,115,0.16); filter:brightness(1.02); }
+    button:active { transform: translateY(-1px) scale(.997); }
+    button:focus { outline: none; box-shadow: 0 10px 36px rgba(0,95,115,0.18); }
+
     .toggle {
       margin-top: 8px;
-      font-size: 1em;
-      color: #005f73;
+      font-size: 0.98em;
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
     }
     .toggle a {
-      color: #0077b6;
-      text-decoration: underline;
+      color: var(--accent-2);
+      text-decoration: none;
       cursor: pointer;
-      font-weight: 500;
-      transition: color 0.2s;
+      font-weight: 600;
+      transition: color 160ms ease, transform 160ms ease;
     }
-    .toggle a:hover {
-      color: #00aaff;
-    }
+    .toggle a:hover { color: #0077cc; transform: translateY(-2px); }
+
     .error {
-      color: #d32f2f;
-      font-size: 0.98em;
-      margin-top: 10px;
+      color: #b71c1c;
+      font-size: 0.96em;
+      margin-top: 12px;
       min-height: 22px;
-      font-weight: 500;
+      font-weight: 600;
+      display:block;
+      transition: transform 180ms ease, opacity 180ms ease;
+      opacity: 0.98;
     }
+    /* subtle attention animation when there's an error text */
+    .error:not(:empty){ animation: errorPop 740ms cubic-bezier(.2,.9,.3,1); }
+    @keyframes errorPop {
+      0% { transform: translateY(-6px) scale(.995); opacity:0; }
+      50% { transform: translateY(2px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); opacity:1; }
+    }
+
     .spinner {
       display: none;
       margin: 12px auto;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #00aaff;
+      border: 4px solid rgba(243,243,243,0.95);
+      border-top: 4px solid var(--accent-2);
       border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      animation: spin 1s linear infinite;
+      width: 30px;
+      height: 30px;
+      animation: spin 900ms linear infinite;
+      box-shadow: 0 6px 18px rgba(0,95,115,0.08);
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /* Responsive and touch-friendly tweaks for phones (replaced) */
     @media (max-width: 480px) {
+      .background {
+        /* reduce blur & stop animation on small devices for performance */
+        filter: blur(2px) brightness(0.78);
+        animation: none;
+        will-change: auto;
+      }
       .box {
-        padding: 22px 8px 18px 8px;
-        max-width: 98vw;
-        margin: 0;
+        padding: 22px 16px;
+        max-width: 96vw;
+        margin: 6vh 0 0 0;
+        border-radius: 14px;
       }
-      .logo {
-        max-width: 80px;
-      }
-      h2#form-title {
-        font-size: 1.2em;
-      }
-      input, button {
-        font-size: 1em;
-        padding: 12px 8px;
-      }
+      .logo { width: 76px; height:76px; border-radius:12px; padding:8px; }
+      h2#form-title { font-size: 1.12rem; margin-bottom:10px; }
+      input, button { font-size: 1.06em; padding: 16px 12px; border-radius: 12px; }
+      label { font-size: 0.94em; }
+      .toggle { font-size: 0.95em; }
+      /* make spinner slightly larger on phones */
+      .spinner { width: 36px; height: 36px; border-width: 4px; }
+    }
+
+    @media (max-width:360px) {
+      .box { padding: 18px 12px; }
+      .logo { width:68px; height:68px; }
     }
   </style>
 </head>
@@ -175,7 +260,7 @@
   <div class="background"></div>
   <div class="box">
     <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRael_4f3Iv0L-t9WvqLQ8XBoMMa6m-L82gjg&s" alt="University of Nottingham Logo">
-    <h2 id="form-title">Student Login</h2>
+    <h2 id="form-title">User Login</h2>
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="Enter your email" />
     <label for="password">Password</label>
@@ -250,8 +335,14 @@
 
         localStorage.setItem("studentEmail", userCredential.user.email);
         window.location.href = "student-home.html";
-      } catch (err) {
-        errorMsg.innerText = err.message;
+} catch (err) {
+        // If registering and the email is already in use, show a friendly smiley prompt to log in
+        if (isRegister && err.code === 'auth/email-already-in-use') {
+          errorMsg.innerText = "😊 You already have an account — please log in.";
+          document.querySelector(".toggle a").innerText = "Login";
+        } else {
+          errorMsg.innerText = err.message;
+        }
       } finally {
         spinner.style.display = "none";
       }
