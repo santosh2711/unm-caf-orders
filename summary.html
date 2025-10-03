@@ -66,6 +66,25 @@
       color: #005f73;
       letter-spacing: 0.5px;
     }
+    .note-section {
+      margin-top: 1.5rem;
+    }
+    .note-section label {
+      display: block;
+      font-weight: 500;
+      color: #222;
+      margin-bottom: 0.5rem;
+    }
+    .note-section textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-family: 'Roboto', Arial, sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 60px;
+    }
     .actions {
       display: flex;
       justify-content: space-between;
@@ -141,6 +160,10 @@
     <h1>Order Summary</h1>
     <div id="order-items"></div>
     <p class="total" id="total-price">Total: RM 0.00</p>
+    <div class="note-section">
+      <label for="order-note">Add a note for the vendor (optional):</label>
+      <textarea id="order-note" placeholder="e.g., More rice, less spice, etc."></textarea>
+    </div>
     <div class="actions">
       <button class="cancel" onclick="window.history.back()">Cancel</button>
       <button class="confirm" onclick="submitOrder()">Confirm Order</button>
@@ -191,15 +214,18 @@
           return;
         }
 
+        const note = document.getElementById("order-note").value.trim();
+
         try {
           // Save new order
           const docRef = await addDoc(collection(db, "orders"), {
             items: cart,
             vendorId,
-            timestamp: serverTimestamp(),
+            createdAt: serverTimestamp(),  // Changed from timestamp to createdAt for sorting
             status: "Pending",
             studentId: user.uid,
-            email: user.email
+            email: user.email,
+            note: note || null  // Add note to order
           });
 
           // Award points
