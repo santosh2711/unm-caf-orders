@@ -58,6 +58,7 @@
   <div class="order-box">
     <h3>Your Items:</h3>
     <div id="order-items"></div>
+    <p><strong>Note:</strong> <span id="order-note">No note provided.</span></p>
     <p class="status">Status: <span id="order-status">Pending</span></p>
   </div>
 
@@ -87,6 +88,7 @@
 
     const itemsContainer = document.getElementById("order-items");
     const statusEl = document.getElementById("order-status");
+    const noteEl = document.getElementById("order-note");
     const dingSound = document.getElementById("ding-sound");
 
     // Get orderId saved from summary.html
@@ -107,6 +109,9 @@
           div.innerHTML = `<span>${i.name} × ${i.qty}</span><span>RM ${(i.qty * i.price).toFixed(2)}</span>`;
           itemsContainer.appendChild(div);
         });
+
+        // Update note
+        noteEl.textContent = data.note || "No note provided.";
 
         // Update status
         const oldStatus = statusEl.textContent;
