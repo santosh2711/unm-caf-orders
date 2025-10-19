@@ -70,7 +70,7 @@
       gap: 28px;  /* Reduced gap */
     }
     .shop-card {
-      width: 340px;
+      width: 432px;
       background: linear-gradient(120deg, #e3eafcbb 80%, #f1f8e9bb 100%);
       border-radius: 18px;
       box-shadow: 0 4px 16px rgba(31, 38, 135, 0.10);
@@ -146,28 +146,28 @@
         margin-top: 8px;
       }
       .container {
-        padding: 16px 0;
-        gap: 0px;
+        padding: 0;  /* Removed padding to make white box tighter and cards fill it */
+        gap: 0px;  /* Least gap possible */
         flex-direction: row;
         flex-wrap: wrap;
       }
       .shop-card {
-        width: 50vw;
+        width: 50vw;  /* Fills half the container/screen */
         max-width: 50vw;
       }
       .shop-card img {
-        height: calc(50vw * 0.6);  /* Reduced multiplier for shorter cards, less glitching */
+        height: calc(50vw * 0.8);  /* Bigger image for taller cards */
         object-position: bottom;
         background: #e3eafcbb;
       }
       .shop-card h3 {
-        font-size: 1.4rem;
-        margin: 18px 0 12px 0;
+        font-size: 1.5rem;  /* Bigger font */
+        margin: 20px 0 14px 0;  /* Bigger margin */
       }
       .shop-card p {
-        font-size: 1.2rem;
-        padding: 0 10px 20px;
-        min-height: 52px;
+        font-size: 1.3rem;  /* Bigger font */
+        padding: 0 12px 24px;  /* Bigger padding */
+        min-height: 56px;  /* Bigger min-height */
       }
     }
   </style>
@@ -185,7 +185,7 @@
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+      apiKey: "AIzaSyBQzrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
       authDomain: "unm-caf-orders.firebaseapp.com",
       projectId: "unm-caf-orders",
       storageBucket: "unm-caf-orders.appspot.com",
