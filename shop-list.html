@@ -26,26 +26,26 @@
     }
     h1 {
       text-align: center;
-      padding: 24px 0 20px 0;  /* Even bigger padding */
-      margin: 32px auto 0 auto;
-      max-width: 900px;
+      padding: 36px 0 30px 0;  /* 1.5x bigger padding */
+      margin: 48px auto 0 auto;  /* 1.5x bigger margin */
+      max-width: 1350px;  /* 1.5x bigger */
       background: rgba(255,255,255,0.70);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(31,38,135,0.12);
-      font-size: 2.4rem;  /* Even bigger */
+      border-radius: 27px;  /* 1.5x bigger radius */
+      box-shadow: 0 12px 48px rgba(31,38,135,0.12);  /* 1.5x bigger shadow */
+      font-size: 3.6rem;  /* 1.5x bigger */
       font-weight: 700;
       color: #005f73;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.75px;  /* 1.5x bigger */
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 15px;  /* 1.5x bigger gap */
     }
     h1::before {
       content: "🍴";
-      font-size: 2rem;  /* Even bigger */
+      font-size: 3rem;  /* 1.5x bigger */
       color: #b7b7d7;
-      margin-right: 8px;
+      margin-right: 12px;  /* 1.5x bigger */
     }
     body {
       min-height: 100vh;
@@ -56,118 +56,118 @@
     }
     .container {
       background: rgba(255,255,255,0.70);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-      padding: 40px 24px 32px 24px;  /* Even bigger padding */
-      max-width: 900px;
+      border-radius: 27px;  /* 1.5x bigger */
+      box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.18);  /* 1.5x bigger */
+      padding: 60px 36px 48px 36px;  /* 1.5x bigger padding */
+      max-width: 1350px;  /* 1.5x bigger */
       width: 100%;
-      margin: 24px auto 0 auto;
+      margin: 36px auto 0 auto;  /* 1.5x bigger margin */
       position: relative;
       z-index: 1;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 28px;  /* Even bigger gap */
+      gap: 42px;  /* 1.5x bigger gap */
     }
     .shop-card {
-      width: 340px;  /* Even bigger */
+      width: 510px;  /* 1.5x bigger */
       background: linear-gradient(120deg, #e3eafcbb 80%, #f1f8e9bb 100%);
-      border-radius: 18px;  /* Even bigger radius */
-      box-shadow: 0 4px 16px rgba(31, 38, 135, 0.10);
+      border-radius: 27px;  /* 1.5x bigger radius */
+      box-shadow: 0 6px 24px rgba(31, 38, 135, 0.10);  /* 1.5x bigger */
       overflow: hidden;
       text-align: center;
       transition: transform 0.18s, box-shadow 0.18s;
       cursor: pointer;
       position: relative;
-      border: 2px solid #005f7322;
+      border: 3px solid #005f7322;  /* 1.5x bigger border */
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .shop-card:hover {
       transform: scale(1.03);
-      box-shadow: 0 8px 24px rgba(31, 38, 135, 0.18);
+      box-shadow: 0 12px 36px rgba(31, 38, 135, 0.18);  /* 1.5x bigger */
       border-color: #005f7355;
     }
     .shop-card img {
       width: 100%;
-      height: 200px;  /* Even bigger */
+      height: 300px;  /* 1.5x bigger */
       object-fit: cover;
       object-position: top;
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
+      border-top-left-radius: 27px;  /* 1.5x bigger */
+      border-top-right-radius: 27px;  /* 1.5x bigger */
       background: #e3eafcbb;
     }
     .shop-card h3 {
-      margin: 16px 0 10px 0;  /* Even bigger margin */
+      margin: 24px 0 15px 0;  /* 1.5x bigger margin */
       color: #005f73;
-      font-size: 1.35rem;  /* Even bigger */
+      font-size: 2.025rem;  /* 1.5x bigger */
       font-weight: 700;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.3px;  /* 1.5x bigger */
     }
     .shop-card p {
       color: #444;
-      padding: 0 16px 20px;  /* Even bigger padding */
-      font-size: 1.1rem;  /* Even bigger */
-      min-height: 48px;  /* Even bigger */
+      padding: 0 24px 30px;  /* 1.5x bigger padding */
+      font-size: 1.65rem;  /* 1.5x bigger */
+      min-height: 72px;  /* 1.5x bigger */
     }
     @media (max-width: 700px) {
       h1 {
-        font-size: 1.7rem;  /* Even bigger */
-        padding: 14px 0 12px 0;
-        margin-top: 12px;
+        font-size: 2.55rem;  /* 1.5x bigger */
+        padding: 21px 0 18px 0;  /* 1.5x bigger */
+        margin-top: 18px;  /* 1.5x bigger */
       }
       .container {
-        padding: 20px 6px;  /* Even bigger padding */
+        padding: 30px 9px;  /* 1.5x bigger */
         max-width: 98vw;
-        gap: 20px;  /* Even bigger gap */
+        gap: 30px;  /* 1.5x bigger */
       }
       .shop-card {
         width: 98vw;
-        max-width: 420px;  /* Even bigger */
+        max-width: 630px;  /* 1.5x bigger */
       }
       .shop-card img {
-        height: 260px;  /* Even bigger */
+        height: 390px;  /* 1.5x bigger */
         object-position: 0% 5%;
         background: #f1f1f1;
         transition: opacity 0.3s ease;
       }
       .shop-card h3 {
-        font-size: 1.4rem;  /* Even bigger */
+        font-size: 2.1rem;  /* 1.5x bigger */
       }
       .shop-card p {
-        font-size: 1.2rem;  /* Even bigger */
+        font-size: 1.8rem;  /* 1.5x bigger */
       }
     }
     @media (max-width: 500px) {
       h1 {
-        font-size: 1.6rem;  /* Much bigger */
-        padding: 12px 0 10px 0;
-        margin-top: 8px;
+        font-size: 2.4rem;  /* 1.5x bigger */
+        padding: 18px 0 15px 0;  /* 1.5x bigger */
+        margin-top: 12px;  /* 1.5x bigger */
       }
       .container {
-        padding: 16px 0;  /* Even bigger padding */
-        gap: 0px;  /* No gap for full fill */
+        padding: 24px 0;  /* 1.5x bigger */
+        gap: 0px;
         flex-direction: row;
         flex-wrap: wrap;
       }
       .shop-card {
-        width: 50vw;  /* Half screen, no calc for full fill */
+        width: 50vw;
         max-width: 50vw;
       }
       .shop-card img {
-        height: calc(50vw * 0.8);  /* Even taller for bigger fill */
+        height: calc(50vw * 1.2);  /* 1.5x bigger multiplier */
         object-position: bottom;
         background: #e3eafcbb;
       }
       .shop-card h3 {
-        font-size: 1.4rem;  /* Even bigger */
-        margin: 18px 0 12px 0;  /* Even bigger margin */
+        font-size: 2.1rem;  /* 1.5x bigger */
+        margin: 27px 0 18px 0;  /* 1.5x bigger */
       }
       .shop-card p {
-        font-size: 1.2rem;  /* Even bigger */
-        padding: 0 10px 20px;  /* Even bigger padding */
-        min-height: 52px;  /* Even bigger */
+        font-size: 1.8rem;  /* 1.5x bigger */
+        padding: 0 15px 30px;  /* 1.5x bigger */
+        min-height: 78px;  /* 1.5x bigger */
       }
     }
   </style>
