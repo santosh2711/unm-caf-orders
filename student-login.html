@@ -1,9 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>UNM Cafeteria – Food Shops</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Student Login</title>
+  <link rel="icon" href="https://www.nottingham.edu.my/SiteAssets/Images/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Modern, professional, mobile-first design + subtle animations */
+    :root{
+      --accent-1:#005f73;
+      --accent-2:#00aaff;
+      --muted:#6b7a8a;
+      --glass-bg: rgba(255,255,255,0.88);
+      --box-radius:18px;
+    }
+
     html, body {
       height: 100%;
       margin: 0;
@@ -12,7 +24,12 @@
       min-height: 100vh;
       box-sizing: border-box;
       background: transparent;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-clip: padding-box;
     }
+
+    /* background image kept as-is; add a slow moving overlay for subtle motion */
     .background {
       position: fixed;
       top: 0; left: 0;
@@ -22,202 +39,314 @@
       background-position: center;
       background-repeat: no-repeat;
       filter: blur(6px) brightness(0.7);
-      z-index: -1;
+      z-index: -2;
+      transform-origin: center;
+      animation: backgroundShift 18s cubic-bezier(.2,.8,.2,1) infinite alternate;
     }
-    h1 {
-      text-align: center;
-      padding: 48px 0 40px 0;  /* 2x bigger padding */
-      margin: 64px auto 0 auto;  /* 2x bigger margin */
-      max-width: 1800px;  /* 2x bigger */
-      background: rgba(255,255,255,0.70);
-      border-radius: 36px;  /* 2x bigger radius */
-      box-shadow: 0 16px 64px rgba(31,38,135,0.12);  /* 2x bigger shadow */
-      font-size: 4.8rem;  /* 2x bigger */
-      font-weight: 700;
-      color: #005f73;
-      letter-spacing: 1px;  /* 2x bigger */
+    .background::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.30));
+      mix-blend-mode: multiply;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    @keyframes backgroundShift {
+      from { transform: scale(1) translateY(0px); }
+      to { transform: scale(1.02) translateY(-8px); }
+    }
+
+    body {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 20px;  /* 2x bigger gap */
-    }
-    h1::before {
-      content: "🍴";
-      font-size: 4rem;  /* 2x bigger */
-      color: #b7b7d7;
-      margin-right: 16px;  /* 2x bigger */
-    }
-    body {
+      padding: 20px;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
     }
-    .container {
-      background: rgba(255,255,255,0.70);
-      border-radius: 36px;  /* 2x bigger */
-      box-shadow: 0 16px 64px 0 rgba(31, 38, 135, 0.18);  /* 2x bigger */
-      padding: 80px 48px 64px 48px;  /* 2x bigger padding */
-      max-width: 1800px;  /* 2x bigger */
+
+    /* Card */
+    .box {
       width: 100%;
-      margin: 48px auto 0 auto;  /* 2x bigger margin */
+      max-width: 420px;
+      background: var(--glass-bg);
+      border-radius: var(--box-radius);
+      padding: 34px 26px;
+      color: #222;
+      text-align: center;
+      margin: 0;
+      transition: box-shadow 280ms ease, transform 280ms ease, backdrop-filter 280ms ease;
+      box-shadow: 0 10px 30px rgba(8,20,40,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
       position: relative;
       z-index: 1;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 56px;  /* 2x bigger gap */
+      backdrop-filter: blur(6px) saturate(110%);
+      -webkit-backdrop-filter: blur(6px) saturate(110%);
+      animation: slideUp 540ms cubic-bezier(.2,.9,.3,1) both;
     }
-    .shop-card {
-      width: 680px;  /* 2x bigger */
-      background: linear-gradient(120deg, #e3eafcbb 80%, #f1f8e9bb 100%);
-      border-radius: 36px;  /* 2x bigger */
-      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.10);  /* 2x bigger */
-      overflow: hidden;
-      text-align: center;
-      transition: transform 0.18s, box-shadow 0.18s;
-      cursor: pointer;
-      position: relative;
-      border: 4px solid #005f7322;  /* 2x bigger border */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+
+    @keyframes slideUp {
+      0% { opacity:0; transform: translateY(18px) scale(.995); }
+      100% { opacity:1; transform: translateY(0) scale(1); }
     }
-    .shop-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 16px 48px rgba(31, 38, 135, 0.18);  /* 2x bigger */
-      border-color: #005f7355;
+
+    /* lift on pointer for larger screens */
+    @media (hover: hover) and (min-width: 560px) {
+      .box:hover { transform: translateY(-6px); box-shadow: 0 18px 48px rgba(8,20,40,0.24); }
     }
-    .shop-card img {
-      width: 100%;
-      height: 400px;  /* 2x bigger */
-      object-fit: cover;
-      object-position: top;
-      border-top-left-radius: 36px;  /* 2x bigger */
-      border-top-right-radius: 36px;  /* 2x bigger */
-      background: #e3eafcbb;
+
+    .logo {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 14px auto;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.9));
+      padding: 10px;
+      display: block;
+      object-fit: contain;
+      transition: transform 220ms ease;
     }
-    .shop-card h3 {
-      margin: 32px 0 20px 0;  /* 2x bigger margin */
-      color: #005f73;
-      font-size: 2.7rem;  /* 2x bigger */
+    @media (hover:hover) {
+      .logo:hover { transform: translateY(-4px); }
+    }
+
+    h2#form-title {
+      font-size: 1.28rem;
+      margin: 6px 0 16px 0;
+      letter-spacing: 0.6px;
       font-weight: 700;
-      letter-spacing: 0.4px;  /* 2x bigger */
+      color: var(--accent-1);
+      text-shadow: 0 4px 26px rgba(0,0,0,0.05);
     }
-    .shop-card p {
-      color: #444;
-      padding: 0 32px 40px;  /* 2x bigger padding */
-      font-size: 2.2rem;  /* 2x bigger */
-      min-height: 96px;  /* 2x bigger */
+
+    label {
+      display: block;
+      text-align: left;
+      font-size: 0.95em;
+      font-weight: 700;
+      color: var(--accent-1);
+      margin-top: 12px;
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
     }
-    @media (max-width: 700px) {
-      h1 {
-        font-size: 3.4rem;  /* 2x bigger */
-        padding: 28px 0 24px 0;  /* 2x bigger */
-        margin-top: 24px;  /* 2x bigger */
-      }
-      .container {
-        padding: 40px 12px;  /* 2x bigger */
-        max-width: 98vw;
-        gap: 40px;  /* 2x bigger */
-      }
-      .shop-card {
-        width: 98vw;
-        max-width: 840px;  /* 2x bigger */
-      }
-      .shop-card img {
-        height: 520px;  /* 2x bigger */
-        object-position: 0% 5%;
-        background: #f1f1f1;
-        transition: opacity 0.3s ease;
-      }
-      .shop-card h3 {
-        font-size: 2.8rem;  /* 2x bigger */
-      }
-      .shop-card p {
-        font-size: 2.4rem;  /* 2x bigger */
-      }
+
+    input {
+      width: 100%;
+      display: block;
+      margin: 6px 0 0 0;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(100,115,130,0.18);
+      font-size: 1.02em;
+      background: linear-gradient(180deg, #fbfcfd, #f6fbff);
+      color: #0f1720;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+      box-sizing: border-box;
+      -webkit-appearance: none;
     }
-    @media (max-width: 500px) {
-      h1 {
-        font-size: 3.2rem;  /* 2x bigger */
-        padding: 24px 0 20px 0;  /* 2x bigger */
-        margin-top: 16px;  /* 2x bigger */
+    input::placeholder { color: #9aa7b4; font-weight:500; }
+    input:focus {
+      border: 1.8px solid var(--accent-1);
+      outline: none;
+      box-shadow: 0 8px 28px rgba(0,95,115,0.08);
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 0;
+      margin: 18px 0 8px 0;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.06em;
+      background: linear-gradient(90deg, var(--accent-1) 40%, var(--accent-2) 100%);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,95,115,0.12);
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+      letter-spacing: 0.4px;
+    }
+    button:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,95,115,0.16); filter:brightness(1.02); }
+    button:active { transform: translateY(-1px) scale(.997); }
+    button:focus { outline: none; box-shadow: 0 10px 36px rgba(0,95,115,0.18); }
+
+    .toggle {
+      margin-top: 8px;
+      font-size: 0.98em;
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+    }
+    .toggle a {
+      color: var(--accent-2);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: color 160ms ease, transform 160ms ease;
+    }
+    .toggle a:hover { color: #0077cc; transform: translateY(-2px); }
+
+    .error {
+      color: #b71c1c;
+      font-size: 0.96em;
+      margin-top: 12px;
+      min-height: 22px;
+      font-weight: 600;
+      display:block;
+      transition: transform 180ms ease, opacity 180ms ease;
+      opacity: 0.98;
+    }
+    /* subtle attention animation when there's an error text */
+    .error:not(:empty){ animation: errorPop 740ms cubic-bezier(.2,.9,.3,1); }
+    @keyframes errorPop {
+      0% { transform: translateY(-6px) scale(.995); opacity:0; }
+      50% { transform: translateY(2px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); opacity:1; }
+    }
+
+    .spinner {
+      display: none;
+      margin: 12px auto;
+      border: 4px solid rgba(243,243,243,0.95);
+      border-top: 4px solid var(--accent-2);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 900ms linear infinite;
+      box-shadow: 0 6px 18px rgba(0,95,115,0.08);
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive and touch-friendly tweaks for phones (replaced) */
+    @media (max-width: 480px) {
+      .background {
+        /* reduce blur & stop animation on small devices for performance */
+        filter: blur(2px) brightness(0.78);
+        animation: none;
+        will-change: auto;
       }
-      .container {
-        padding: 32px 0;  /* 2x bigger */
-        gap: 0px;
-        flex-direction: row;
-        flex-wrap: wrap;
+      .box {
+        padding: 22px 16px;
+        max-width: 96vw;
+        margin: 6vh 0 0 0;
+        border-radius: 14px;
       }
-      .shop-card {
-        width: 50vw;
-        max-width: 50vw;
-      }
-      .shop-card img {
-        height: calc(50vw * 1.6);  /* 2x bigger multiplier */
-        object-position: bottom;
-        background: #e3eafcbb;
-      }
-      .shop-card h3 {
-        font-size: 2.8rem;  /* 2x bigger */
-        margin: 36px 0 24px 0;  /* 2x bigger */
-      }
-      .shop-card p {
-        font-size: 2.4rem;  /* 2x bigger */
-        padding: 0 20px 40px;  /* 2x bigger */
-        min-height: 104px;  /* 2x bigger */
-      }
+      .logo { width: 76px; height:76px; border-radius:12px; padding:8px; }
+      h2#form-title { font-size: 1.12rem; margin-bottom:10px; }
+      input, button { font-size: 1.06em; padding: 16px 12px; border-radius: 12px; }
+      label { font-size: 0.94em; }
+      .toggle { font-size: 0.95em; }
+      /* make spinner slightly larger on phones */
+      .spinner { width: 36px; height: 36px; border-width: 4px; }
+    }
+
+    @media (max-width:360px) {
+      .box { padding: 18px 12px; }
+      .logo { width:68px; height:68px; }
     }
   </style>
 </head>
 <body>
   <div class="background"></div>
-  <h1>UNM Cafeteria – Choose a Shop</h1>
-  <div class="container" id="shopList">
-    <!-- Shops will load here -->
+  <div class="box">
+    <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRael_4f3Iv0L-t9WvqLQ8XBoMMa6m-L82gjg&s" alt="University of Nottingham Logo">
+    <h2 id="form-title">User Login</h2>
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" />
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter your password" />
+    <button onclick="handleSubmit()">Login</button>
+    <div class="spinner" id="loading-spinner"></div>
+    <div class="toggle">or <a onclick="toggleMode()">Register</a></div>
+    <div class="error" id="error-message"></div>
   </div>
-
-  <!-- Firebase Scripts -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword 
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc 
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
       authDomain: "unm-caf-orders.firebaseapp.com",
       projectId: "unm-caf-orders",
-      storageBucket: "unm-caf-orders.appspot.com",
+      storageBucket: "unm-caf-orders.firebasestorage.app",
       messagingSenderId: "562096834985",
       appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
       measurementId: "G-J12PBDK7N1"
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const loadShops = async () => {
-      const shopList = document.getElementById("shopList");
-      const vendorsRef = collection(db, "vendors");
-      const snapshot = await getDocs(vendorsRef);
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const div = document.createElement("div");
-        div.className = "shop-card";
-        div.innerHTML = `
-          <img src="${data.imageURL || 'https://via.placeholder.com/300'}" alt="${data.name}">
-          <h3>${data.name}</h3>
-          <p>${data.description || 'No description yet'}</p>
-        `;
-        div.onclick = () => {
-          window.location.href = `menu.html?vendor=${doc.id}`;
-        };
-        shopList.appendChild(div);
-      });
-    };
+    let isRegister = false;
 
-    loadShops();
+    window.toggleMode = function () {
+      isRegister = !isRegister;
+      document.getElementById("form-title").innerText = isRegister ? "Create Account" : "Student Login";
+      document.querySelector("button").innerText = isRegister ? "Register" : "Login";
+      document.querySelector(".toggle a").innerText = isRegister ? "Login" : "Register";
+      document.getElementById("error-message").innerText = "";
+    }
+
+    window.handleSubmit = async function () {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("error-message");
+      const spinner = document.getElementById("loading-spinner");
+
+      errorMsg.innerText = "";
+      spinner.style.display = "block";
+
+      try {
+        let userCredential;
+        if (isRegister) {
+          // Register new student
+          userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+          // ✅ Create Firestore record for this student
+          await setDoc(doc(db, "students", userCredential.user.uid), {
+            email: email,
+            points: 0
+          });
+
+        } else {
+          // Login existing student
+          userCredential = await signInWithEmailAndPassword(auth, email, password);
+        }
+
+        localStorage.setItem("studentEmail", userCredential.user.email);
+        window.location.href = "student-home.html";
+} catch (err) {
+        // If registering and the email is already in use, show a friendly smiley prompt to log in
+        if (isRegister && err.code === 'auth/email-already-in-use') {
+          errorMsg.innerText = "😊 You already have an account — please log in.";
+          document.querySelector(".toggle a").innerText = "Login";
+        } else {
+          errorMsg.innerText = err.message;
+        }
+      } finally {
+        spinner.style.display = "none";
+      }
+    };
   </script>
 </body>
 </html>
