@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>UNM Cafeteria – Food Shops</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     html, body {
@@ -12,7 +13,10 @@
       min-height: 100vh;
       box-sizing: border-box;
       background: transparent;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
+
     .background {
       position: fixed;
       top: 0; left: 0;
@@ -23,10 +27,12 @@
       background-repeat: no-repeat;
       filter: blur(6px) brightness(0.7);
       z-index: -1;
+      transform: translateZ(0);
     }
+
     h1 {
       text-align: center;
-      padding: 24px 0 20px 0;  /* Reduced for better balance */
+      padding: 24px 0 20px 0;
       margin: 32px auto 0 auto;
       max-width: 900px;
       background: rgba(255,255,255,0.70);
@@ -41,12 +47,14 @@
       justify-content: center;
       gap: 10px;
     }
+
     h1::before {
       content: "🍴";
       font-size: 2rem;
       color: #b7b7d7;
       margin-right: 8px;
     }
+
     body {
       min-height: 100vh;
       display: flex;
@@ -54,11 +62,12 @@
       align-items: center;
       justify-content: flex-start;
     }
+
     .container {
       background: rgba(255,255,255,0.70);
       border-radius: 18px;
       box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-      padding: 40px 24px 32px 24px;  /* Reduced padding */
+      padding: 40px 24px 32px 24px;
       max-width: 900px;
       width: 100%;
       margin: 24px auto 0 auto;
@@ -67,8 +76,9 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 28px;  /* Reduced gap */
+      gap: 28px;
     }
+
     .shop-card {
       width: 432px;
       background: linear-gradient(120deg, #e3eafcbb 80%, #f1f8e9bb 100%);
@@ -83,12 +93,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      will-change: transform;
     }
+
     .shop-card:hover {
       transform: scale(1.03);
       box-shadow: 0 8px 24px rgba(31, 38, 135, 0.18);
       border-color: #005f7355;
     }
+
     .shop-card img {
       width: 100%;
       height: 200px;
@@ -98,6 +111,7 @@
       border-top-right-radius: 18px;
       background: #e3eafcbb;
     }
+
     .shop-card h3 {
       margin: 16px 0 10px 0;
       color: #005f73;
@@ -105,12 +119,14 @@
       font-weight: 700;
       letter-spacing: 0.2px;
     }
+
     .shop-card p {
       color: #444;
       padding: 0 16px 20px;
-      font-size: 1.rem;
+      font-size: 1rem;
       min-height: 48px;
     }
+
     @media (max-width: 700px) {
       h1 {
         font-size: 2rem;
@@ -130,7 +146,6 @@
         height: 260px;
         object-position: 0% 5%;
         background: #f1f1f1;
-        transition: opacity 0.3s ease;
       }
       .shop-card h3 {
         font-size: 1.4rem;
@@ -139,6 +154,7 @@
         font-size: 1.2rem;
       }
     }
+
     @media (max-width: 500px) {
       h1 {
         font-size: 1.6rem;
@@ -146,29 +162,28 @@
         margin-top: 8px;
       }
       .container {
-        padding: 0;  /* Removed padding to make white box tighter and cards fill it */
-        gap: 0px;  /* Least gap possible */
+        padding: 0;
+        gap: 0;
         flex-direction: row;
         flex-wrap: wrap;
-        min-height: auto;  /* Allows container to expand vertically for more shops */
       }
       .shop-card {
-        width: 50vw;  /* Fills half the container/screen */
+        width: 50vw;
         max-width: 50vw;
       }
       .shop-card img {
-        height: calc(50vw * 0.8);  /* Bigger image for taller cards */
+        height: calc(50vw * 0.6);
         object-position: bottom;
         background: #e3eafcbb;
       }
       .shop-card h3 {
-        font-size: 1.5rem;  /* Bigger font */
-        margin: 20px 0 14px 0;  /* Bigger margin */
+        font-size: 1.2rem;
+        margin: 16px 0 12px 0;
       }
       .shop-card p {
-        font-size: 1.3rem;  /* Bigger font */
-        padding: 0 12px 24px;  /* Bigger padding */
-        min-height: 56px;  /* Bigger min-height */
+        font-size: 1rem;
+        padding: 0 10px 20px;
+        min-height: 48px;
       }
     }
   </style>
@@ -176,11 +191,8 @@
 <body>
   <div class="background"></div>
   <h1>UNM Cafeteria</h1>
-  <div class="container" id="shopList">
-    <!-- Shops will load here -->
-  </div>
+  <div class="container" id="shopList"></div>
 
-  <!-- Firebase Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -202,6 +214,7 @@
       const shopList = document.getElementById("shopList");
       const vendorsRef = collection(db, "vendors");
       const snapshot = await getDocs(vendorsRef);
+
       snapshot.forEach(doc => {
         const data = doc.data();
         const div = document.createElement("div");
