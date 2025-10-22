@@ -21,14 +21,10 @@
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      /* background-image removed */
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      filter: blur(3px) brightness(0.7);  /* Reduced blur from 6px to 3px */
+      background: linear-gradient(135deg, #001122, #002233, #003344, #004455, #005566, #006677, #007788, #008899, #0099AA);  /* Mixed gradient with similar blue-turquoise shades */
       z-index: -1;
       transform: translateZ(0);
-      will-change: transform;  /* Added to reduce glitching on scroll */
+      will-change: transform;
     }
 
     h1 {
@@ -36,17 +32,18 @@
       padding: 24px 0 20px 0;
       margin: 32px auto 0 auto;
       max-width: 900px;
-      background: rgba(255,255,255,0.70);
+      /* Removed white background */
       border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(31,38,135,0.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);  /* Adjusted shadow for visibility */
       font-size: 3.5rem;
       font-weight: 700;
-      color: #005f73;
+      color: white;  /* Changed to white for contrast */
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);  /* Added text shadow for readability */
     }
 
     h1::before {
@@ -65,9 +62,9 @@
     }
 
     .container {
-      background: rgba(255,255,255,0.70);
+      /* Removed white background */
       border-radius: 18px;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);  /* Adjusted shadow */
       padding: 40px 24px 32px 24px;
       max-width: 900px;
       width: 100%;
@@ -82,26 +79,27 @@
 
     .shop-card {
       width: 432px;
-      background: linear-gradient(120deg, #e3eafcbb 80%, #f1f8e9bb 100%);
+      background: rgba(0, 128, 128, 0.6);  /* Changed to semi-transparent greenish blue (teal) */
       border-radius: 18px;
-      box-shadow: 0 4px 16px rgba(31, 38, 135, 0.10);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
       overflow: hidden;
       text-align: center;
       transition: transform 0.18s, box-shadow 0.18s;
       cursor: pointer;
       position: relative;
-      border: 2px solid #005f7322;
+      border: 2px solid rgba(255,255,255,0.2);  /* Adjusted border */
       display: flex;
       flex-direction: column;
       align-items: center;
       will-change: transform;
-      margin-left: -1mm;  /* Moved shops to the left by 1mm */
+      margin-left: -1mm;
+      color: white;  /* Text color for visibility */
     }
 
     .shop-card:hover {
       transform: scale(1.03);
-      box-shadow: 0 8px 24px rgba(31, 38, 135, 0.18);
-      border-color: #005f7355;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      border-color: rgba(255,255,255,0.4);
     }
 
     .shop-card img {
@@ -116,14 +114,15 @@
 
     .shop-card h3 {
       margin: 16px 0 10px 0;
-      color: #005f73;
+      color: white;  /* Changed to white */
       font-size: 2rem;
       font-weight: 700;
       letter-spacing: 0.2px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
 
     .shop-card p {
-      color: #444;
+      color: #ddd;  /* Light gray for description */
       padding: 0 16px 20px;
       font-size: 1rem;
       min-height: 48px;
@@ -143,10 +142,10 @@
         gap: 12px;
       }
       .shop-card {
-        width: 45vw;          /* Two columns */
+        width: 45vw;
         max-width: 45vw;
         border-radius: 14px;
-        margin-left: -1mm;  /* Applied to mobile too */
+        margin-left: -1mm;
       }
       .shop-card img {
         height: calc(45vw * 0.6);
@@ -170,7 +169,7 @@
         width: 47vw;
         max-width: 47vw;
         margin: 0;
-        margin-left: -1mm;  /* Applied to mobile too */
+        margin-left: -1mm;
       }
       .shop-card img {
         height: calc(47vw * 0.6);
