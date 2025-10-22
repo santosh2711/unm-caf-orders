@@ -18,17 +18,17 @@
     }
 
     .background {
-      position: fixed;
+      position: absolute;  /* Changed from fixed to absolute to prevent white glitch on scroll */
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       background-image: url('https://firebasestorage.googleapis.com/v0/b/unm-caf-orders.firebasestorage.app/o/DSC_8475.jpg?alt=media&token=e46d3522-b27e-422f-99b4-9b3863c21ff0');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      filter: blur(3px) brightness(0.7);  /* Reduced blur from 6px to 3px */
+      filter: blur(3px) brightness(0.7);
       z-index: -1;
       transform: translateZ(0);
-      will-change: transform;  /* Added to reduce glitching on scroll */
+      will-change: transform;
     }
 
     h1 {
@@ -62,6 +62,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+      background: rgba(255,255,255,0.7);  /* Added background color to body to fill scroll area */
     }
 
     .container {
@@ -95,7 +96,7 @@
       flex-direction: column;
       align-items: center;
       will-change: transform;
-      margin-left: -1mm;  /* Moved shops to the left by 1mm */
+      margin-left: -1mm;
     }
 
     .shop-card:hover {
@@ -143,10 +144,10 @@
         gap: 12px;
       }
       .shop-card {
-        width: 45vw;          /* Two columns */
+        width: 45vw;
         max-width: 45vw;
         border-radius: 14px;
-        margin-left: -1mm;  /* Applied to mobile too */
+        margin-left: -1mm;
       }
       .shop-card img {
         height: calc(45vw * 0.6);
@@ -170,7 +171,7 @@
         width: 47vw;
         max-width: 47vw;
         margin: 0;
-        margin-left: -1mm;  /* Applied to mobile too */
+        margin-left: -1mm;
       }
       .shop-card img {
         height: calc(47vw * 0.6);
