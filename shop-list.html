@@ -18,17 +18,17 @@
     }
 
     .background {
-      position: absolute;
+      position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background-image: url('https://firebasestorage.googleapis.com/v0/b/unm-caf-orders.firebasestorage.app/o/DSC_8475.jpg?alt=media&token=e46d3522-b27e-422f-99b4-9b3863c21ff0');
+      /* background-image removed */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      filter: blur(3px) brightness(0.7);
+      filter: blur(3px) brightness(0.7);  /* Reduced blur from 6px to 3px */
       z-index: -1;
       transform: translateZ(0);
-      will-change: transform;
+      will-change: transform;  /* Added to reduce glitching on scroll */
     }
 
     h1 {
@@ -62,7 +62,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      background: rgba(255,255,255,0.7);
     }
 
     .container {
@@ -96,7 +95,7 @@
       flex-direction: column;
       align-items: center;
       will-change: transform;
-      touch-action: manipulation;  /* Improves touch response on mobile */
+      margin-left: -1mm;  /* Moved shops to the left by 1mm */
     }
 
     .shop-card:hover {
@@ -141,12 +140,13 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 8px;  /* Reduced gap for tighter mobile layout */
+        gap: 12px;
       }
       .shop-card {
-        width: 45vw;
+        width: 45vw;          /* Two columns */
         max-width: 45vw;
         border-radius: 14px;
+        margin-left: -1mm;  /* Applied to mobile too */
       }
       .shop-card img {
         height: calc(45vw * 0.6);
@@ -166,34 +166,14 @@
     }
 
     @media (max-width: 500px) {
-      h1 {
-        font-size: 1.8rem;  /* Slightly larger for mobile readability */
-        padding: 12px 0 10px 0;
-        margin-top: 8px;
-      }
-      .container {
-        padding: 8px 2px;  /* Reduced padding to fit better */
-        gap: 2px;  /* Further reduced gap to prevent overflow */
-      }
       .shop-card {
-        width: 47vw;  /* Reduced from 48vw to fit better (94vw total for two cards) */
+        width: 47vw;
         max-width: 47vw;
-        border-radius: 12px;
+        margin: 0;
+        margin-left: -1mm;  /* Applied to mobile too */
       }
       .shop-card img {
-        height: calc(47vw * 0.6);  /* Proportional height */
-      }
-      .shop-card h3 {
-        font-size: 1.2rem;  /* Larger for touch */
-        margin: 12px 0 8px 0;
-      }
-      .shop-card p {
-        font-size: 1rem;  /* Larger for readability */
-        padding: 0 10px 12px;
-        min-height: 40px;
-      }
-      .background {
-        background-image: url('https://via.placeholder.com/800x600?text=Mobile+Background');  /* Placeholder for phone-friendly image; replace with optimized mobile image */
+        height: calc(47vw * 0.6);
       }
     }
   </style>
