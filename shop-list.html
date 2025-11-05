@@ -23,8 +23,7 @@
       width: 100vw; height: 100vh;
       background: linear-gradient(135deg, #001122, #002233, #003344, #004455, #005566, #006677, #007788, #008899, #0099AA);  /* Mixed gradient with similar blue-turquoise shades */
       z-index: -1;
-      transform: translateZ(0);
-      will-change: transform;
+      /* Removed transform and will-change to prevent flickering */
     }
 
     h1 {
@@ -96,12 +95,10 @@
       align-items: center;
       margin-left: 0;  /* Removed negative margin */
       color: white;  /* Text color for visibility */
-      transform: translateZ(0);  /* Force hardware acceleration */
-      will-change: auto;  /* Remove will-change to avoid overuse */
+      /* Removed transform and will-change to prevent flickering */
     }
 
     .shop-card:hover {
-      transform: none;  /* Removed hover transform to prevent stuttering */
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       border-color: rgba(255,255,255,0.4);
     }
@@ -116,6 +113,7 @@
       background: #e3eafcbb;
       loading: lazy;  /* Lazy load images for better performance */
       contain: layout;  /* Optimize image rendering */
+      aspect-ratio: 3 / 2;  /* Fixed aspect ratio to prevent layout shifts */
     }
 
     .shop-card h3 {
@@ -158,6 +156,7 @@
         object-fit: cover;
         border-top-left-radius: 14px;
         border-top-right-radius: 14px;
+        aspect-ratio: 4 / 3;  /* Adjusted aspect ratio for mobile */
       }
       .shop-card h3 {
         font-size: 1.1rem;
@@ -177,6 +176,7 @@
       }
       .shop-card img {
         height: 120px;  /* Smaller fixed height */
+        aspect-ratio: 5 / 3;  /* Adjusted for small screens */
       }
     }
   </style>
