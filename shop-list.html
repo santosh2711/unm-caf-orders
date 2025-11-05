@@ -78,7 +78,7 @@
     }
 
     .shop-card {
-      width: calc(50% - 14px);  /* Use calc for responsive width, accounting for gap */
+      flex: 1 1 45%;  /* Flexible width for better centering */
       min-width: 300px;  /* Minimum width to prevent too small cards */
       max-width: 432px;  /* Maximum width for large screens */
       background: rgba(0, 128, 128, 0.6);  /* Changed to semi-transparent greenish blue (teal) */
@@ -93,7 +93,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-left: -2px;  /* Slight left shift to center and prevent right cut-off */
       color: white;  /* Text color for visibility */
       /* Removed transform and will-change to prevent flickering */
     }
@@ -146,11 +145,10 @@
         gap: 12px;
       }
       .shop-card {
-        width: calc(50% - 6px);  /* Adjusted for smaller gap */
+        flex: 1 1 45%;  /* Flexible width for mobile centering */
         min-width: 200px;
         max-width: none;  /* Allow full width on mobile */
         border-radius: 14px;
-        margin-left: -2px;  /* Slight left shift for mobile centering */
       }
       .shop-card img {
         height: 150px;  /* Fixed height to prevent layout shifts */
@@ -172,9 +170,8 @@
 
     @media (max-width: 500px) {
       .shop-card {
-        width: calc(100% - 8px);  /* Full width on very small screens */
+        flex: 1 1 100%;  /* Full width on very small screens */
         margin: 0;
-        margin-left: 0;  /* No shift needed for full width */
       }
       .shop-card img {
         height: 120px;  /* Smaller fixed height */
@@ -197,7 +194,7 @@
       authDomain: "unm-caf-orders.firebaseapp.com",
       projectId: "unm-caf-orders",
       storageBucket: "unm-caf-orders.appspot.com",
-      messagingSenderId: "562096834985",
+      messagingSenderId: "562096834985";
       appId: "1:562096834985:web:f4bfe451e5482521e49cb8",
       measurementId: "G-J12PBDK7N1"
     };
