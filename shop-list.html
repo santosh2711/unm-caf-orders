@@ -75,29 +75,33 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 28px;
+      contain: layout style;  /* Optimize layout containment */
     }
 
     .shop-card {
-      width: 432px;
+      width: calc(50% - 14px);  /* Use calc for responsive width, accounting for gap */
+      min-width: 300px;  /* Minimum width to prevent too small cards */
+      max-width: 432px;  /* Maximum width for large screens */
       background: rgba(0, 128, 128, 0.6);  /* Changed to semi-transparent greenish blue (teal) */
       border-radius: 18px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.3);
       overflow: hidden;
       text-align: center;
-      transition: transform 0.18s, box-shadow 0.18s;
+      transition: none;  /* Removed transitions to eliminate stuttering */
       cursor: pointer;
       position: relative;
       border: 2px solid rgba(255,255,255,0.2);  /* Adjusted border */
       display: flex;
       flex-direction: column;
       align-items: center;
-      will-change: transform;
-      margin-left: -1mm;
+      margin-left: 0;  /* Removed negative margin */
       color: white;  /* Text color for visibility */
+      transform: translateZ(0);  /* Force hardware acceleration */
+      will-change: auto;  /* Remove will-change to avoid overuse */
     }
 
     .shop-card:hover {
-      transform: scale(1.03);
+      transform: none;  /* Removed hover transform to prevent stuttering */
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       border-color: rgba(255,255,255,0.4);
     }
@@ -110,6 +114,8 @@
       border-top-left-radius: 18px;
       border-top-right-radius: 18px;
       background: #e3eafcbb;
+      loading: lazy;  /* Lazy load images for better performance */
+      contain: layout;  /* Optimize image rendering */
     }
 
     .shop-card h3 {
@@ -142,13 +148,13 @@
         gap: 12px;
       }
       .shop-card {
-        width: 45vw;
-        max-width: 45vw;
+        width: calc(50% - 6px);  /* Adjusted for smaller gap */
+        min-width: 200px;
+        max-width: none;  /* Allow full width on mobile */
         border-radius: 14px;
-        margin-left: -1mm;
       }
       .shop-card img {
-        height: calc(45vw * 0.6);
+        height: 150px;  /* Fixed height to prevent layout shifts */
         object-fit: cover;
         border-top-left-radius: 14px;
         border-top-right-radius: 14px;
@@ -166,13 +172,11 @@
 
     @media (max-width: 500px) {
       .shop-card {
-        width: 47vw;
-        max-width: 47vw;
+        width: calc(100% - 8px);  /* Full width on very small screens */
         margin: 0;
-        margin-left: -1mm;
       }
       .shop-card img {
-        height: calc(47vw * 0.6);
+        height: 120px;  /* Smaller fixed height */
       }
     }
   </style>
@@ -204,20 +208,19 @@
       const vendorsRef = collection(db, "vendors");
       const snapshot = await getDocs(vendorsRef);
 
+      // Build HTML string in one go to avoid multiple DOM manipulations
+      let html = '';
       snapshot.forEach(doc => {
         const data = doc.data();
-        const div = document.createElement("div");
-        div.className = "shop-card";
-        div.innerHTML = `
-          <img src="${data.imageURL || 'https://via.placeholder.com/300'}" alt="${data.name}">
-          <h3>${data.name}</h3>
-          <p>${data.description || 'No description yet'}</p>
+        html += `
+          <div class="shop-card" onclick="window.location.href='menu.html?vendor=${doc.id}'">
+            <img src="${data.imageURL || 'https://via.placeholder.com/300'}" alt="${data.name}" loading="lazy">
+            <h3>${data.name}</h3>
+            <p>${data.description || 'No description yet'}</p>
+          </div>
         `;
-        div.onclick = () => {
-          window.location.href = `menu.html?vendor=${doc.id}`;
-        };
-        shopList.appendChild(div);
       });
+      shopList.innerHTML = html;  // Single DOM update for smoothness
     };
 
     loadShops();
