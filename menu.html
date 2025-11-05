@@ -23,8 +23,7 @@
       width: 100vw; height: 100vh;
       background: linear-gradient(135deg, #001122, #002233, #003344, #004455, #005566, #006677, #007788, #008899, #0099AA);  /* Mixed gradient with similar blue-turquoise shades */
       z-index: -1;
-      transform: translateZ(0);
-      will-change: transform;
+      /* Removed transform and will-change to prevent flickering */
     }
     .lux-box {
       /* Removed white background */
@@ -63,6 +62,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;  /* Reduced gap for compact layout */
+      contain: layout style;  /* Optimize layout containment */
     }
     .menu-card {
       width: 100%;
@@ -71,7 +71,7 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.3);
       overflow: hidden;
       text-align: left;
-      transition: transform 0.18s, box-shadow 0.18s;
+      transition: none;  /* Removed transitions to eliminate stuttering */
       cursor: pointer;
       position: relative;
       border: 2px solid rgba(255,255,255,0.2);  /* Adjusted border */
@@ -82,10 +82,10 @@
       min-height: 100px;  /* Increased for bigger image */
       touch-action: manipulation;  /* Better touch on mobile */
       color: white;  /* Text color for visibility */
-      margin-left: -1mm;  /* Added to align like shop-list */
+      margin-left: -2px;  /* Slight left shift to center and prevent right cut-off */
+      /* Removed transform and will-change to prevent flickering */
     }
     .menu-card:hover {
-      transform: scale(1.01);
       box-shadow: 0 12px 40px rgba(0,0,0,0.4);
       border-color: rgba(255,255,255,0.4);
     }
@@ -98,6 +98,7 @@
       margin-right: 12px;
       box-shadow: 0 2px 8px rgba(31,38,135,0.08);
       flex-shrink: 0;
+      aspect-ratio: 1 / 1;  /* Fixed aspect ratio to prevent layout shifts */
     }
     .menu-card .details {
       flex: 1;
@@ -146,7 +147,7 @@
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      transition: background 0.2s, transform 0.2s;
+      transition: none;  /* Removed transitions to eliminate stuttering */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -156,7 +157,6 @@
     }
     .menu-card button:active {
       background: #00aaff;
-      transform: scale(0.95);
     }
     #cart-section {
       background: rgba(255,255,255,0.90);
@@ -224,7 +224,7 @@
       padding: 2px 10px;
       font-size: 1em;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: none;  /* Removed transitions to eliminate stuttering */
       touch-action: manipulation;
     }
     .cart-item-controls button:hover {
@@ -248,7 +248,7 @@
       font-size: 1rem;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      transition: background 0.2s, transform 0.2s;
+      transition: none;  /* Removed transitions to eliminate stuttering */
       letter-spacing: 0.5px;
       touch-action: manipulation;
     }
@@ -266,7 +266,7 @@
       .menu-card {
         padding: 10px;
         min-height: 110px;
-        margin-left: -1mm;  /* Added for alignment */
+        margin-left: -2px;  /* Slight left shift for mobile centering */
       }
       .menu-card img {
         width: 90px;  /* Bigger on mobile */
@@ -302,7 +302,7 @@
       .menu-card {
         padding: 8px;
         min-height: 120px;
-        margin-left: -1mm;  /* Added for alignment */
+        margin-left: -2px;  /* Slight left shift for mobile centering */
       }
       .menu-card img {
         width: 100px;  /* Even bigger on small mobile */
