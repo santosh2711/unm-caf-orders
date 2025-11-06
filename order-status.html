@@ -25,6 +25,16 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 20px;
     }
+    .order-number {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #d32f2f;  /* Red color to stand out */
+      text-align: center;
+      margin-bottom: 20px;
+      background: #ffebee;
+      padding: 10px;
+      border-radius: 8px;
+    }
     .item {
       display: flex;
       justify-content: space-between;
@@ -56,6 +66,9 @@
 <body>
   <h1>Order Placed ✅</h1>
   <div class="order-box">
+    <div class="order-number">
+      <strong>Your Order Number:</strong> <span id="order-number">--</span>
+    </div>
     <h3>Your Items:</h3>
     <div id="order-items"></div>
     <p><strong>Note:</strong> <span id="order-note">No note provided.</span></p>
@@ -89,6 +102,7 @@
     const itemsContainer = document.getElementById("order-items");
     const statusEl = document.getElementById("order-status");
     const noteEl = document.getElementById("order-note");
+    const orderNumberEl = document.getElementById("order-number");
     const dingSound = document.getElementById("ding-sound");
 
     // Get orderId saved from summary.html
@@ -100,6 +114,9 @@
       onSnapshot(orderRef, (snap) => {
         if (!snap.exists()) return;
         const data = snap.data();
+
+        // Update order number
+        orderNumberEl.textContent = data.orderNumber || "--";
 
         // Render items
         itemsContainer.innerHTML = "";
