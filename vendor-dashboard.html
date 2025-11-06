@@ -100,15 +100,28 @@
       max-width: 600px;
       backdrop-filter: blur(4px);
       border: 1px solid rgba(0,95,115,0.2);
+      color: #333;  /* Default text color, will be overridden for colored cards */
+      font-weight: bold;  /* Make text bold for friendliness */
     }
     .order-card ul {
       padding-left: 20px;
       margin: 0.5rem 0;
     }
+    .order-card li {
+      margin: 0.3rem 0;
+    }
+    .item-name {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #d32f2f;  /* Red color for food names to stand out */
+    }
     .order-card p {
       margin: 0.5rem 0;
-      color: #333;
-      font-weight: 500;
+      color: inherit;  /* Inherit from parent for dynamic color */
+      font-weight: inherit;  /* Inherit bold */
+    }
+    .emoji {
+      font-size: 1.5em;  /* Bigger emojis */
     }
     .order-card button {
       background: linear-gradient(90deg, #28a745 60%, #4caf50 100%);
@@ -244,13 +257,22 @@
       const div = document.createElement("div");
       div.className = "order-card";
 
-      const items = (data.items || []).map(i => `<li>${i.name} × ${i.qty}</li>`).join("");
+      // Apply color coding based on delivery option
+      if (data.displayColor) {
+        div.style.backgroundColor = data.displayColor;
+        div.style.color = '#000';  // Black text for readability on colored backgrounds
+      }
+
+      const items = (data.items || []).map(i => `<li><span class="item-name">${i.name}</span> × ${i.qty}</li>`).join("");
       const isReady = data.status === "Ready";
+      const deliveryOption = data.deliveryOption ? data.deliveryOption.charAt(0).toUpperCase() + data.deliveryOption.slice(1) : "--";
+      const emoji = data.deliveryOption === 'dine-in' ? '🍽️' : data.deliveryOption === 'take-away' ? '🛍️' : '';
 
       div.innerHTML = `
-        <p><strong>Order ID:</strong> ${docSnap.id}</p>
+        <p><strong>Order Number:</strong> ${data.orderNumber || "--"}</p>
         <ul>${items}</ul>
         <p><strong>Status:</strong> ${data.status}</p>
+        <p><strong>Delivery Option:</strong> <span class="emoji">${emoji}</span> ${deliveryOption}</p>
         <p><strong>Note:</strong> ${data.note || "--"}</p>
         <button 
           data-order="${docSnap.id}" 
