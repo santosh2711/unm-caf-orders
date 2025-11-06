@@ -66,6 +66,68 @@
       color: #005f73;
       letter-spacing: 0.5px;
     }
+    .delivery-section {
+      margin-top: 1.5rem;
+    }
+    .delivery-section label {
+      display: block;
+      font-weight: 500;
+      color: #222;
+      margin-bottom: 0.5rem;
+    }
+    .delivery-options {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .delivery-options label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-weight: normal;
+      position: relative;
+      padding-left: 2rem; /* Space for custom checkbox */
+    }
+    .delivery-options input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .checkmark {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 20px;
+      width: 20px;
+      background-color: #eee;
+      border: 2px solid #ccc;
+      border-radius: 4px; /* Square with slight radius */
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .delivery-options input[type="radio"]:checked ~ .checkmark {
+      background-color: #005f73;
+      border-color: #005f73;
+    }
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    .delivery-options input[type="radio"]:checked ~ .checkmark:after {
+      display: block;
+    }
+    .option-icon {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
     .note-section {
       margin-top: 1.5rem;
     }
@@ -130,6 +192,11 @@
       #summary-container h1 {
         font-size: 1.3rem;
       }
+      .delivery-options {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
       .actions button {
         font-size: 1rem;
         padding: 0.7rem 0.5rem;
@@ -160,6 +227,21 @@
     <h1>Order Summary</h1>
     <div id="order-items"></div>
     <p class="total" id="total-price">Total: RM 0.00</p>
+    <div class="delivery-section">
+      <label>Delivery Option:</label>
+      <div class="delivery-options">
+        <label>
+          <input type="radio" name="delivery" value="dine-in" checked>
+          <span class="checkmark"></span>
+          <span class="option-icon">🍽️</span> Dine In
+        </label>
+        <label>
+          <input type="radio" name="delivery" value="take-away">
+          <span class="checkmark"></span>
+          <span class="option-icon">🛍️</span> Take Away (+RM 1.00)
+        </label>
+      </div>
+    </div>
     <div class="note-section">
       <label for="order-note">Add a note for the vendor (optional):</label>
       <textarea id="order-note" placeholder="e.g., More rice, less spice, etc."></textarea>
@@ -172,7 +254,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getFirestore, collection, addDoc, serverTimestamp, doc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, updateDoc, increment, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
     const firebaseConfig = {
@@ -181,7 +263,7 @@
       projectId: "unm-caf-orders",
       storageBucket: "unm-caf-orders.firebasestorage.app",
       messagingSenderId: "562096834985",
-      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      appId: "1:562096834985:web:f4bfe451e5482521e49cb8",
       measurementId: "G-J12PBDK7N1"
     };
 
@@ -194,16 +276,30 @@
     const orderItemsContainer = document.getElementById("order-items");
     const totalPriceContainer = document.getElementById("total-price");
 
-    let total = 0;
+    let baseTotal = 0;
     cart.forEach(item => {
       const row = document.createElement("div");
       row.className = "item";
       const itemTotal = item.qty * item.price;
-      total += itemTotal;
+      baseTotal += itemTotal;
       row.innerHTML = `<span>${item.name} × ${item.qty}</span><span>RM ${itemTotal.toFixed(2)}</span>`;
       orderItemsContainer.appendChild(row);
     });
-    totalPriceContainer.textContent = `Total: RM ${total.toFixed(2)}`;
+
+    function updateTotal() {
+      const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
+      const deliveryFee = deliveryOption === 'take-away' ? 1.00 : 0.00;
+      const total = baseTotal + deliveryFee;
+      totalPriceContainer.textContent = `Total: RM ${total.toFixed(2)}`;
+    }
+
+    // Initial total update
+    updateTotal();
+
+    // Add event listener for delivery options
+    document.querySelectorAll('input[name="delivery"]').forEach(radio => {
+      radio.addEventListener('change', updateTotal);
+    });
 
     // ✅ Single clean function
     window.submitOrder = function () {
@@ -215,6 +311,13 @@
         }
 
         const note = document.getElementById("order-note").value.trim();
+        const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
+        const displayColor = deliveryOption === 'take-away' ? '#ff6666' : '#ccffcc';  // Deeper red for Take Away, light green for Dine In
+
+        // Get vendor's next order number
+        const vendorRef = doc(db, "vendors", vendorId);
+        const vendorSnap = await getDoc(vendorRef);
+        const nextOrderNumber = vendorSnap.data().nextOrderNumber || 1;
 
         try {
           // Save new order
@@ -225,7 +328,10 @@
             status: "Pending",
             studentId: user.uid,
             email: user.email,
-            note: note || null  // Add note to order
+            note: note || null,  // Add note to order
+            deliveryOption: deliveryOption,  // Add delivery option
+            displayColor: displayColor,  // Add color for vendor separation
+            orderNumber: nextOrderNumber  // Add sequential order number
           });
 
           // Award points
@@ -240,6 +346,9 @@
           // Cleanup
           localStorage.removeItem('cart');
           localStorage.removeItem('vendorId');
+
+          // Increment vendor's order number counter
+          await updateDoc(vendorRef, { nextOrderNumber: nextOrderNumber + 1 });
 
           // Redirect
           window.location.href = "order-status.html";
