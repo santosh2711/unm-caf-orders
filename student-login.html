@@ -12,7 +12,7 @@
       --accent-1:#005f73;
       --accent-2:#00aaff;
       --muted:#6b7a8a;
-      --glass-bg: rgba(255,255,255,0.88);
+      --glass-bg: rgba(255,255,255,0.95);  /* Updated to match other pages */
       --box-radius:18px;
     }
 
@@ -34,7 +34,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background-image: url('https://firebasestorage.googleapis.com/v0/b/unm-caf-orders.firebasestorage.app/o/DSC_8475.jpg?alt=media&token=e46d3522-b27e-422f-99b4-9b3863c21ff0');
+      background-image: url('https://firebasestorage.googleapis.com/v0/b/unm-caf-orders.firebasestorage.app/o/Campus%20photo%20(450m).jpg?alt=media&token=ddd6b5ca-91ef-4dd9-9f9c-458dff4b4cb9');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -78,7 +78,7 @@
       margin: 0;
       transition: box-shadow 280ms ease, transform 280ms ease, backdrop-filter 280ms ease;
       box-shadow: 0 10px 30px rgba(8,20,40,0.18);
-      border: 1px solid rgba(255,255,255,0.35);
+      border: 2px solid #40E0D0;  /* Added turquoise border for theme consistency */
       position: relative;
       z-index: 1;
       backdrop-filter: blur(6px) saturate(110%);
@@ -117,8 +117,11 @@
       margin: 6px 0 16px 0;
       letter-spacing: 0.6px;
       font-weight: 700;
-      color: var(--accent-1);
-      text-shadow: 0 4px 26px rgba(0,0,0,0.05);
+      background: linear-gradient(90deg, black, #005f73);  /* Black to dark turquoise gradient */
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;  /* Transparent to show gradient */
+      text-shadow: none;  /* Removed for gradient effect */
     }
 
     label {
@@ -350,4 +353,3 @@
   </script>
 </body>
 </html>
-
