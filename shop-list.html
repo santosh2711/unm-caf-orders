@@ -21,7 +21,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: linear-gradient(135deg, #001122, #002233, #003344, #004455, #005566, #006677, #007788, #008899, #0099AA);  /* Mixed gradient with similar blue-turquoise shades */
+      background: white;  /* Changed to white like Grab */
       z-index: -1;
       /* Removed transform and will-change to prevent flickering */
     }
@@ -36,19 +36,22 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.3);  /* Adjusted shadow for visibility */
       font-size: 3.5rem;
       font-weight: 700;
-      color: white;  /* Changed to white for contrast */
+      background: linear-gradient(90deg, black, #005f73);  /* Black to dark turquoise gradient */
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;  /* Transparent to show gradient */
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);  /* Added text shadow for readability */
+      /* Removed text-shadow for gradient effect */
     }
 
     h1::before {
       content: "🍴";
       font-size: 2rem;
-      color: #b7b7d7;
+      color: black;  /* Black for the emoji */
       margin-right: 8px;
     }
 
@@ -81,7 +84,7 @@
       flex: 1 1 45%;  /* Flexible width for better centering */
       min-width: 300px;  /* Minimum width to prevent too small cards */
       max-width: 432px;  /* Maximum width for large screens */
-      background: rgba(0, 128, 128, 0.6);  /* Changed to semi-transparent greenish blue (teal) */
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);  /* Button color code applied */
       border-radius: 18px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.3);
       overflow: hidden;
@@ -89,18 +92,18 @@
       transition: none;  /* Removed transitions to eliminate stuttering */
       cursor: pointer;
       position: relative;
-      border: 2px solid rgba(255,255,255,0.2);  /* Adjusted border */
+      border: 2px solid #40E0D0;  /* Turquoise border */
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: white;  /* Text color for visibility */
+      color: white;  /* White text for contrast */
       margin-left: -2mm;  /* Move cards left by 2mm on desktop */
       /* Removed transform and will-change to prevent flickering */
     }
 
     .shop-card:hover {
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-      border-color: rgba(255,255,255,0.4);
+      border-color: #00CED1;  /* Darker turquoise on hover */
     }
 
     .shop-card img {
@@ -110,7 +113,7 @@
       object-position: top;
       border-top-left-radius: 18px;
       border-top-right-radius: 18px;
-      background: #e3eafcbb;
+      background: #f0f8ff;  /* Light turquoise tint for image background */
       loading: lazy;  /* Lazy load images for better performance */
       contain: layout;  /* Optimize image rendering */
       aspect-ratio: 3 / 2;  /* Fixed aspect ratio to prevent layout shifts */
@@ -118,7 +121,7 @@
 
     .shop-card h3 {
       margin: 16px 0 10px 0;
-      color: white;  /* Changed to white */
+      color: white;  /* White text */
       font-size: 2rem;
       font-weight: 700;
       letter-spacing: 0.2px;
@@ -126,7 +129,7 @@
     }
 
     .shop-card p {
-      color: #ddd;  /* Light gray for description */
+      color: #ddd;  /* Light gray for description readability */
       padding: 0 16px 20px;
       font-size: 1rem;
       min-height: 48px;
