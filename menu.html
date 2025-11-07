@@ -21,7 +21,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: linear-gradient(135deg, #001122, #002233, #003344, #004455, #005566, #006677, #007788, #008899, #0099AA);  /* Mixed gradient with similar blue-turquoise shades */
+      background: white;  /* Changed to white like shop-list.html */
       z-index: -1;
       /* Removed transform and will-change to prevent flickering */
     }
@@ -35,19 +35,21 @@
       text-align: center;
       font-size: 2rem;
       font-weight: 700;
-      color: white;  /* Changed to white for contrast */
+      background: linear-gradient(90deg, black, #005f73);  /* Black to dark turquoise gradient like shop-list.html */
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;  /* Transparent to show gradient */
       letter-spacing: 0.5px;
       position: relative;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);  /* Added text shadow for readability */
+      /* Removed text-shadow for gradient effect */
     }
     .lux-box .menu-title {
       font-size: 2rem;
       font-weight: 700;
-      color: white;  /* Changed to white */
       margin: 0;
       letter-spacing: 0.5px;
       font-family: 'Roboto', Arial, sans-serif;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      /* Gradient applied to parent */
     }
     .container {
       /* Removed white background */
@@ -66,7 +68,7 @@
     }
     .menu-card {
       width: 100%;
-      background: rgba(0, 128, 128, 0.6);  /* Changed to semi-transparent greenish blue (teal) */
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);  /* Same gradient as shop-list.html shop cards */
       border-radius: 16px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.3);
       overflow: hidden;
@@ -122,11 +124,12 @@
     .portion-options {
       display: flex;
       justify-content: center;
-      gap: 8px;
-      margin: 4px 0;
-      font-size: 0.8rem;
+      gap: 4px;  /* Reduced gap */
+      margin: 2px 0;  /* Reduced margin */
+      font-size: 0.7rem;  /* Smaller font */
       color: white;  /* Changed to white */
       font-weight: 600;
+      margin-left: -1mm;  /* Move left by 1mm */
     }
     .portion-options label {
       display: flex;
@@ -353,7 +356,7 @@
       projectId: "unm-caf-orders",
       storageBucket: "unm-caf-orders.appspot.com",
       messagingSenderId: "562096834985",
-      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      appId: "1:562096834985:web:f4bfe451e5482521e49cb8",
       measurementId: "G-J12PBDK7N1"
     };
 
