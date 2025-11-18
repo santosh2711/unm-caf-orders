@@ -21,13 +21,11 @@
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: white;  /* Changed to white like shop-list.html */
+      background: white;
       z-index: -1;
-      /* Removed transform and will-change to prevent flickering */
     }
     .lux-box {
-      /* Removed white background */
-      box-shadow: 0 12px 40px rgba(0,0,0,0.3);  /* Adjusted shadow for visibility */
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
       border-radius: 20px;
       max-width: 900px;
       margin: 32px auto 0 auto;
@@ -35,13 +33,12 @@
       text-align: center;
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(90deg, black, #005f73);  /* Black to dark turquoise gradient like shop-list.html */
+      background: linear-gradient(90deg, black, #005f73);
       -webkit-background-clip: text;
       background-clip: text;
-      color: transparent;  /* Transparent to show gradient */
+      color: transparent;
       letter-spacing: 0.5px;
       position: relative;
-      /* Removed text-shadow for gradient effect */
     }
     .lux-box .menu-title {
       font-size: 2rem;
@@ -49,58 +46,76 @@
       margin: 0;
       letter-spacing: 0.5px;
       font-family: 'Roboto', Arial, sans-serif;
-      /* Gradient applied to parent */
     }
-    .container {
-      /* Removed white background */
-      border-radius: 20px;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.3);  /* Adjusted shadow */
-      padding: 32px 18px 24px 18px;
+    .container-bg {
       max-width: 900px;
-      width: 100%;
-      margin: 24px auto 0 auto;
+      margin: 40px auto 40px auto;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      padding: 32px 18px 32px 18px;
       position: relative;
       z-index: 1;
+      min-height: 70vh;
       display: flex;
       flex-direction: column;
-      gap: 12px;  /* Reduced gap for compact layout */
-      contain: layout style;  /* Optimize layout containment */
+      align-items: stretch;
+    }
+    .container {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 40px; /* More spacing between menu items */
+    }
+    .category-section {
+      margin-bottom: 32px;
+    }
+    .category-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #005f73;
+      margin: 20px 0 18px 0;
+      text-align: left;
+      background: linear-gradient(90deg, black, #005f73);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 0.3px;
     }
     .menu-card {
       width: 100%;
-      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);  /* Same gradient as shop-list.html shop cards */
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
       border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
       overflow: hidden;
       text-align: left;
-      transition: none;  /* Removed transitions to eliminate stuttering */
       cursor: pointer;
       position: relative;
-      border: 2px solid rgba(255,255,255,0.2);  /* Adjusted border */
+      border: 2px solid rgba(255,255,255,0.2);
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 12px;
-      min-height: 100px;  /* Increased for bigger image */
-      touch-action: manipulation;  /* Better touch on mobile */
-      color: white;  /* Text color for visibility */
-      margin-left: -2px;  /* Slight left shift to center and prevent right cut-off */
-      /* Removed transform and will-change to prevent flickering */
+      padding: 16px 18px;
+      min-height: 100px;
+      color: white;
+      margin: 0 auto;
+      box-sizing: border-box;
     }
-    .menu-card:hover {
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-      border-color: rgba(255,255,255,0.4);
+    .menu-card:not(:last-child) {
+      margin-bottom: 32px; /* More spacing between menu cards */
     }
     .menu-card img {
-      width: 80px;  /* Bigger image */
+      width: 80px;
       height: 80px;
       object-fit: cover;
       border-radius: 8px;
       background: #e3eafc;
-      margin-right: 12px;
+      margin-right: 18px;
       box-shadow: 0 2px 8px rgba(31,38,135,0.08);
       flex-shrink: 0;
-      aspect-ratio: 1 / 1;  /* Fixed aspect ratio to prevent layout shifts */
+      aspect-ratio: 1 / 1;
     }
     .menu-card .details {
       flex: 1;
@@ -110,26 +125,25 @@
     }
     .menu-card h3 {
       margin: 0 0 4px 0;
-      color: white;  /* Changed to white */
-      font-size: 1.1rem;  /* Slightly larger for readability */
+      color: white;
+      font-size: 1.1rem;
       font-weight: 700;
       letter-spacing: 0.2px;
       text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
     .menu-card p {
       margin: 0;
-      color: #ddd;  /* Light gray for price */
-      font-size: 1rem;  /* Larger price */
+      color: #ddd;
+      font-size: 1rem;
     }
     .portion-options {
       display: flex;
-      justify-content: center;
-      gap: 4px;  /* Reduced gap */
-      margin: 2px 0;  /* Reduced margin */
-      font-size: 0.7rem;  /* Smaller font */
-      color: white;  /* Changed to white */
+      justify-content: flex-start;
+      gap: 12px;
+      margin: 8px 0 0 0;
+      font-size: 0.95rem;
+      color: white;
       font-weight: 600;
-      margin-left: -1mm;  /* Move left by 1mm */
     }
     .portion-options label {
       display: flex;
@@ -144,46 +158,44 @@
       color: #fff;
       border: none;
       border-radius: 50%;
-      width: 50px;  /* Bigger button for touch */
+      width: 50px;
       height: 50px;
       font-size: 1.8rem;
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      transition: none;  /* Removed transitions to eliminate stuttering */
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin-left: 12px;
+      margin-left: 18px;
       touch-action: manipulation;
     }
     .menu-card button:active {
       background: #00aaff;
     }
+    /* Cart section as floating, centered, hidden by default */
     #cart-section {
-      background: rgba(255,255,255,0.90);
-      padding: 0.5rem;
+      background: rgba(255,255,255,0.95);
+      padding: 1rem 2rem;
       position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100vw;
-      box-shadow: 0 -4px 24px rgba(31,38,135,0.12), 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
-      z-index: 10;
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      min-width: 320px;
+      max-width: 400px;
+      box-shadow: 0 4px 32px rgba(31,38,135,0.12), 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      border-radius: 18px;
+      z-index: 100;
+      display: none; /* Hide by default */
       flex-direction: column;
       align-items: center;
       backdrop-filter: blur(2px);
-      max-height: 200px;
-      overflow-y: auto;
     }
     #cart-items {
       width: 100%;
-      max-width: 600px;
+      max-width: 320px;
       margin: 0 auto 4px auto;
       max-height: 100px;
       overflow-y: auto;
@@ -194,7 +206,7 @@
       justify-content: space-between;
       margin-bottom: 4px;
       padding: 0 12px;
-      max-width: 600px;
+      max-width: 320px;
       width: 100%;
       background: rgba(227,234,252,0.5);
       border-radius: 8px;
@@ -227,7 +239,6 @@
       padding: 2px 10px;
       font-size: 1em;
       cursor: pointer;
-      transition: none;  /* Removed transitions to eliminate stuttering */
       touch-action: manipulation;
     }
     .cart-item-controls button:hover {
@@ -241,8 +252,8 @@
       text-align: center;
     }
     #cart-section button {
-      margin-top: 4px;
-      padding: 10px 24px;  /* Bigger button for touch */
+      margin-top: 8px;
+      padding: 10px 24px;
       border-radius: 8px;
       border: none;
       background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
@@ -251,9 +262,55 @@
       font-size: 1rem;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      transition: none;  /* Removed transitions to eliminate stuttering */
       letter-spacing: 0.5px;
       touch-action: manipulation;
+    }
+    /* Cart icon floating button */
+    #cart-toggle-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 40px;
+      z-index: 200;
+      font-size: 2rem;
+      background: #005f73;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #cart-badge {
+      display: none;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #ff5252;
+      color: #fff;
+      border-radius: 50%;
+      padding: 2px 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      min-width: 22px;
+      text-align: center;
+      line-height: 1;
+      pointer-events: none;
+    }
+    @media (max-width: 900px) {
+      .container-bg {
+        max-width: 98vw;
+        padding: 16px 2vw 24px 2vw;
+      }
+      .container {
+        max-width: 98vw;
+      }
+      #cart-section {
+        max-width: 98vw;
+      }
     }
     @media (max-width: 700px) {
       .lux-box {
@@ -261,19 +318,24 @@
         padding: 12px 0 10px 0;
         margin-top: 12px;
       }
+      .container-bg {
+        padding: 10px 1vw 18px 1vw;
+      }
       .container {
-        padding: 16px 4px;
-        max-width: 98vw;
-        gap: 10px;
+        gap: 28px;
+      }
+      .category-title {
+        font-size: 1.3rem;
+        margin: 16px 0 8px 0;
       }
       .menu-card {
-        padding: 10px;
+        padding: 10px 8px;
         min-height: 110px;
-        margin-left: -2px;  /* Slight left shift for mobile centering */
       }
       .menu-card img {
-        width: 90px;  /* Bigger on mobile */
-        height: 90px;
+        width: 70px;
+        height: 70px;
+        margin-right: 10px;
       }
       .menu-card h3 {
         font-size: 1.2rem;
@@ -282,14 +344,21 @@
         font-size: 1.1rem;
       }
       .menu-card button {
-        width: 55px;
-        height: 55px;
-        font-size: 2rem;
+        width: 48px;
+        height: 48px;
+        font-size: 1.6rem;
+        margin-left: 10px;
       }
       #cart-section {
-        max-width: 98vw;
         padding: 0.5rem;
         max-height: 200px;
+      }
+      #cart-toggle-btn {
+        bottom: 24px;
+        right: 16px;
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
       }
     }
     @media (max-width: 500px) {
@@ -298,29 +367,36 @@
         padding: 10px 0 8px 0;
         margin-top: 8px;
       }
+      .container-bg {
+        padding: 6px 0 10px 0;
+      }
       .container {
-        padding: 12px 2px;
-        gap: 8px;
+        gap: 18px;
+      }
+      .category-title {
+        font-size: 1.2rem;
+        margin: 14px 0 6px 0;
       }
       .menu-card {
-        padding: 8px;
-        min-height: 120px;
-        margin-left: -2px;  /* Slight left shift for mobile centering */
+        padding: 8px 4px;
+        min-height: 100px;
       }
       .menu-card img {
-        width: 100px;  /* Even bigger on small mobile */
-        height: 100px;
+        width: 54px;
+        height: 54px;
+        margin-right: 6px;
       }
       .menu-card h3 {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
       }
       .menu-card p {
-        font-size: 1.2rem;
+        font-size: 1rem;
       }
       .menu-card button {
-        width: 60px;
-        height: 60px;
-        font-size: 2.2rem;
+        width: 38px;
+        height: 38px;
+        font-size: 1.2rem;
+        margin-left: 6px;
       }
       #cart-section {
         padding: 0.4rem;
@@ -331,6 +407,13 @@
         gap: 3px;
         font-size: 0.9rem;
       }
+      #cart-toggle-btn {
+        bottom: 16px;
+        right: 8px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
@@ -339,13 +422,20 @@
   <div class="lux-box">
     <span class="menu-title" id="menu-header">Menu</span>
   </div>
-  <div class="container" id="menu-container"></div>
+  <div class="container-bg">
+    <div class="container" id="menu-container"></div>
+  </div>
+  <!-- Cart floating section -->
   <div id="cart-section">
     <div id="cart-items"></div>
     <p id="cart-count">Cart: 0 items</p>
     <p id="cart-total">Total: RM 0.00</p>
     <button onclick="goToSummary()">Place Order</button>
   </div>
+  <!-- Cart icon floating button -->
+  <button id="cart-toggle-btn" title="Show Cart" style="position:fixed;">
+    🛒<span id="cart-badge"></span>
+  </button>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -383,7 +473,6 @@
     }
 
     function renderMenuItem(data) {
-      const menuContainer = document.getElementById("menu-container");
       const card = document.createElement("div");
       card.className = "menu-card";
       card.innerHTML = `
@@ -399,7 +488,7 @@
         </div>
         <button onclick='addToCart(${JSON.stringify(data)}, getPortion("${data.name.replace(/\s+/g, '-')}"))'>+</button>
       `;
-      menuContainer.appendChild(card);
+      return card;
     }
 
     function getPortion(nameKey) {
@@ -421,6 +510,17 @@
       cart[index].qty += delta;
       if (cart[index].qty <= 0) cart.splice(index, 1);
       updateCartStatus();
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById("cart-badge");
+      const count = cart.reduce((a, i) => a + i.qty, 0);
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
     }
 
     function updateCartStatus() {
@@ -448,6 +548,7 @@
       }
       document.getElementById("cart-count").textContent = `Cart: ${cart.reduce((a, i) => a + i.qty, 0)} items`;
       document.getElementById("cart-total").textContent = `Total: RM ${total.toFixed(2)}`;
+      updateCartBadge();
     }
 
     async function loadMenu() {
@@ -457,14 +558,52 @@
       }
       const q = query(collection(db, "vendors", vendorId, "menus"), where("available", "==", true));
       const snapshot = await getDocs(q);
-      console.log("Menu docs count:", snapshot.size);
       if (snapshot.empty) {
         document.getElementById("menu-container").innerHTML = "<p>No menu items found for this shop.</p>";
-      } else {
-        snapshot.forEach(doc => {
-          console.log("Menu item:", doc.data());
-          renderMenuItem(doc.data());
+        return;
+      }
+
+      // Group items by category
+      const grouped = {};
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const category = data.category || 'Other';
+        if (!grouped[category]) grouped[category] = [];
+        grouped[category].push(data);
+      });
+
+      const menuContainer = document.getElementById("menu-container");
+      menuContainer.innerHTML = "";
+
+      // Sort categories: Put "Rice" or "Rice and Curry Options" first, then others alphabetically
+      const sortedCategories = Object.keys(grouped).sort((a, b) => {
+        const riceNames = ['rice', 'rice and curry options', 'rice options'];
+        const aIsRice = riceNames.some(r => a.toLowerCase().includes(r));
+        const bIsRice = riceNames.some(r => b.toLowerCase().includes(r));
+        if (aIsRice && !bIsRice) return -1;
+        if (!aIsRice && bIsRice) return 1;
+        return a.localeCompare(b);
+      });
+
+      // Render each category section
+      for (const category of sortedCategories) {
+        // Sort items within category: For Rice, put "Nasi Putih" first, then alphabetical
+        grouped[category].sort((a, b) => {
+          if (category.toLowerCase().includes('rice')) {
+            if (a.name.toLowerCase().includes('nasi putih')) return -1;
+            if (b.name.toLowerCase().includes('nasi putih')) return 1;
+          }
+          return a.name.localeCompare(b.name);
         });
+
+        const catDiv = document.createElement("div");
+        catDiv.className = "category-section";
+        catDiv.innerHTML = `<h2 class="category-title">${category}</h2>`;
+        grouped[category].forEach(item => {
+          const card = renderMenuItem(item);
+          catDiv.appendChild(card);
+        });
+        menuContainer.appendChild(catDiv);
       }
     }
 
@@ -482,6 +621,19 @@
 
     setHeader();
     loadMenu();
+
+    // Cart toggle logic
+    const cartSection = document.getElementById("cart-section");
+    const cartToggleBtn = document.getElementById("cart-toggle-btn");
+    cartToggleBtn.addEventListener("click", () => {
+      if (cartSection.style.display === "flex") {
+        cartSection.style.display = "none";
+      } else {
+        cartSection.style.display = "flex";
+      }
+    });
+    cartSection.style.display = "none";
+    updateCartBadge();
   </script>
 </body>
 </html>
