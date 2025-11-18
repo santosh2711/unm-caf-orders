@@ -47,6 +47,43 @@
       letter-spacing: 0.5px;
       font-family: 'Roboto', Arial, sans-serif;
     }
+    .category-bar {
+      display: flex;
+      overflow-x: auto;
+      gap: 12px;
+      padding: 12px 0 12px 0;
+      background: #fff;
+      border-radius: 16px;
+      margin: 18px auto 0 auto;
+      max-width: 900px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      scrollbar-width: none;
+    }
+    .category-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .category-btn {
+      flex: 0 0 auto;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: none;
+      background: #e0f2f1;
+      color: #005f73;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      outline: none;
+      border: 2px solid transparent;
+    }
+    .category-btn.active, .category-btn:focus {
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      color: #fff;
+      border: 2px solid #00aaff;
+    }
     .container-bg {
       max-width: 900px;
       margin: 40px auto 40px auto;
@@ -67,16 +104,39 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 40px; /* More spacing between menu items */
+      gap: 1mm; /* 1mm spacing between menu items */
     }
     .category-section {
-      margin-bottom: 32px;
+      margin-bottom: 18px;
+      scroll-margin-top: 90px;
+    }
+    @media (max-width: 700px) {
+      .container-bg {
+        padding: 10px 1vw 18px 1vw;
+      }
+      .container {
+        gap: 1mm;
+      }
+      .category-section {
+        margin-bottom: 10px;
+      }
+    }
+    @media (max-width: 500px) {
+      .container-bg {
+        padding: 6px 0 10px 0;
+      }
+      .container {
+        gap: 1mm;
+      }
+      .category-section {
+        margin-bottom: 7px;
+      }
     }
     .category-title {
       font-size: 1.5rem;
       font-weight: 700;
       color: #005f73;
-      margin: 20px 0 18px 0;
+      margin: 20px 0 14px 0;
       text-align: left;
       background: linear-gradient(90deg, black, #005f73);
       -webkit-background-clip: text;
@@ -97,31 +157,31 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 16px 18px;
-      min-height: 100px;
+      padding: 10px 12px;
+      min-height: 90px;
       color: white;
       margin: 0 auto;
       box-sizing: border-box;
-    }
-    .menu-card:not(:last-child) {
-      margin-bottom: 32px; /* More spacing between menu cards */
+      gap: 12px;
     }
     .menu-card img {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 12px;
       background: #e3eafc;
-      margin-right: 18px;
       box-shadow: 0 2px 8px rgba(31,38,135,0.08);
       flex-shrink: 0;
       aspect-ratio: 1 / 1;
+      margin: 0;
+      display: block;
     }
     .menu-card .details {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      min-width: 0;
     }
     .menu-card h3 {
       margin: 0 0 4px 0;
@@ -130,36 +190,21 @@
       font-weight: 700;
       letter-spacing: 0.2px;
       text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      white-space: normal;
+      word-break: break-word;
     }
     .menu-card p {
       margin: 0;
       color: #ddd;
       font-size: 1rem;
     }
-    .portion-options {
-      display: flex;
-      justify-content: flex-start;
-      gap: 12px;
-      margin: 8px 0 0 0;
-      font-size: 0.95rem;
-      color: white;
-      font-weight: 600;
-    }
-    .portion-options label {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
-    .portion-options input[type="radio"] {
-      margin-right: 3px;
-    }
     .menu-card button {
       background: #005f73;
       color: #fff;
       border: none;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       font-size: 1.8rem;
       font-weight: bold;
       cursor: pointer;
@@ -168,8 +213,9 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin-left: 18px;
+      margin-left: 10px;
       touch-action: manipulation;
+      transition: background 0.2s;
     }
     .menu-card button:active {
       background: #00aaff;
@@ -188,7 +234,7 @@
       box-shadow: 0 4px 32px rgba(31,38,135,0.12), 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
       border-radius: 18px;
       z-index: 100;
-      display: none; /* Hide by default */
+      display: none;
       flex-direction: column;
       align-items: center;
       backdrop-filter: blur(2px);
@@ -271,13 +317,13 @@
       bottom: 32px;
       right: 40px;
       z-index: 200;
-      font-size: 2rem;
+      font-size: 2.6rem;
       background: #005f73;
       color: #fff;
       border: none;
       border-radius: 50%;
-      width: 56px;
-      height: 56px;
+      width: 70px;
+      height: 70px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
       cursor: pointer;
       display: flex;
@@ -287,30 +333,18 @@
     #cart-badge {
       display: none;
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: 10px;
+      right: 10px;
       background: #ff5252;
       color: #fff;
       border-radius: 50%;
       padding: 2px 8px;
-      font-size: 1rem;
+      font-size: 1.2rem;
       font-weight: bold;
-      min-width: 22px;
+      min-width: 26px;
       text-align: center;
       line-height: 1;
       pointer-events: none;
-    }
-    @media (max-width: 900px) {
-      .container-bg {
-        max-width: 98vw;
-        padding: 16px 2vw 24px 2vw;
-      }
-      .container {
-        max-width: 98vw;
-      }
-      #cart-section {
-        max-width: 98vw;
-      }
     }
     @media (max-width: 700px) {
       .lux-box {
@@ -322,43 +356,51 @@
         padding: 10px 1vw 18px 1vw;
       }
       .container {
-        gap: 28px;
+        gap: 1mm;
       }
-      .category-title {
-        font-size: 1.3rem;
-        margin: 16px 0 8px 0;
+      .category-bar {
+        gap: 8px;
+        padding: 8px 0 8px 0;
+        border-radius: 12px;
+      }
+      .category-btn {
+        padding: 7px 12px;
+        font-size: 0.98rem;
       }
       .menu-card {
-        padding: 10px 8px;
-        min-height: 110px;
+        padding: 7px 6px;
+        min-height: 70px;
+        gap: 7px;
       }
       .menu-card img {
         width: 70px;
         height: 70px;
-        margin-right: 10px;
-      }
-      .menu-card h3 {
-        font-size: 1.2rem;
-      }
-      .menu-card p {
-        font-size: 1.1rem;
+        border-radius: 8px;
       }
       .menu-card button {
-        width: 48px;
-        height: 48px;
-        font-size: 1.6rem;
-        margin-left: 10px;
+        width: 54px;
+        height: 54px;
+        font-size: 2.1rem;
+        margin-left: 5px;
       }
       #cart-section {
         padding: 0.5rem;
         max-height: 200px;
+        min-width: 90vw;
+        max-width: 98vw;
       }
       #cart-toggle-btn {
-        bottom: 24px;
-        right: 16px;
-        width: 48px;
-        height: 48px;
-        font-size: 1.5rem;
+        bottom: 18px;
+        right: 10px;
+        width: 90px;
+        height: 90px;
+        font-size: 3.2rem;
+      }
+      #cart-badge {
+        top: 8px;
+        right: 8px;
+        font-size: 1.3rem;
+        min-width: 28px;
       }
     }
     @media (max-width: 500px) {
@@ -371,48 +413,46 @@
         padding: 6px 0 10px 0;
       }
       .container {
-        gap: 18px;
+        gap: 1mm;
       }
       .category-title {
         font-size: 1.2rem;
         margin: 14px 0 6px 0;
       }
       .menu-card {
-        padding: 8px 4px;
-        min-height: 100px;
+        padding: 4px 2px;
+        min-height: 60px;
+        gap: 4px;
       }
       .menu-card img {
         width: 54px;
         height: 54px;
-        margin-right: 6px;
-      }
-      .menu-card h3 {
-        font-size: 1.1rem;
-      }
-      .menu-card p {
-        font-size: 1rem;
+        border-radius: 6px;
       }
       .menu-card button {
-        width: 38px;
-        height: 38px;
-        font-size: 1.2rem;
-        margin-left: 6px;
+        width: 54px;
+        height: 54px;
+        font-size: 2.1rem;
+        margin-left: 3px;
       }
       #cart-section {
         padding: 0.4rem;
         max-height: 180px;
-      }
-      .portion-options {
-        flex-direction: column;
-        gap: 3px;
-        font-size: 0.9rem;
+        min-width: 90vw;
+        max-width: 98vw;
       }
       #cart-toggle-btn {
-        bottom: 16px;
-        right: 8px;
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
+        bottom: 10px;
+        right: 5px;
+        width: 90px;
+        height: 90px;
+        font-size: 3.2rem;
+      }
+      #cart-badge {
+        top: 6px;
+        right: 6px;
+        font-size: 1.3rem;
+        min-width: 24px;
       }
     }
   </style>
@@ -422,6 +462,7 @@
   <div class="lux-box">
     <span class="menu-title" id="menu-header">Menu</span>
   </div>
+  <div class="category-bar" id="category-bar"></div>
   <div class="container-bg">
     <div class="container" id="menu-container"></div>
   </div>
@@ -457,6 +498,7 @@
     const vendorId = urlParams.get("vendor");
 
     let cart = [];
+    let categories = [];
 
     async function setHeader() {
       if (!vendorId) {
@@ -480,28 +522,18 @@
         <div class="details">
           <h3>${data.name || 'Unnamed Item'}</h3>
           <p>RM ${parseFloat(data.price).toFixed(2)}</p>
-          <div class="portion-options">
-            <label><input type="radio" name="portion-${data.name.replace(/\s+/g, '-')}" value="normal" checked> Normal</label>
-            <label><input type="radio" name="portion-${data.name.replace(/\s+/g, '-')}" value="large"> Large</label>
-            <label><input type="radio" name="portion-${data.name.replace(/\s+/g, '-')}" value="small"> Small</label>
-          </div>
         </div>
-        <button onclick='addToCart(${JSON.stringify(data)}, getPortion("${data.name.replace(/\s+/g, '-')}"))'>+</button>
+        <button onclick='addToCart(${JSON.stringify(data)})'>+</button>
       `;
       return card;
     }
 
-    function getPortion(nameKey) {
-      const selected = document.querySelector(`input[name="portion-${nameKey}"]:checked`);
-      return selected ? selected.value : 'normal';
-    }
-
-    function addToCart(item, portion) {
-      const existing = cart.find(i => i.name === item.name && i.portion === portion);
+    function addToCart(item) {
+      const existing = cart.find(i => i.name === item.name);
       if (existing) {
         existing.qty += 1;
       } else {
-        cart.push({ ...item, qty: 1, portion });
+        cart.push({ ...item, qty: 1 });
       }
       updateCartStatus();
     }
@@ -535,7 +567,7 @@
           div.className = "cart-item";
           total += item.price * item.qty;
           div.innerHTML = `
-            <span class="cart-item-name">${item.name} (${item.portion.charAt(0).toUpperCase() + item.portion.slice(1)})</span>
+            <span class="cart-item-name">${item.name}</span>
             <span class="cart-item-price">RM ${(item.price * item.qty).toFixed(2)}</span>
             <div class="cart-item-controls">
               <button onclick="changeQty(${index}, -1)">−</button>
@@ -572,11 +604,8 @@
         grouped[category].push(data);
       });
 
-      const menuContainer = document.getElementById("menu-container");
-      menuContainer.innerHTML = "";
-
       // Sort categories: Put "Rice" or "Rice and Curry Options" first, then others alphabetically
-      const sortedCategories = Object.keys(grouped).sort((a, b) => {
+      categories = Object.keys(grouped).sort((a, b) => {
         const riceNames = ['rice', 'rice and curry options', 'rice options'];
         const aIsRice = riceNames.some(r => a.toLowerCase().includes(r));
         const bIsRice = riceNames.some(r => b.toLowerCase().includes(r));
@@ -585,8 +614,13 @@
         return a.localeCompare(b);
       });
 
+      // Render category bar
+      renderCategoryBar(categories);
+
       // Render each category section
-      for (const category of sortedCategories) {
+      const menuContainer = document.getElementById("menu-container");
+      menuContainer.innerHTML = "";
+      for (const category of categories) {
         // Sort items within category: For Rice, put "Nasi Putih" first, then alphabetical
         grouped[category].sort((a, b) => {
           if (category.toLowerCase().includes('rice')) {
@@ -598,6 +632,7 @@
 
         const catDiv = document.createElement("div");
         catDiv.className = "category-section";
+        catDiv.id = `cat-${category.replace(/\s+/g, '-')}`;
         catDiv.innerHTML = `<h2 class="category-title">${category}</h2>`;
         grouped[category].forEach(item => {
           const card = renderMenuItem(item);
@@ -605,6 +640,26 @@
         });
         menuContainer.appendChild(catDiv);
       }
+    }
+
+    function renderCategoryBar(categories) {
+      const bar = document.getElementById("category-bar");
+      bar.innerHTML = "";
+      categories.forEach((cat, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "category-btn";
+        btn.textContent = cat;
+        btn.onclick = () => {
+          document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const section = document.getElementById(`cat-${cat.replace(/\s+/g, '-')}`);
+          if (section) {
+            section.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        };
+        if (idx === 0) btn.classList.add('active');
+        bar.appendChild(btn);
+      });
     }
 
     function goToSummary() {
@@ -617,7 +672,6 @@
     window.addToCart = addToCart;
     window.changeQty = changeQty;
     window.goToSummary = goToSummary;
-    window.getPortion = getPortion;
 
     setHeader();
     loadMenu();
