@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Order History</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #005f73;
+      margin-bottom: 24px;
+    }
+    .history-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .order-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      margin-bottom: 24px;
+      padding: 20px 24px 16px 24px;
+      transition: filter 0.2s, opacity 0.2s, box-shadow 0.2s;
+      position: relative;
+      opacity: 1;
+      filter: none;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .order-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      border: 2px solid #00aaff;
+    }
+    .order-card.taken {
+      filter: blur(2px) grayscale(0.4) brightness(1.1);
+      opacity: 0.7;
+      pointer-events: none;
+      cursor: default;
+      border: 2px solid transparent;
+    }
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .order-number {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #d32f2f;
+      background: #ffebee;
+      padding: 6px 16px;
+      border-radius: 8px;
+      margin-right: 10px;
+    }
+    .order-date {
+      font-size: 1em;
+      color: #00796b;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    .order-status {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #00796b;
+      margin-left: 10px;
+    }
+    .order-items {
+      margin: 10px 0 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .order-items li {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1em;
+    }
+    .order-note {
+      margin: 8px 0 0 0;
+      font-size: 0.98em;
+      color: #444;
+    }
+    .no-orders {
+      text-align: center;
+      color: #888;
+      font-size: 1.2em;
+      margin-top: 40px;
+    }
+    .back {
+      margin-top: 25px;
+      text-align: center;
+    }
+    .back button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Order History</h1>
+  <div class="history-container" id="history-container">
+    <!-- Orders will be rendered here -->
+  </div>
+  <div class="back">
+    <button onclick="window.location.href='student-home.html'">Back to Home</button>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQZrBURfwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.appspot.com",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4bfe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Use email for user identification, as in your Firestore orders
+    const userEmail = localStorage.getItem("email");
+    const historyContainer = document.getElementById("history-container");
+
+    if (!userEmail) {
+      historyContainer.innerHTML = `<div class="no-orders">No user found. Please log in.</div>`;
+    } else {
+      // Query orders for this user, most recent first
+      const q = query(
+        collection(db, "orders"),
+        where("email", "==", userEmail),
+        orderBy("createdAt", "desc")
+      );
+      onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+          historyContainer.innerHTML = `<div class="no-orders">No orders found.</div>`;
+          return;
+        }
+        historyContainer.innerHTML = "";
+        snapshot.forEach((doc, idx) => {
+          const data = doc.data();
+          // If status is "Taken", blur the card (except for the most recent order)
+          const isTaken = data.status && data.status.toLowerCase() === "taken";
+          const card = document.createElement("div");
+          card.className = "order-card" + (isTaken && idx !== 0 ? " taken" : "");
+
+          // Format date/time
+          let dateStr = "";
+          if (data.createdAt && data.createdAt.toDate) {
+            const d = data.createdAt.toDate();
+            dateStr = d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          } else if (data.createdAt && data.createdAt.seconds) {
+            const d = new Date(data.createdAt.seconds * 1000);
+            dateStr = d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          } else {
+            dateStr = "Unknown";
+          }
+
+          card.innerHTML = `
+            <div class="order-header">
+              <span class="order-number">#${data.orderNumber || "--"}</span>
+              <span class="order-date">${dateStr}</span>
+              <span class="order-status">${data.status || "Pending"}</span>
+            </div>
+            <ul class="order-items">
+              ${(data.items || []).map(i => `
+                <li>
+                  <span>${i.name} × ${i.qty}</span>
+                  <span>RM ${(i.qty * i.price).toFixed(2)}</span>
+                </li>
+              `).join("")}
+            </ul>
+            <div class="order-note"><strong>Note:</strong> ${data.note || "No note provided."}</div>
+          `;
+
+          // Only make clickable if not blurred (not "taken" or is most recent)
+          if (!(isTaken && idx !== 0)) {
+            card.addEventListener("click", () => {
+              // Save orderId to localStorage and redirect to order-status.html
+              localStorage.setItem("lastOrderId", doc.id);
+              window.location.href = "order-status.html";
+            });
+            card.title = "Click to view order status";
+            card.style.cursor = "pointer";
+          }
+
+          historyContainer.appendChild(card);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
