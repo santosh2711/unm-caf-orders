@@ -22,7 +22,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: white;  /* Changed to white for consistency with other pages */
+      background: white;
       z-index: -1;
     }
     body {
@@ -34,7 +34,7 @@
     .container {
       background: rgba(255,255,255,0.95);
       border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);  /* Enhanced shadow for depth */
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
       padding: 36px 24px 28px 24px;
       max-width: 370px;
       width: 100%;
@@ -42,13 +42,13 @@
       margin: 0;
       position: relative;
       z-index: 1;
-      border: 2px solid #40E0D0;  /* Turquoise border for theme consistency */
+      border: 2px solid #40E0D0;
     }
     .avatar {
       width: 70px;
       height: 70px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #005f73, #00aaff);  /* Gradient background */
+      background: linear-gradient(135deg, #005f73, #00aaff);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -62,12 +62,12 @@
       margin: 0 0 10px 0;
       font-size: 1.7rem;
       font-weight: 700;
-      background: linear-gradient(90deg, black, #005f73);  /* Black to dark turquoise gradient */
+      background: linear-gradient(90deg, black, #005f73);
       -webkit-background-clip: text;
       background-clip: text;
-      color: transparent;  /* Transparent to show gradient */
+      color: transparent;
       letter-spacing: 0.5px;
-      text-shadow: none;  /* Removed for gradient effect */
+      text-shadow: none;
     }
     .info {
       margin: 16px 0;
@@ -75,7 +75,7 @@
       color: #444;
     }
     .points {
-      background: linear-gradient(90deg, #388e3c, #66bb6a);  /* Green gradient */
+      background: linear-gradient(90deg, #388e3c, #66bb6a);
       color: white;
       display: inline-block;
       padding: 7px 16px;
@@ -110,36 +110,53 @@
       transform: scale(0.98);
     }
     .actions button.shop-list {
-      border-radius: 50%;  /* Circular icon button */
-      width: 120px;  /* Larger width to fit content */
-      height: 120px;  /* Larger height to fit content */
-      padding: 0;  /* Remove padding */
-      font-size: 2rem;  /* Larger icon */
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      padding: 0;
+      font-size: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin: 0 auto;  /* Center the button */
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);  /* Deeper shadow for fancy look */
+      margin: 0 auto;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
     .actions button.shop-list::before {
-      content: "🛒";  /* Shopping cart icon */
-      font-size: 2.5rem;  /* Icon size */
-      margin-bottom: 4px;  /* Space between icon and text */
+      content: "🛒";
+      font-size: 2.5rem;
+      margin-bottom: 4px;
     }
     .actions button.shop-list span {
-      font-size: 0.7rem;  /* Smaller text */
+      font-size: 0.7rem;
       font-weight: 600;
-      color: white;  /* Changed to white */
+      color: white;
       text-align: center;
       line-height: 1.2;
     }
     .actions button.shop-list:hover {
       background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
-      transform: scale(1.05);  /* Slight scale up on hover */
+      transform: scale(1.05);
+    }
+    .actions button.history {
+      background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05em;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(255,152,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .actions button.history::before {
+      content: "📜";
+      font-size: 1.3em;
+      margin-right: 6px;
     }
     .actions button.logout {
-      background: linear-gradient(90deg, #dc3545 60%, #ff6f6f 100%);  /* Red gradient for logout */
+      background: linear-gradient(90deg, #dc3545 60%, #ff6f6f 100%);
     }
     .actions button.logout:hover {
       background: linear-gradient(90deg, #b71c1c 60%, #dc3545 100%);
@@ -176,6 +193,14 @@
       .actions button.shop-list span {
         font-size: 0.6rem;
       }
+      .actions button.history {
+        font-size: 0.98em;
+        gap: 6px;
+      }
+      .actions button.history::before {
+        font-size: 1em;
+        margin-right: 4px;
+      }
     }
   </style>
   <script type="module">
@@ -185,7 +210,7 @@
 
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
-      authDomain: "unm-caf-orders.firebaseapp.com",  // Corrected from firebasestorage.app
+      authDomain: "unm-caf-orders.firebaseapp.com",
       projectId: "unm-caf-orders",
       storageBucket: "unm-caf-orders.appspot.com",
       messagingSenderId: "562096834985",
@@ -204,6 +229,9 @@
       } else {
         document.getElementById("user-email").textContent = user.email;
         document.getElementById("avatar").textContent = user.email ? user.email[0].toUpperCase() : "U";
+        // Save userId/email for order history page
+        localStorage.setItem("userId", user.uid);
+        localStorage.setItem("email", user.email);
         const studentRef = doc(db, "students", user.uid);
         const docSnap = await getDoc(studentRef);
         if (docSnap.exists()) {
@@ -216,6 +244,9 @@
 
     window.goToShopList = function() {
       window.location.href = 'shop-list.html';
+    }
+    window.goToOrderHistory = function() {
+      window.location.href = 'order-history.html';
     }
     window.logout = function() {
       signOut(auth).then(() => {
@@ -237,6 +268,7 @@
     </div>
     <div class="actions">
       <button class="shop-list" onclick="goToShopList()" title="Go to Shop List"><span>Shop List</span></button>
+      <button class="history" onclick="goToOrderHistory()" title="Order History">Order History</button>
       <button class="logout" onclick="logout()">Logout</button>
     </div>
   </div>
