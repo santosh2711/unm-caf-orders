@@ -25,31 +25,115 @@
       z-index: -1;
     }
 
-    h1 {
-      text-align: center;
-      padding: 24px 0 20px 0;
-      margin: 32px auto 0 auto;
+    .header-bar {
+      width: 100%;
       max-width: 900px;
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      font-size: 3.5rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, black, #005f73);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0 0 0;
+      position: relative;
+    }
+
+    .caf-title {
+      flex: 1;
+      text-align: left;
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      margin: 0 0 0 24px;
+      background: linear-gradient(90deg, #005f73 30%, #00aaff 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      letter-spacing: 0.5px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      font-family: 'Roboto', Arial, sans-serif;
+      line-height: 1.1;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
+      gap: 12px;
     }
 
-    h1::before {
-      content: "🍴";
-      font-size: 2rem;
-      color: black;
+    .caf-title span {
+      font-size: 2.2rem;
       margin-right: 8px;
+    }
+
+    .profile-btn {
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      margin-right: 24px;
+      margin-left: 12px;
+      padding: 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .profile-btn img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      border: 2px solid #00aaff;
+      background: #e0f7fa;
+      object-fit: cover;
+      transition: box-shadow 0.2s;
+    }
+
+    .profile-btn:active img, .profile-btn:focus img {
+      box-shadow: 0 4px 16px #00aaff44;
+    }
+
+    .profile-menu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 24px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      min-width: 160px;
+      z-index: 100;
+      padding: 0;
+      overflow: hidden;
+      border: 1.5px solid #00aaff;
+      animation: fadeIn 0.18s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    .profile-menu button {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 14px 18px;
+      font-size: 1.1rem;
+      color: #005f73;
+      text-align: left;
+      cursor: pointer;
+      font-family: 'Roboto', Arial, sans-serif;
+      transition: background 0.15s;
+      border-bottom: 1px solid #e0f7fa;
+      outline: none;
+    }
+
+    .profile-menu button:last-child {
+      border-bottom: none;
+    }
+
+    .profile-menu button:hover, .profile-menu button:focus {
+      background: #e0f7fa;
+      color: #00aaff;
+    }
+
+    h1 {
+      display: none;
     }
 
     body {
@@ -74,7 +158,6 @@
       justify-content: center;
       gap: 28px;
       contain: layout style;
-      /* Prevent edge touching on mobile */
       box-sizing: border-box;
     }
 
@@ -137,13 +220,21 @@
         padding-left: 2vw;
         padding-right: 2vw;
       }
+      .header-bar {
+        max-width: 98vw;
+      }
     }
 
     @media (max-width: 700px) {
-      h1 {
-        font-size: 2rem;
-        padding: 14px 0 12px 0;
-        margin-top: 12px;
+      .header-bar {
+        padding: 12px 0 0 0;
+      }
+      .caf-title {
+        font-size: 1.5rem;
+        margin-left: 10px;
+      }
+      .profile-btn {
+        margin-right: 10px;
       }
       .container {
         padding: 10px 2vw;
@@ -172,6 +263,9 @@
         padding: 0 8px 10px;
         min-height: auto;
       }
+      .profile-menu {
+        right: 10px;
+      }
     }
 
     @media (max-width: 500px) {
@@ -189,14 +283,38 @@
         height: 120px;
         aspect-ratio: 5 / 3;
       }
+      .caf-title {
+        font-size: 1.1rem;
+        margin-left: 6px;
+      }
+      .profile-btn img {
+        width: 38px;
+        height: 38px;
+      }
+      .profile-menu {
+        min-width: 120px;
+        right: 6px;
+        top: 48px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="background"></div>
+  <div class="header-bar">
+    <div class="caf-title">
+      <span>🍴</span>UNM Cafeteria
+    </div>
+    <button class="profile-btn" id="profileBtn" aria-label="Profile">
+      <img src="https://ui-avatars.com/api/?name=U&background=00aaff&color=fff&rounded=true" alt="Profile" />
+    </button>
+     <div class="profile-menu" id="profileMenu">
+      <button onclick="window.location.href='student-home.html'">🏠 Home</button>
+      <button onclick="window.open('https://mail.google.com/mail/?view=cm&fs=1&to=absmods538@gmail.com&su=UNM%20Cafeteria%20Feedback','_blank')">💬 Feedback</button>
+    </div>
+  </div>
   <h1>UNM Cafeteria</h1>
   <div class="container" id="shopList"></div>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -249,6 +367,17 @@
     };
 
     loadShops();
+
+    // Profile menu logic
+    const profileBtn = document.getElementById('profileBtn');
+    const profileMenu = document.getElementById('profileMenu');
+    document.addEventListener('click', (e) => {
+      if (profileBtn.contains(e.target)) {
+        profileMenu.style.display = profileMenu.style.display === 'block' ? 'none' : 'block';
+      } else if (!profileMenu.contains(e.target)) {
+        profileMenu.style.display = 'none';
+      }
+    });
   </script>
 </body>
 </html>
