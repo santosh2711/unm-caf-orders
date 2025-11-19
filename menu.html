@@ -170,6 +170,29 @@
       margin: 0 auto 18px auto;
       box-sizing: border-box;
       gap: 16px;
+      transition: filter 0.2s;
+    }
+    .menu-card.unavailable {
+      filter: blur(2px) grayscale(0.3) brightness(1.1);
+      pointer-events: none;
+    }
+    .menu-card .not-available-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #ff5252;
+      border-radius: inherit;
+      z-index: 2;
+      pointer-events: none;
+      text-shadow: 0 2px 8px #fff, 0 1px 0 #fff;
     }
     .category-section .menu-card:last-child {
       margin-bottom: 0;
@@ -229,6 +252,10 @@
     }
     .menu-card button:active {
       background: #00aaff;
+    }
+    .menu-card.unavailable button {
+      pointer-events: none;
+      opacity: 0.5;
     }
     /* Cart section as floating, centered, hidden by default */
     #cart-section {
@@ -498,7 +525,7 @@
   </button>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, doc, getDoc, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURfwenjWEEnQMMIH7sOSqPq0Qtx0",
@@ -518,8 +545,8 @@
 
     let cart = [];
     let categories = [];
-    let groupedMenu = {}; // Store all menu items grouped by category
-    let allMenuItems = []; // Flat array of all menu items
+    let groupedMenu = {};
+    let allMenuItems = [];
 
     async function setHeader() {
       if (!vendorId) {
@@ -537,14 +564,15 @@
 
     function renderMenuItem(data) {
       const card = document.createElement("div");
-      card.className = "menu-card";
+      card.className = "menu-card" + (data.available === false ? " unavailable" : "");
       card.innerHTML = `
         <img src="${data.imageURL || 'https://via.placeholder.com/200x140'}" alt="${data.name}" />
         <div class="details">
           <h3>${data.name || 'Unnamed Item'}</h3>
           <p>RM ${parseFloat(data.price).toFixed(2)}</p>
         </div>
-        <button onclick='addToCart(${JSON.stringify(data)})'>+</button>
+        <button ${data.available === false ? "disabled" : ""} onclick='addToCart(${JSON.stringify(data)})'>+</button>
+        ${data.available === false ? `<div class="not-available-overlay">Finished</div>` : ""}
       `;
       return card;
     }
@@ -604,41 +632,36 @@
       updateCartBadge();
     }
 
-    async function loadMenu() {
+    // Real-time menu loading
+    function loadMenuRealtime() {
       if (!vendorId) {
         document.getElementById("menu-container").innerHTML = "<p>No shop selected. Please go back and choose a shop.</p>";
         return;
       }
-      const q = query(collection(db, "vendors", vendorId, "menus"), where("available", "==", true));
-      const snapshot = await getDocs(q);
-      if (snapshot.empty) {
-        document.getElementById("menu-container").innerHTML = "<p>No menu items found for this shop.</p>";
-        return;
-      }
+      const q = query(collection(db, "vendors", vendorId, "menus"));
+      onSnapshot(q, (snapshot) => {
+        groupedMenu = {};
+        allMenuItems = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const category = data.category || 'Other';
+          if (!groupedMenu[category]) groupedMenu[category] = [];
+          groupedMenu[category].push(data);
+          allMenuItems.push({ ...data, category });
+        });
 
-      // Group items by category
-      groupedMenu = {};
-      allMenuItems = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const category = data.category || 'Other';
-        if (!groupedMenu[category]) groupedMenu[category] = [];
-        groupedMenu[category].push(data);
-        allMenuItems.push({ ...data, category });
+        categories = Object.keys(groupedMenu).sort((a, b) => {
+          const riceNames = ['rice', 'rice and curry options', 'rice options'];
+          const aIsRice = riceNames.some(r => a.toLowerCase().includes(r));
+          const bIsRice = riceNames.some(r => b.toLowerCase().includes(r));
+          if (aIsRice && !bIsRice) return -1;
+          if (!aIsRice && bIsRice) return 1;
+          return a.localeCompare(b);
+        });
+
+        renderCategoryBar(categories);
+        renderMenuSections(groupedMenu, categories, document.getElementById("search-bar").value.trim().toLowerCase());
       });
-
-      // Sort categories: Put "Rice" or "Rice and Curry Options" first, then others alphabetically
-      categories = Object.keys(groupedMenu).sort((a, b) => {
-        const riceNames = ['rice', 'rice and curry options', 'rice options'];
-        const aIsRice = riceNames.some(r => a.toLowerCase().includes(r));
-        const bIsRice = riceNames.some(r => b.toLowerCase().includes(r));
-        if (aIsRice && !bIsRice) return -1;
-        if (!aIsRice && bIsRice) return 1;
-        return a.localeCompare(b);
-      });
-
-      renderCategoryBar(categories);
-      renderMenuSections(groupedMenu, categories);
     }
 
     function renderMenuSections(grouped, cats, searchTerm = "") {
@@ -646,7 +669,6 @@
       menuContainer.innerHTML = "";
       let foundAny = false;
       for (const category of cats) {
-        // Filter items by search term if provided
         let items = grouped[category];
         if (searchTerm) {
           items = items.filter(item =>
@@ -656,7 +678,6 @@
         }
         if (!items.length) continue;
 
-        // Sort items within category: For Rice, put "Nasi Putih" first, then alphabetical
         items.sort((a, b) => {
           if (category.toLowerCase().includes('rice')) {
             if (a.name.toLowerCase().includes('nasi putih')) return -1;
@@ -713,7 +734,7 @@
     window.goToSummary = goToSummary;
 
     setHeader();
-    loadMenu();
+    loadMenuRealtime();
 
     // Cart toggle logic
     const cartSection = document.getElementById("cart-section");
@@ -731,8 +752,7 @@
     // Search bar logic
     const searchBar = document.getElementById("search-bar");
     searchBar.addEventListener("input", function() {
-      const searchTerm = this.value.trim().toLowerCase();
-      renderMenuSections(groupedMenu, categories, searchTerm);
+      renderMenuSections(groupedMenu, categories, this.value.trim().toLowerCase());
     });
   </script>
 </body>
