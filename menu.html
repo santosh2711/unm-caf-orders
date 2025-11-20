@@ -309,10 +309,9 @@
     /* Cart section as floating, centered, hidden by default */
     #cart-section {
       background: linear-gradient(120deg, #ff7e2d 60%, #ffb347 100%);
-      /* Orange gradient */
       padding: 1.5rem 2rem 1.5rem 2rem;
       position: fixed;
-      bottom: 100px; /* Give space for cart bar */
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
       width: calc(100vw - 16px);
@@ -704,6 +703,7 @@
     let categories = [];
     let groupedMenu = {};
     let allMenuItems = [];
+    let iceBlendedState = {}; // Track ice blended checkbox per item
 
     async function setHeader() {
       if (!vendorId) {
@@ -722,27 +722,76 @@
       }
     }
 
-    function renderMenuItem(data) {
+    function renderMenuItem(data, category) {
       const card = document.createElement("div");
       card.className = "menu-card" + (data.available === false ? " unavailable" : "");
+      let iceBlendedId = "";
+      let iceBlendedBox = "";
+      if (category === "Fresh Juice") {
+        iceBlendedId = `ice-blended-${btoa(data.name).replace(/=/g, "")}`;
+        iceBlendedBox = `
+          <div style="margin-top:8px;">
+            <label style="color:#fff; font-size:0.98em; cursor:pointer;">
+              <input type="checkbox" id="${iceBlendedId}" style="transform:scale(1.2);margin-right:6px;vertical-align:middle;" />
+              Ice Blended (+RM 1.50)
+            </label>
+          </div>
+        `;
+      }
       card.innerHTML = `
         <img src="${data.imageURL || 'https://via.placeholder.com/200x140'}" alt="${data.name}" />
         <div class="details">
           <h3>${data.name || 'Unnamed Item'}</h3>
-          <p>RM ${parseFloat(data.price).toFixed(2)}</p>
+          <p>RM <span id="price-${iceBlendedId || btoa(data.name).replace(/=/g, "")}">${parseFloat(data.price).toFixed(2)}</span></p>
+          ${iceBlendedBox}
         </div>
-        <button ${data.available === false ? "disabled" : ""} onclick='addToCart(${JSON.stringify(data)})'>+</button>
+        <button ${data.available === false ? "disabled" : ""} data-name="${data.name}" data-category="${category}">+</button>
         ${data.available === false ? `<div class="not-available-overlay">Finished</div>` : ""}
       `;
+      // Add event for ice blended checkbox
+      if (category === "Fresh Juice") {
+        setTimeout(() => {
+          const cb = document.getElementById(iceBlendedId);
+          if (cb) {
+            cb.addEventListener("change", function() {
+              iceBlendedState[data.name] = cb.checked;
+              // Update price display
+              const priceSpan = document.getElementById("price-" + iceBlendedId);
+              if (cb.checked) {
+                priceSpan.textContent = (parseFloat(data.price) + 1.5).toFixed(2);
+              } else {
+                priceSpan.textContent = parseFloat(data.price).toFixed(2);
+              }
+            });
+          }
+        }, 0);
+      }
+      // Add event for add to cart button
+      setTimeout(() => {
+        const btn = card.querySelector("button[data-name]");
+        if (btn) {
+          btn.onclick = () => {
+            addToCart(data, category);
+          };
+        }
+      }, 0);
       return card;
     }
 
-    function addToCart(item) {
-      const existing = cart.find(i => i.name === item.name);
+    function addToCart(item, category) {
+      let price = parseFloat(item.price);
+      let iceBlended = false;
+      if (category === "Fresh Juice" && iceBlendedState[item.name]) {
+        price += 1.5;
+        iceBlended = true;
+      }
+      // Add iceBlended info to cart item if applicable
+      const cartItemName = item.name + (iceBlended ? " (Ice Blended)" : "");
+      const existing = cart.find(i => i.name === cartItemName);
       if (existing) {
         existing.qty += 1;
       } else {
-        cart.push({ ...item, qty: 1 });
+        cart.push({ ...item, name: cartItemName, price, qty: 1, iceBlended });
       }
       updateCartStatus();
     }
@@ -851,7 +900,7 @@
         catDiv.id = `cat-${category.replace(/\s+/g, '-')}`;
         catDiv.innerHTML = `<h2 class="category-title">${category}</h2>`;
         items.forEach(item => {
-          const card = renderMenuItem(item);
+          const card = renderMenuItem(item, category);
           catDiv.appendChild(card);
         });
         menuContainer.appendChild(catDiv);
@@ -889,7 +938,6 @@
       window.location.href = "summary.html";
     }
 
-    window.addToCart = addToCart;
     window.changeQty = changeQty;
     window.goToSummary = goToSummary;
 
