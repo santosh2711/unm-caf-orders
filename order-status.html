@@ -105,6 +105,16 @@
     const orderNumberEl = document.getElementById("order-number");
     const dingSound = document.getElementById("ding-sound");
 
+    // Helper: is this a cold beverage?
+    function isColdBeverage(item) {
+      return item.category === "Beverages" && item.name && item.name.endsWith(" (Cold)");
+    }
+
+    // Categories that do NOT get takeaway fee
+    const NO_TAKEAWAY_FEE_CATEGORIES = [
+      "Cold Drink", "Fresh Juice", "Hicknokey", "Other Drink"
+    ];
+
     // Get orderId saved from summary.html
     const orderId = localStorage.getItem("lastOrderId");
     if (!orderId) {
@@ -122,14 +132,10 @@
         const isTakeaway = (data.deliveryOption && data.deliveryOption.toLowerCase().includes("take")) ||
                            (data.type && data.type.toLowerCase().includes("take"));
 
-        // Render items
+        // Render items (NO extra fee added here, just show the price as in cart)
         itemsContainer.innerHTML = "";
         (data.items || []).forEach(i => {
-          const price = isTakeaway ? (i.price + 1) : i.price;
-          const div = document.createElement("div");
-          div.className = "item";
-          div.innerHTML = `<span>${i.name} × ${i.qty}</span><span>RM ${(i.qty * price).toFixed(2)}</span>`;
-          itemsContainer.appendChild(div);
+          itemsContainer.innerHTML += `<div class="item"><span>${i.name} × ${i.qty}</span><span>RM ${(i.qty * i.price).toFixed(2)}</span></div>`;
         });
 
         // Update note
