@@ -19,7 +19,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: white;  /* Changed to white like shop-list.html and menu.html */
+      background: white;
       z-index: -1;
     }
     #summary-container {
@@ -82,7 +82,7 @@
       cursor: pointer;
       font-weight: normal;
       position: relative;
-      padding-left: 2rem; /* Space for custom checkbox */
+      padding-left: 2rem;
     }
     .delivery-options input[type="radio"] {
       position: absolute;
@@ -98,7 +98,7 @@
       width: 20px;
       background-color: #eee;
       border: 2px solid #ccc;
-      border-radius: 4px; /* Square with slight radius */
+      border-radius: 4px;
       transition: background-color 0.2s, border-color 0.2s;
     }
     .delivery-options input[type="radio"]:checked ~ .checkmark {
@@ -234,8 +234,12 @@
         <label>
           <input type="radio" name="delivery" value="take-away">
           <span class="checkmark"></span>
-          <span class="option-icon">🛍️</span> Take Away (+RM 1.00)
+          <span class="option-icon">🛍️</span> Take Away (+RM 1.00*)
         </label>
+      </div>
+      <div style="font-size:0.95em;color:#888;margin-top:4px;">
+        *Take Away fee does not apply to Cold Drink, Fresh Juice, Hicknokey, or Other Drink.<br>
+        <span style="color:#005f73">If you ordered a "Beverages" item as Cold, no take away fee is charged for that item.</span>
       </div>
     </div>
     <div class="note-section">
@@ -272,20 +276,50 @@
     const orderItemsContainer = document.getElementById("order-items");
     const totalPriceContainer = document.getElementById("total-price");
 
-    let baseTotal = 0;
-    cart.forEach(item => {
-      const row = document.createElement("div");
-      row.className = "item";
-      const itemTotal = item.qty * item.price;
-      baseTotal += itemTotal;
-      row.innerHTML = `<span>${item.name} × ${item.qty}</span><span>RM ${itemTotal.toFixed(2)}</span>`;
-      orderItemsContainer.appendChild(row);
-    });
+    // Categories that do NOT get takeaway fee
+    const NO_TAKEAWAY_FEE_CATEGORIES = [
+      "Cold Drink", "Fresh Juice", "Hicknokey", "Other Drink"
+    ];
+
+    // Helper: is this a cold beverage?
+    function isColdBeverage(item) {
+      // For mamak, cold beverage items have (Cold) in their name and category is Beverages
+      return item.category === "Beverages" && item.name && item.name.endsWith(" (Cold)");
+    }
+
+    // Render order items and calculate base total
+    function renderOrderItems(deliveryOption) {
+      orderItemsContainer.innerHTML = "";
+      let baseTotal = 0;
+      cart.forEach(item => {
+        let fee = 0;
+        // Take away fee logic:
+        // - If category is "Beverages" and item is cold, NO fee
+        // - If category is "Beverages" and item is hot, YES fee
+        // - If category is in NO_TAKEAWAY_FEE_CATEGORIES, NO fee
+        // - Otherwise, YES fee
+        if (deliveryOption === "take-away") {
+          if (item.category === "Beverages") {
+            if (!isColdBeverage(item)) {
+              fee = 1.0;
+            }
+          } else if (!NO_TAKEAWAY_FEE_CATEGORIES.some(cat =>
+            (item.category || "").toLowerCase() === cat.toLowerCase()
+          )) {
+            fee = 1.0;
+          }
+        }
+        const itemTotal = item.qty * item.price + fee;
+        baseTotal += itemTotal;
+        let feeLabel = fee > 0 ? " <span style='color:#00796b;font-size:0.95em;'>(+RM 1.00 Take Away)</span>" : "";
+        orderItemsContainer.innerHTML += `<div class="item"><span>${item.name} × ${item.qty}${feeLabel}</span><span>RM ${itemTotal.toFixed(2)}</span></div>`;
+      });
+      return baseTotal;
+    }
 
     function updateTotal() {
       const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
-      const deliveryFee = deliveryOption === 'take-away' ? 1.00 : 0.00;
-      const total = baseTotal + deliveryFee;
+      const total = renderOrderItems(deliveryOption);
       totalPriceContainer.textContent = `Total: RM ${total.toFixed(2)}`;
     }
 
@@ -297,7 +331,6 @@
       radio.addEventListener('change', updateTotal);
     });
 
-    // ✅ Single clean function
     window.submitOrder = function () {
       onAuthStateChanged(auth, async (user) => {
         if (!user) {
@@ -308,7 +341,12 @@
 
         const note = document.getElementById("order-note").value.trim();
         const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
-        const displayColor = deliveryOption === 'take-away' ? '#ff6666' : '#ccffcc';  // Deeper red for Take Away, light green for Dine In
+        const displayColor = deliveryOption === 'take-away' ? '#ff6666' : '#ccffcc';
+
+        // Prepare items with correct price (excluding take away fee, which is shown in summary only)
+        const itemsWithFee = cart.map(item => {
+          return { ...item };
+        });
 
         // Get vendor's next order number
         const vendorRef = doc(db, "vendors", vendorId);
@@ -318,16 +356,16 @@
         try {
           // Save new order
           const docRef = await addDoc(collection(db, "orders"), {
-            items: cart,
+            items: itemsWithFee,
             vendorId,
-            createdAt: serverTimestamp(),  // Changed from timestamp to createdAt for sorting
+            createdAt: serverTimestamp(),
             status: "Pending",
             studentId: user.uid,
             email: user.email,
-            note: note || null,  // Add note to order
-            deliveryOption: deliveryOption,  // Add delivery option
-            displayColor: displayColor,  // Add color for vendor separation
-            orderNumber: nextOrderNumber  // Add sequential order number
+            note: note || null,
+            deliveryOption: deliveryOption,
+            displayColor: displayColor,
+            orderNumber: nextOrderNumber
           });
 
           // Award points
