@@ -699,11 +699,29 @@
     const urlParams = new URLSearchParams(window.location.search);
     const vendorId = urlParams.get("vendor");
 
+    // Only apply special logic for this mamak vendor
+    const mamakVendorId = "8z8ZyLjOaYZsGgWcI1ce";
+    const isMamak = vendorId === mamakVendorId;
+
+    const MAMAK_CATEGORY_ORDER = [
+      "Rice and Curry Options",
+      "Vegetable",
+      "Nasi Lemak",
+      "Fried Rice",
+      "Noodles",
+      "Dosai Corner",
+      "Roti Canai",
+      "White Bread",
+      "Fresh Juice",
+      "Beverages"
+    ];
+
     let cart = [];
     let categories = [];
     let groupedMenu = {};
     let allMenuItems = [];
-    let iceBlendedState = {}; // Track ice blended checkbox per item
+    let coldDrinkState = {};
+    let juiceTakeawayState = {};
 
     async function setHeader() {
       if (!vendorId) {
@@ -725,38 +743,75 @@
     function renderMenuItem(data, category) {
       const card = document.createElement("div");
       card.className = "menu-card" + (data.available === false ? " unavailable" : "");
-      let iceBlendedId = "";
-      let iceBlendedBox = "";
-      if (category === "Fresh Juice") {
-        iceBlendedId = `ice-blended-${btoa(data.name).replace(/=/g, "")}`;
-        iceBlendedBox = `
+      let coldDrinkId = "";
+      let coldDrinkBox = "";
+      let juiceTakeawayId = "";
+      let juiceTakeawayBox = "";
+
+      // Only for mamak and Beverages
+      if (isMamak && category === "Beverages") {
+        coldDrinkId = `cold-drink-${btoa(data.name).replace(/=/g, "")}`;
+        coldDrinkBox = `
           <div style="margin-top:8px;">
             <label style="color:#fff; font-size:0.98em; cursor:pointer;">
-              <input type="checkbox" id="${iceBlendedId}" style="transform:scale(1.2);margin-right:6px;vertical-align:middle;" />
-              Ice Blended (+RM 1.50)
+              <input type="checkbox" id="${coldDrinkId}" style="transform:scale(1.2);margin-right:6px;vertical-align:middle;" />
+              Cold (+RM 1.00)
             </label>
           </div>
         `;
       }
+
+      // Only for mamak and Fresh Juice
+      if (isMamak && category === "Fresh Juice") {
+        juiceTakeawayId = `juice-takeaway-${btoa(data.name).replace(/=/g, "")}`;
+        juiceTakeawayBox = `
+          <div style="margin-top:8px;">
+            <label style="color:#fff; font-size:0.98em; cursor:pointer;">
+              <input type="checkbox" id="${juiceTakeawayId}" style="transform:scale(1.2);margin-right:6px;vertical-align:middle;" />
+              Ice-Blended (+RM 1.50)
+            </label>
+          </div>
+        `;
+      }
+
       card.innerHTML = `
         <img src="${data.imageURL || 'https://via.placeholder.com/200x140'}" alt="${data.name}" />
         <div class="details">
           <h3>${data.name || 'Unnamed Item'}</h3>
-          <p>RM <span id="price-${iceBlendedId || btoa(data.name).replace(/=/g, "")}">${parseFloat(data.price).toFixed(2)}</span></p>
-          ${iceBlendedBox}
+          <p>RM <span id="price-${coldDrinkId || juiceTakeawayId || btoa(data.name).replace(/=/g, "")}">${parseFloat(data.price).toFixed(2)}</span></p>
+          ${coldDrinkBox}
+          ${juiceTakeawayBox}
         </div>
         <button ${data.available === false ? "disabled" : ""} data-name="${data.name}" data-category="${category}">+</button>
         ${data.available === false ? `<div class="not-available-overlay">Finished</div>` : ""}
       `;
-      // Add event for ice blended checkbox
-      if (category === "Fresh Juice") {
+
+      // Add event for cold drink checkbox (only for mamak beverages)
+      if (isMamak && category === "Beverages") {
         setTimeout(() => {
-          const cb = document.getElementById(iceBlendedId);
+          const cb = document.getElementById(coldDrinkId);
           if (cb) {
             cb.addEventListener("change", function() {
-              iceBlendedState[data.name] = cb.checked;
-              // Update price display
-              const priceSpan = document.getElementById("price-" + iceBlendedId);
+              coldDrinkState[data.name] = cb.checked;
+              const priceSpan = document.getElementById("price-" + coldDrinkId);
+              if (cb.checked) {
+                priceSpan.textContent = (parseFloat(data.price) + 1.0).toFixed(2);
+              } else {
+                priceSpan.textContent = parseFloat(data.price).toFixed(2);
+              }
+            });
+          }
+        }, 0);
+      }
+
+      // Add event for juice takeaway checkbox (only for mamak fresh juice)
+      if (isMamak && category === "Fresh Juice") {
+        setTimeout(() => {
+          const cb = document.getElementById(juiceTakeawayId);
+          if (cb) {
+            cb.addEventListener("change", function() {
+              juiceTakeawayState[data.name] = cb.checked;
+              const priceSpan = document.getElementById("price-" + juiceTakeawayId);
               if (cb.checked) {
                 priceSpan.textContent = (parseFloat(data.price) + 1.5).toFixed(2);
               } else {
@@ -766,7 +821,7 @@
           }
         }, 0);
       }
-      // Add event for add to cart button
+
       setTimeout(() => {
         const btn = card.querySelector("button[data-name]");
         if (btn) {
@@ -780,18 +835,36 @@
 
     function addToCart(item, category) {
       let price = parseFloat(item.price);
-      let iceBlended = false;
-      if (category === "Fresh Juice" && iceBlendedState[item.name]) {
-        price += 1.5;
-        iceBlended = true;
+      let cold = false;
+      let beverageType = "Hot";
+      let takeaway = false;
+      let cartItemName = item.name;
+
+      // For mamak Beverages
+      if (isMamak && category === "Beverages") {
+        if (coldDrinkState[item.name]) {
+          price += 1.0;
+          cold = true;
+          beverageType = "Cold";
+        }
+        // If hot (not cold), add take away fee flag (not price, just flag for summary)
+        cartItemName += cold ? " (Cold)" : " (Hot)";
       }
-      // Add iceBlended info to cart item if applicable
-      const cartItemName = item.name + (iceBlended ? " (Ice Blended)" : "");
+
+      // For mamak Fresh Juice
+      if (isMamak && category === "Fresh Juice") {
+        if (juiceTakeawayState[item.name]) {
+          price += 1.5;
+          takeaway = true;
+          cartItemName += " (Take Away)";
+        }
+      }
+
       const existing = cart.find(i => i.name === cartItemName);
       if (existing) {
         existing.qty += 1;
       } else {
-        cart.push({ ...item, name: cartItemName, price, qty: 1, iceBlended });
+        cart.push({ ...item, name: cartItemName, price, qty: 1, cold, beverageType, category, takeaway });
       }
       updateCartStatus();
     }
@@ -821,9 +894,9 @@
         cartContainer.innerHTML = "<p>Cart is empty</p>";
       } else {
         cart.forEach((item, index) => {
+          total += item.price * item.qty;
           const div = document.createElement("div");
           div.className = "cart-item";
-          total += item.price * item.qty;
           div.innerHTML = `
             <span class="cart-item-name">${item.name}</span>
             <span class="cart-item-price">RM ${(item.price * item.qty).toFixed(2)}</span>
@@ -841,7 +914,6 @@
       updateCartBadge();
     }
 
-    // Real-time menu loading
     function loadMenuRealtime() {
       if (!vendorId) {
         document.getElementById("menu-container").innerHTML = "<p>No shop selected. Please go back and choose a shop.</p>";
@@ -853,18 +925,23 @@
         allMenuItems = [];
         snapshot.forEach(doc => {
           const data = doc.data();
-          const category = data.category || 'Other';
+          let category = data.category || 'Other';
+          // Only change "Hot Drink" to "Beverages" for mamak
+          if (isMamak && category === "Hot Drink") category = "Beverages";
           if (!groupedMenu[category]) groupedMenu[category] = [];
           groupedMenu[category].push(data);
           allMenuItems.push({ ...data, category });
         });
 
+        // Use mamak order if mamak, else alphabetical
         categories = Object.keys(groupedMenu).sort((a, b) => {
-          const riceNames = ['rice', 'rice and curry options', 'rice options'];
-          const aIsRice = riceNames.some(r => a.toLowerCase().includes(r));
-          const bIsRice = riceNames.some(r => b.toLowerCase().includes(r));
-          if (aIsRice && !bIsRice) return -1;
-          if (!aIsRice && bIsRice) return 1;
+          if (isMamak) {
+            const idxA = MAMAK_CATEGORY_ORDER.indexOf(a);
+            const idxB = MAMAK_CATEGORY_ORDER.indexOf(b);
+            if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+            if (idxA !== -1) return -1;
+            if (idxB !== -1) return 1;
+          }
           return a.localeCompare(b);
         });
 
@@ -887,13 +964,7 @@
         }
         if (!items.length) continue;
 
-        items.sort((a, b) => {
-          if (category.toLowerCase().includes('rice')) {
-            if (a.name.toLowerCase().includes('nasi putih')) return -1;
-            if (b.name.toLowerCase().includes('nasi putih')) return 1;
-          }
-          return a.name.localeCompare(b.name);
-        });
+        items.sort((a, b) => a.name.localeCompare(b.name));
 
         const catDiv = document.createElement("div");
         catDiv.className = "category-section";
