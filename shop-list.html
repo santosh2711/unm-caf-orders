@@ -181,6 +181,12 @@
       transition: box-shadow 0.15s;
     }
 
+    .shop-card.closed {
+      cursor: default;
+      opacity: 0.7;
+      filter: grayscale(0.2);
+    }
+
     .shop-card:hover {
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       border-color: #00CED1;
@@ -212,6 +218,20 @@
       padding: 0 16px 20px;
       font-size: 1rem;
       min-height: 48px;
+    }
+
+    .shop-closed {
+      color: #fff;
+      font-weight: bold;
+      background: #d32f2f;
+      padding: 8px 0;
+      border-radius: 8px;
+      margin: 10px 0 0 0;
+      width: 90%;
+      text-align: center;
+      font-size: 1.1em;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px #d32f2f44;
     }
 
     @media (max-width: 900px) {
@@ -317,7 +337,7 @@
   <div class="container" id="shopList"></div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBQzrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
@@ -332,13 +352,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Use requestAnimationFrame for smooth rendering
-    const loadShops = async () => {
-      const shopList = document.getElementById("shopList");
-      const vendorsRef = collection(db, "vendors");
-      const snapshot = await getDocs(vendorsRef);
+    // Real-time shop list
+    const shopList = document.getElementById("shopList");
+    const vendorsRef = collection(db, "vendors");
 
-      // Collect data first
+    onSnapshot(vendorsRef, (snapshot) => {
       const shops = [];
       snapshot.forEach(doc => {
         const data = doc.data();
@@ -346,27 +364,26 @@
           id: doc.id,
           name: data.name,
           imageURL: data.imageURL,
-          description: data.description
+          description: data.description,
+          isOpen: data.isOpen !== false // default to true if not set
         });
       });
 
-      // Render all at once for best performance
       requestAnimationFrame(() => {
         let html = '';
         shops.forEach(data => {
           html += `
-            <div class="shop-card" onclick="window.location.href='menu.html?vendor=${data.id}'">
+            <div class="shop-card${!data.isOpen ? ' closed' : ''}" ${data.isOpen ? `onclick="window.location.href='menu.html?vendor=${data.id}'"` : ''}>
               <img src="${data.imageURL || 'https://via.placeholder.com/300'}" alt="${data.name}" loading="lazy">
               <h3>${data.name}</h3>
               <p>${data.description || 'No description yet'}</p>
+              ${!data.isOpen ? `<div class="shop-closed">Shop is Closed</div>` : ''}
             </div>
           `;
         });
         shopList.innerHTML = html;
       });
-    };
-
-    loadShops();
+    });
 
     // Profile menu logic
     const profileBtn = document.getElementById('profileBtn');
