@@ -179,6 +179,16 @@
       background: linear-gradient(90deg, #b71c1c 60%, #dc3545 100%);
       transform: scale(0.98);
     }
+    .mamak-note {
+      font-size:0.95em;
+      color:#888;
+      margin-top:4px;
+      background: #fffbe6;
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid #ffe0b2;
+      box-shadow: 0 2px 8px rgba(255, 215, 64, 0.10);
+    }
     @media (max-width: 700px) {
       #summary-container {
         max-width: 98vw;
@@ -237,10 +247,7 @@
           <span class="option-icon">🛍️</span> Take Away (+RM 1.00*)
         </label>
       </div>
-      <div style="font-size:0.95em;color:#888;margin-top:4px;">
-        *Take Away fee does not apply to Cold Drink, Fresh Juice, Hicknokey, or Other Drink.<br>
-        <span style="color:#005f73">If you ordered a "Beverages" item as Cold, no take away fee is charged for that item.</span>
-      </div>
+      <div id="mamak-note"></div>
     </div>
     <div class="note-section">
       <label for="order-note">Add a note for the vendor (optional):</label>
@@ -254,7 +261,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getFirestore, collection, addDoc, serverTimestamp, doc, updateDoc, increment, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
     const firebaseConfig = {
@@ -275,6 +282,28 @@
     const vendorId = localStorage.getItem('vendorId');
     const orderItemsContainer = document.getElementById("order-items");
     const totalPriceContainer = document.getElementById("total-price");
+    const mamakNoteDiv = document.getElementById("mamak-note");
+
+    // Show notes only for MAMAK shop (by vendor name)
+    async function showMamakNoteIfNeeded() {
+      if (!vendorId) return;
+      const vendorRef = doc(db, "vendors", vendorId);
+      const vendorSnap = await getDoc(vendorRef);
+      if (vendorSnap.exists()) {
+        const name = (vendorSnap.data().name || "").toLowerCase();
+        if (name.includes("mamak")) {
+          mamakNoteDiv.innerHTML = `
+            <div class="mamak-note">
+              *Take Away fee does not apply to Cold Drink, Fresh Juice, Hicknokey, or Other Drink.<br>
+              <span style="color:#005f73">If you ordered a "Beverages" item as Cold, no take away fee is charged for that item.</span>
+            </div>
+          `;
+        } else {
+          mamakNoteDiv.innerHTML = "";
+        }
+      }
+    }
+    showMamakNoteIfNeeded();
 
     // Categories that do NOT get takeaway fee
     const NO_TAKEAWAY_FEE_CATEGORIES = [
