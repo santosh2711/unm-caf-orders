@@ -283,6 +283,14 @@
     const orderItemsContainer = document.getElementById("order-items");
     const totalPriceContainer = document.getElementById("total-price");
     const mamakNoteDiv = document.getElementById("mamak-note");
+    const noteInput = document.getElementById("order-note");
+
+    // Pre-fill note if available from previous order
+    const savedNote = localStorage.getItem("orderNote");
+    if (savedNote && noteInput) {
+      noteInput.value = savedNote;
+      localStorage.removeItem("orderNote");
+    }
 
     // Show notes only for MAMAK shop (by vendor name)
     async function showMamakNoteIfNeeded() {
@@ -312,7 +320,6 @@
 
     // Helper: is this a cold beverage?
     function isColdBeverage(item) {
-      // For mamak, cold beverage items have (Cold) in their name and category is Beverages
       return item.category === "Beverages" && item.name && item.name.endsWith(" (Cold)");
     }
 
@@ -322,11 +329,6 @@
       let baseTotal = 0;
       cart.forEach(item => {
         let fee = 0;
-        // Take away fee logic:
-        // - If category is "Beverages" and item is cold, NO fee
-        // - If category is "Beverages" and item is hot, YES fee
-        // - If category is in NO_TAKEAWAY_FEE_CATEGORIES, NO fee
-        // - Otherwise, YES fee
         if (deliveryOption === "take-away") {
           if (item.category === "Beverages") {
             if (!isColdBeverage(item)) {
@@ -368,7 +370,7 @@
           return;
         }
 
-        const note = document.getElementById("order-note").value.trim();
+        const note = noteInput.value.trim();
         const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
         const displayColor = deliveryOption === 'take-away' ? '#ff6666' : '#ccffcc';
 
