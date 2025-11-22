@@ -29,6 +29,7 @@
     body {
       padding: 1rem;
       background: transparent;
+      color: #000;
     }
     header {
       text-align: center;
@@ -91,8 +92,31 @@
     .stats button:active {
       transform: scale(0.98);
     }
+    #close-shop-btn {
+      background: linear-gradient(90deg, #d32f2f 60%, #ff6f6f 100%);
+      color: white;
+      margin-left: 10px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: background 0.2s, transform 0.2s;
+    }
+    #close-shop-btn.open {
+      background: linear-gradient(90deg, #28a745 60%, #4caf50 100%);
+      color: white;
+    }
+    #close-shop-btn:hover {
+      background: linear-gradient(90deg, #ff6f6f 60%, #d32f2f 100%);
+      transform: scale(1.02);
+    }
+    #close-shop-btn.open:hover {
+      background: linear-gradient(90deg, #4caf50 60%, #28a745 100%);
+    }
     .order-card {
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.95);
       padding: 1.2rem;
       margin: 1rem auto;
       border-radius: 12px;
@@ -100,8 +124,8 @@
       max-width: 600px;
       backdrop-filter: blur(4px);
       border: 1px solid rgba(0,95,115,0.2);
-      color: #333;  /* Default text color, will be overridden for colored cards */
-      font-weight: bold;  /* Make text bold for friendliness */
+      color: #000;
+      font-weight: bold;
     }
     .order-card ul {
       padding-left: 20px;
@@ -109,19 +133,52 @@
     }
     .order-card li {
       margin: 0.3rem 0;
+      font-size: 1.1em;
+      color: #222;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .item-name {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #005f73;
+      margin-right: 10px;
+    }
+    .item-qty {
       font-size: 1.2em;
       font-weight: bold;
-      color: #d32f2f;  /* Red color for food names to stand out */
+      color: #d32f2f;
+      background: #ffeaea;
+      border-radius: 6px;
+      padding: 2px 14px;
+      margin-left: 10px;
+      min-width: 38px;
+      text-align: center;
+      display: inline-block;
+      border: 2px solid #d32f2f;
     }
     .order-card p {
       margin: 0.5rem 0;
-      color: inherit;  /* Inherit from parent for dynamic color */
-      font-weight: inherit;  /* Inherit bold */
+      color: #000;
+      font-weight: inherit;
+    }
+    .order-total {
+      font-size: 1.15em;
+      font-weight: bold;
+      color: #005f73;
+      margin: 0.7em 0;
+      text-align: right;
+    }
+    .order-date {
+      font-size: 1.08em;
+      color: #000;
+      margin-bottom: 0.5em;
+      text-align: right;
+      font-weight: bold;
     }
     .emoji {
-      font-size: 1.5em;  /* Bigger emojis */
+      font-size: 1.5em;
     }
     .order-card button {
       background: linear-gradient(90deg, #28a745 60%, #4caf50 100%);
@@ -148,7 +205,20 @@
       background-color: #ccc;
       cursor: not-allowed;
       transform: none;
-      opacity: 0.6;  /* Added dim effect */
+      opacity: 0.6;
+    }
+    .order-note {
+      background: #fffbe6;
+      color: #d32f2f;
+      font-size: 1.15em;
+      font-weight: bold;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin: 1em 0;
+      border: 2px solid #ffe0b2;
+      word-break: break-word;
+      text-align: left;
+      box-shadow: 0 2px 8px rgba(255, 215, 64, 0.10);
     }
     @media (max-width: 700px) {
       header, .stats {
@@ -208,6 +278,7 @@
   <div class="stats">
     Orders Processed: <span id="orderCount">0</span>
     <button onclick="window.location.href='menu-management.html?vendor=' + window.vendorId">Manage Menu</button>
+    <button id="close-shop-btn">Close Shop</button>
   </div>
   <div id="orders-container"></div>
 
@@ -215,7 +286,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getFirestore, collection, query, where, orderBy, onSnapshot, updateDoc, doc, getDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getFirestore, collection, query, where, orderBy, onSnapshot, updateDoc, doc, getDoc, increment, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
@@ -232,23 +303,55 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const vendorId = urlParams.get("vendor");
-    window.vendorId = vendorId;  // Make vendorId global for button onclick
+    window.vendorId = vendorId;
     const ordersContainer = document.getElementById("orders-container");
     const dingSound = document.getElementById("ding-sound");
-
+    const closeShopBtn = document.getElementById("close-shop-btn");
     const vendorRef = doc(db, "vendors", vendorId);
 
-    // Load vendor info
-    async function loadVendorInfo() {
-      const vendorSnap = await getDoc(vendorRef);
-      if (vendorSnap.exists()) {
-        const data = vendorSnap.data();
-        document.getElementById("vendor-name").textContent = data.name || "Vendor Dashboard";
-        if (data.imageURL) {
-          document.getElementById("vendor-logo").src = data.imageURL;
+    // Helper: is this a cold beverage?
+    function isColdBeverage(item) {
+      return item.category === "Beverages" && item.name && item.name.endsWith(" (Cold)");
+    }
+
+    // Categories that do NOT get takeaway fee
+    const NO_TAKEAWAY_FEE_CATEGORIES = [
+      "Cold Drink", "Fresh Juice", "Hicknokey", "Other Drink"
+    ];
+
+    // Calculate total amount for an order
+    function calculateOrderTotal(items, deliveryOption) {
+      let total = 0;
+      items.forEach(item => {
+        let fee = 0;
+        if (deliveryOption === "take-away") {
+          if (item.category === "Beverages") {
+            if (!isColdBeverage(item)) {
+              fee = 1.0;
+            }
+          } else if (!NO_TAKEAWAY_FEE_CATEGORIES.some(cat =>
+            (item.category || "").toLowerCase() === cat.toLowerCase()
+          )) {
+            fee = 1.0;
+          }
         }
-        document.getElementById("orderCount").textContent = data.orderCount || 0;
+        total += item.qty * item.price + fee;
+      });
+      return total;
+    }
+
+    // Format Firestore Timestamp to readable date/time
+    function formatDate(ts) {
+      if (!ts) return "--";
+      let dateObj;
+      if (ts instanceof Timestamp) {
+        dateObj = ts.toDate();
+      } else if (ts.seconds) {
+        dateObj = new Date(ts.seconds * 1000);
+      } else {
+        dateObj = new Date(ts);
       }
+      return dateObj.toLocaleString();
     }
 
     // Render each order
@@ -256,24 +359,39 @@
       const data = docSnap.data();
       const div = document.createElement("div");
       div.className = "order-card";
+      div.style.color = "#000";
 
       // Apply color coding based on delivery option
       if (data.displayColor) {
         div.style.backgroundColor = data.displayColor;
-        div.style.color = '#000';  // Black text for readability on colored backgrounds
       }
 
-      const items = (data.items || []).map(i => `<li><span class="item-name">${i.name}</span> × ${i.qty}</li>`).join("");
+      // Date/time
+      const orderDate = formatDate(data.createdAt);
+
+      // Calculate total
+      const orderTotal = calculateOrderTotal(data.items || [], data.deliveryOption);
+
+      // Items list
+      const items = (data.items || []).map(i => `
+        <li>
+          <span class="item-name">${i.name}</span>
+          <span class="item-qty">× ${i.qty}</span>
+        </li>
+      `).join("");
+
       const isReady = data.status === "Ready";
       const deliveryOption = data.deliveryOption ? data.deliveryOption.charAt(0).toUpperCase() + data.deliveryOption.slice(1) : "--";
       const emoji = data.deliveryOption === 'dine-in' ? '🍽️' : data.deliveryOption === 'take-away' ? '🛍️' : '';
 
       div.innerHTML = `
+        <div class="order-date"><strong>Date/Time:</strong> ${orderDate}</div>
         <p><strong>Order Number:</strong> ${data.orderNumber || "--"}</p>
         <ul>${items}</ul>
+        <div class="order-total"><strong>Total:</strong> RM ${orderTotal.toFixed(2)}</div>
         <p><strong>Status:</strong> ${data.status}</p>
         <p><strong>Delivery Option:</strong> <span class="emoji">${emoji}</span> ${deliveryOption}</p>
-        <p><strong>Note:</strong> ${data.note || "--"}</p>
+        <div class="order-note"><strong>Note:</strong> ${data.note ? data.note : "No note provided."}</div>
         <button 
           data-order="${docSnap.id}" 
           onclick="markReady('${docSnap.id}')"
@@ -286,21 +404,54 @@
 
     // Mark order as ready
     window.markReady = async function (orderId) {
-      console.log("🔄 Marking as ready:", orderId);
       const orderRef = doc(db, "orders", orderId);
       try {
         await updateDoc(orderRef, { status: "Ready" });
-        console.log("✅ Order status updated in Firestore");
-
-        // Only increment order count (no revenue)
         await updateDoc(vendorRef, {
           orderCount: increment(1)
         });
-        console.log("📊 Vendor order count updated");
-
         loadVendorInfo();
       } catch (err) {
         console.error("❌ Failed to update order:", err);
+      }
+    }
+
+    // Update shop button UI and logic
+    function updateShopButton(isOpen) {
+      if (isOpen) {
+        closeShopBtn.textContent = "Close Shop";
+        closeShopBtn.classList.remove("open");
+        closeShopBtn.onclick = async function() {
+          if (confirm("Are you sure you want to close the shop? Customers will not be able to order.")) {
+            await updateDoc(vendorRef, { isOpen: false });
+            alert("Shop is now closed.");
+            updateShopButton(false);
+          }
+        };
+      } else {
+        closeShopBtn.textContent = "Open Shop";
+        closeShopBtn.classList.add("open");
+        closeShopBtn.onclick = async function() {
+          if (confirm("Are you sure you want to open the shop? Customers will be able to order.")) {
+            await updateDoc(vendorRef, { isOpen: true });
+            alert("Shop is now open.");
+            updateShopButton(true);
+          }
+        };
+      }
+    }
+
+    // Load vendor info and update shop button
+    async function loadVendorInfo() {
+      const vendorSnap = await getDoc(vendorRef);
+      if (vendorSnap.exists()) {
+        const data = vendorSnap.data();
+        document.getElementById("vendor-name").textContent = data.name || "Vendor Dashboard";
+        if (data.imageURL) {
+          document.getElementById("vendor-logo").src = data.imageURL;
+        }
+        document.getElementById("orderCount").textContent = data.orderCount || 0;
+        updateShopButton(data.isOpen !== false);
       }
     }
 
