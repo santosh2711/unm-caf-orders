@@ -3,19 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Student Login</title>
+  <title>User Login</title>
   <link rel="icon" href="https://www.nottingham.edu.my/SiteAssets/Images/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Modern, professional, mobile-first design + subtle animations */
     :root{
       --accent-1:#005f73;
       --accent-2:#00aaff;
       --muted:#6b7a8a;
-      --glass-bg: rgba(255,255,255,0.95);  /* Updated to match other pages */
+      --glass-bg: rgba(255,255,255,0.95);
       --box-radius:18px;
     }
-
     html, body {
       height: 100%;
       margin: 0;
@@ -24,17 +22,13 @@
       min-height: 100vh;
       box-sizing: border-box;
       background: transparent;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
       background-clip: padding-box;
     }
-
-    /* background image kept as-is; add a slow moving overlay for subtle motion */
     .background {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background-image: url('https://firebasestorage.googleapis.com/v0/b/unm-caf-orders.firebasestorage.app/o/Campus%20photo%20(450m).jpg?alt=media&token=ddd6b5ca-91ef-4dd9-9f9c-458dff4b4cb9');
+      background-image: url('https://www.nottingham.edu.my/events/images-multimedia/25th-anniversary/banner-homepage-25th-anniversary.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -43,21 +37,10 @@
       transform-origin: center;
       animation: backgroundShift 18s cubic-bezier(.2,.8,.2,1) infinite alternate;
     }
-    .background::after{
-      content:'';
-      position:absolute;
-      inset:0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.30));
-      mix-blend-mode: multiply;
-      z-index:1;
-      pointer-events:none;
-    }
-
     @keyframes backgroundShift {
       from { transform: scale(1) translateY(0px); }
       to { transform: scale(1.02) translateY(-8px); }
     }
-
     body {
       display: flex;
       align-items: center;
@@ -65,8 +48,6 @@
       padding: 20px;
       min-height: 100vh;
     }
-
-    /* Card */
     .box {
       width: 100%;
       max-width: 420px;
@@ -76,26 +57,17 @@
       color: #222;
       text-align: center;
       margin: 0;
-      transition: box-shadow 280ms ease, transform 280ms ease, backdrop-filter 280ms ease;
       box-shadow: 0 10px 30px rgba(8,20,40,0.18);
-      border: 2px solid #40E0D0;  /* Added turquoise border for theme consistency */
+      border: 2px solid #40E0D0;
       position: relative;
       z-index: 1;
       backdrop-filter: blur(6px) saturate(110%);
-      -webkit-backdrop-filter: blur(6px) saturate(110%);
       animation: slideUp 540ms cubic-bezier(.2,.9,.3,1) both;
     }
-
     @keyframes slideUp {
       0% { opacity:0; transform: translateY(18px) scale(.995); }
       100% { opacity:1; transform: translateY(0) scale(1); }
     }
-
-    /* lift on pointer for larger screens */
-    @media (hover: hover) and (min-width: 560px) {
-      .box:hover { transform: translateY(-6px); box-shadow: 0 18px 48px rgba(8,20,40,0.24); }
-    }
-
     .logo {
       width: 96px;
       height: 96px;
@@ -108,22 +80,16 @@
       object-fit: contain;
       transition: transform 220ms ease;
     }
-    @media (hover:hover) {
-      .logo:hover { transform: translateY(-4px); }
-    }
-
     h2#form-title {
       font-size: 1.28rem;
       margin: 6px 0 16px 0;
       letter-spacing: 0.6px;
       font-weight: 700;
-      background: linear-gradient(90deg, black, #005f73);  /* Black to dark turquoise gradient */
+      background: linear-gradient(90deg, black, #005f73);
       -webkit-background-clip: text;
       background-clip: text;
-      color: transparent;  /* Transparent to show gradient */
-      text-shadow: none;  /* Removed for gradient effect */
+      color: transparent;
     }
-
     label {
       display: block;
       text-align: left;
@@ -134,7 +100,6 @@
       margin-bottom: 6px;
       letter-spacing: 0.2px;
     }
-
     input {
       width: 100%;
       display: block;
@@ -146,9 +111,7 @@
       background: linear-gradient(180deg, #fbfcfd, #f6fbff);
       color: #0f1720;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-      transition: border-color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
       box-sizing: border-box;
-      -webkit-appearance: none;
     }
     input::placeholder { color: #9aa7b4; font-weight:500; }
     input:focus {
@@ -158,7 +121,6 @@
       background: #ffffff;
       transform: translateY(-1px);
     }
-
     button {
       width: 100%;
       padding: 14px 0;
@@ -171,14 +133,12 @@
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 8px 24px rgba(0,95,115,0.12);
-      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
       letter-spacing: 0.4px;
     }
     button:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,95,115,0.16); filter:brightness(1.02); }
     button:active { transform: translateY(-1px) scale(.997); }
     button:focus { outline: none; box-shadow: 0 10px 36px rgba(0,95,115,0.18); }
-
-    .toggle {
+    .toggle, .forgot {
       margin-top: 8px;
       font-size: 0.98em;
       color: var(--muted);
@@ -187,15 +147,14 @@
       justify-content:center;
       gap:6px;
     }
-    .toggle a {
+    .toggle a, .forgot a {
       color: var(--accent-2);
-      text-decoration: none;
+      text-decoration: underline;
       cursor: pointer;
       font-weight: 600;
       transition: color 160ms ease, transform 160ms ease;
     }
-    .toggle a:hover { color: #0077cc; transform: translateY(-2px); }
-
+    .toggle a:hover, .forgot a:hover { color: #0077cc; transform: translateY(-2px); }
     .error {
       color: #b71c1c;
       font-size: 0.96em;
@@ -203,17 +162,16 @@
       min-height: 22px;
       font-weight: 600;
       display:block;
-      transition: transform 180ms ease, opacity 180ms ease;
       opacity: 0.98;
     }
-    /* subtle attention animation when there's an error text */
-    .error:not(:empty){ animation: errorPop 740ms cubic-bezier(.2,.9,.3,1); }
-    @keyframes errorPop {
-      0% { transform: translateY(-6px) scale(.995); opacity:0; }
-      50% { transform: translateY(2px) scale(1.02); }
-      100% { transform: translateY(0) scale(1); opacity:1; }
+    .success {
+      color: #28a745;
+      font-size: 0.96em;
+      margin-top: 12px;
+      font-weight: 600;
+      display:block;
+      opacity: 0.98;
     }
-
     .spinner {
       display: none;
       margin: 12px auto;
@@ -229,30 +187,16 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    /* Responsive and touch-friendly tweaks for phones (replaced) */
     @media (max-width: 480px) {
-      .background {
-        /* reduce blur & stop animation on small devices for performance */
-        filter: blur(2px) brightness(0.78);
-        animation: none;
-        will-change: auto;
-      }
-      .box {
-        padding: 22px 16px;
-        max-width: 96vw;
-        margin: 6vh 0 0 0;
-        border-radius: 14px;
-      }
+      .background { filter: blur(2px) brightness(0.78); animation: none; }
+      .box { padding: 22px 16px; max-width: 96vw; margin: 6vh 0 0 0; border-radius: 14px; }
       .logo { width: 76px; height:76px; border-radius:12px; padding:8px; }
       h2#form-title { font-size: 1.12rem; margin-bottom:10px; }
       input, button { font-size: 1.06em; padding: 16px 12px; border-radius: 12px; }
       label { font-size: 0.94em; }
-      .toggle { font-size: 0.95em; }
-      /* make spinner slightly larger on phones */
+      .toggle, .forgot { font-size: 0.95em; }
       .spinner { width: 36px; height: 36px; border-width: 4px; }
     }
-
     @media (max-width:360px) {
       .box { padding: 18px 12px; }
       .logo { width:68px; height:68px; }
@@ -261,24 +205,47 @@
 </head>
 <body>
   <div class="background"></div>
-  <div class="box">
+  <div class="box" id="loginBox">
     <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRael_4f3Iv0L-t9WvqLQ8XBoMMa6m-L82gjg&s" alt="University of Nottingham Logo">
-    <h2 id="form-title">User Login</h2>
-    <label for="email">Email</label>
-    <input type="email" id="email" placeholder="Enter your email" />
-    <label for="password">Password</label>
-    <input type="password" id="password" placeholder="Enter your password" />
-    <button onclick="handleSubmit()">Login</button>
-    <div class="spinner" id="loading-spinner"></div>
-    <div class="toggle">or <a onclick="toggleMode()">Register</a></div>
-    <div class="error" id="error-message"></div>
+    <h2 id="form-title">Student Login</h2>
+    <div id="loginForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" />
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" />
+      <button id="loginBtn">Login</button>
+      <div class="spinner" id="loading-spinner"></div>
+      <div class="forgot">Forgot password? <a id="showForgot">Reset here</a></div>
+      <div class="toggle">First time? <a id="showRegister">Register</a></div>
+      <div class="error" id="error-message"></div>
+    </div>
+    <div id="registerForm" style="display:none;">
+      <label for="reg-email">Any Email Address</label>
+      <input type="email" id="reg-email" placeholder="Enter any email address" />
+      <label for="reg-password">Create Password</label>
+      <input type="password" id="reg-password" placeholder="Create password" />
+      <button id="registerBtn">Register</button>
+      <div class="spinner" id="register-spinner"></div>
+      <div class="toggle">Already have an account? <a id="showLogin">Login</a></div>
+      <div class="error" id="register-error"></div>
+    </div>
+    <div id="forgotForm" style="display:none;">
+      <label for="forgot-email">Email</label>
+      <input type="email" id="forgot-email" placeholder="Enter your email" />
+      <button id="forgotBtn">Send Reset Link</button>
+      <div class="spinner" id="forgot-spinner"></div>
+      <div class="toggle"><a id="backToLogin">Back to Login</a></div>
+      <div class="error" id="forgot-error"></div>
+      <div class="success" id="forgot-success"></div>
+    </div>
   </div>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
     import { 
       getAuth, 
       createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword 
+      signInWithEmailAndPassword,
+      sendPasswordResetEmail
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
     import { 
       getFirestore, 
@@ -300,54 +267,117 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let isRegister = false;
+    // Elements
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const forgotForm = document.getElementById("forgotForm");
+    const errorMsg = document.getElementById("error-message");
+    const registerError = document.getElementById("register-error");
+    const forgotError = document.getElementById("forgot-error");
+    const forgotSuccess = document.getElementById("forgot-success");
+    const spinner = document.getElementById("loading-spinner");
+    const registerSpinner = document.getElementById("register-spinner");
+    const forgotSpinner = document.getElementById("forgot-spinner");
 
-    window.toggleMode = function () {
-      isRegister = !isRegister;
-      document.getElementById("form-title").innerText = isRegister ? "Create Account" : "Student Login";
-      document.querySelector("button").innerText = isRegister ? "Register" : "Login";
-      document.querySelector(".toggle a").innerText = isRegister ? "Login" : "Register";
-      document.getElementById("error-message").innerText = "";
-    }
+    // Show Register
+    document.getElementById("showRegister").onclick = () => {
+      loginForm.style.display = "none";
+      registerForm.style.display = "block";
+      forgotForm.style.display = "none";
+      errorMsg.innerText = "";
+      registerError.innerText = "";
+    };
+    // Show Login
+    document.getElementById("showLogin").onclick = () => {
+      loginForm.style.display = "block";
+      registerForm.style.display = "none";
+      forgotForm.style.display = "none";
+      errorMsg.innerText = "";
+      registerError.innerText = "";
+    };
+    // Show Forgot
+    document.getElementById("showForgot").onclick = () => {
+      loginForm.style.display = "none";
+      registerForm.style.display = "none";
+      forgotForm.style.display = "block";
+      forgotError.innerText = "";
+      forgotSuccess.innerText = "";
+    };
+    // Back to Login from Forgot
+    document.getElementById("backToLogin").onclick = () => {
+      loginForm.style.display = "block";
+      registerForm.style.display = "none";
+      forgotForm.style.display = "none";
+      errorMsg.innerText = "";
+      forgotError.innerText = "";
+      forgotSuccess.innerText = "";
+    };
 
-    window.handleSubmit = async function () {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const errorMsg = document.getElementById("error-message");
-      const spinner = document.getElementById("loading-spinner");
-
+    // Login
+    document.getElementById("loginBtn").onclick = async () => {
       errorMsg.innerText = "";
       spinner.style.display = "block";
-
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
       try {
-        let userCredential;
-        if (isRegister) {
-          // Register new student
-          userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-          // ✅ Create Firestore record for this student
-          await setDoc(doc(db, "students", userCredential.user.uid), {
-            email: email,
-            points: 0
-          });
-
-        } else {
-          // Login existing student
-          userCredential = await signInWithEmailAndPassword(auth, email, password);
-        }
-
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
         localStorage.setItem("studentEmail", userCredential.user.email);
         window.location.href = "student-home.html";
-} catch (err) {
-        // If registering and the email is already in use, show a friendly smiley prompt to log in
-        if (isRegister && err.code === 'auth/email-already-in-use') {
-          errorMsg.innerText = "😊 You already have an account — please log in.";
-          document.querySelector(".toggle a").innerText = "Login";
-        } else {
-          errorMsg.innerText = err.message;
-        }
+      } catch (err) {
+        errorMsg.innerText = "Login failed. Please check your credentials or register first.";
       } finally {
         spinner.style.display = "none";
+      }
+    };
+
+    // Register
+    document.getElementById("registerBtn").onclick = async () => {
+      registerError.innerText = "";
+      registerSpinner.style.display = "block";
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value.trim();
+      if (!email || !password) {
+        registerError.innerText = "Please enter email and create password.";
+        registerSpinner.style.display = "none";
+        return;
+      }
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, "students", userCredential.user.uid), {
+          email: email,
+          points: 0
+        });
+        localStorage.setItem("studentEmail", userCredential.user.email);
+        window.location.href = "student-home.html";
+      } catch (err) {
+        if (err.code === 'auth/email-already-in-use') {
+          registerError.innerText = "😊 You already have an account — please login.";
+        } else {
+          registerError.innerText = err.message;
+        }
+      } finally {
+        registerSpinner.style.display = "none";
+      }
+    };
+
+    // Forgot Password
+    document.getElementById("forgotBtn").onclick = async () => {
+      forgotError.innerText = "";
+      forgotSuccess.innerText = "";
+      forgotSpinner.style.display = "block";
+      const email = document.getElementById("forgot-email").value.trim();
+      if (!email) {
+        forgotError.innerText = "Please enter your email address.";
+        forgotSpinner.style.display = "none";
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        forgotSuccess.innerText = "Reset link sent! Check your email.";
+      } catch (err) {
+        forgotError.innerText = "Failed to send reset link. Please check your email.";
+      } finally {
+        forgotSpinner.style.display = "none";
       }
     };
   </script>
