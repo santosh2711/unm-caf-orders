@@ -35,6 +35,12 @@
       padding: 10px;
       border-radius: 8px;
     }
+    .order-datetime {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 1.1em;
+      color: #005f73;
+    }
     .item {
       display: flex;
       justify-content: space-between;
@@ -69,6 +75,9 @@
     <div class="order-number">
       <strong>Your Order Number:</strong> <span id="order-number">--</span>
     </div>
+    <div class="order-datetime">
+      <strong>Date/Time:</strong> <span id="order-datetime">--</span>
+    </div>
     <h3>Your Items:</h3>
     <div id="order-items"></div>
     <p><strong>Note:</strong> <span id="order-note">No note provided.</span></p>
@@ -82,6 +91,9 @@
   <!-- Ding sound -->
   <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
 
+  <!-- Firebase SDKs (compat for messaging, module for Firestore) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -103,17 +115,8 @@
     const statusEl = document.getElementById("order-status");
     const noteEl = document.getElementById("order-note");
     const orderNumberEl = document.getElementById("order-number");
+    const orderDatetimeEl = document.getElementById("order-datetime");
     const dingSound = document.getElementById("ding-sound");
-
-    // Helper: is this a cold beverage?
-    function isColdBeverage(item) {
-      return item.category === "Beverages" && item.name && item.name.endsWith(" (Cold)");
-    }
-
-    // Categories that do NOT get takeaway fee
-    const NO_TAKEAWAY_FEE_CATEGORIES = [
-      "Cold Drink", "Fresh Juice", "Hicknokey", "Other Drink"
-    ];
 
     // Get orderId saved from summary.html
     const orderId = localStorage.getItem("lastOrderId");
@@ -128,11 +131,21 @@
         // Update order number
         orderNumberEl.textContent = data.orderNumber || "--";
 
-        // Check if takeaway (use deliveryOption, fallback to type for legacy)
-        const isTakeaway = (data.deliveryOption && data.deliveryOption.toLowerCase().includes("take")) ||
-                           (data.type && data.type.toLowerCase().includes("take"));
+        // Update date/time (up to minutes)
+        let dt = "--";
+        if (data.createdAt && data.createdAt.seconds) {
+          const d = new Date(data.createdAt.seconds * 1000);
+          dt = d.toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+        }
+        orderDatetimeEl.textContent = dt;
 
-        // Render items (NO extra fee added here, just show the price as in cart)
+        // Render items
         itemsContainer.innerHTML = "";
         (data.items || []).forEach(i => {
           itemsContainer.innerHTML += `<div class="item"><span>${i.name} × ${i.qty}</span><span>RM ${(i.qty * i.price).toFixed(2)}</span></div>`;
@@ -151,6 +164,49 @@
         }
       });
     }
+  </script>
+  <script>
+    // Firebase Messaging setup for push notifications (using compat SDK)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+      authDomain: "unm-caf-orders.firebaseapp.com",
+      projectId: "unm-caf-orders",
+      storageBucket: "unm-caf-orders.appspot.com",
+      messagingSenderId: "562096834985",
+      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
+      measurementId: "G-J12PBDK7N1"
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const messaging = firebase.messaging();
+
+    // Register service worker for push notifications
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('firebase-messaging-sw.js')
+        .then(function(registration) {
+          // No need to call messaging.useServiceWorker(registration)
+
+          // Request notification permission using browser API
+          Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+              messaging.getToken().then(token => {
+                console.log('FCM Token:', token);
+                // Save token to Firestore for this user (implement this in your backend)
+              });
+            } else {
+              console.log('Permission denied');
+            }
+          });
+        });
+    }
+
+    // Listen for foreground messages
+    messaging.onMessage(payload => {
+      if (payload.notification) {
+        alert(payload.notification.title + ": " + payload.notification.body);
+      }
+    });
   </script>
 </body>
 </html>
