@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Your Order Status</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -70,6 +71,11 @@
   </style>
 </head>
 <body>
+  <!-- Add Firebase SDKs at the top of body -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
+
   <h1>Order Placed ✅</h1>
   <div class="order-box">
     <div class="order-number">
@@ -83,21 +89,13 @@
     <p><strong>Note:</strong> <span id="order-note">No note provided.</span></p>
     <p class="status">Status: <span id="order-status">Pending</span></p>
   </div>
-
   <div class="back">
     <button onclick="window.location.href='student-home.html'">Back to Home</button>
   </div>
-
-  <!-- Ding sound -->
   <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
 
-  <!-- Firebase SDKs (compat for messaging, module for Firestore) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+  <script>
+    // Initialize Firebase and Firestore using compat SDK
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
       authDomain: "unm-caf-orders.firebaseapp.com",
@@ -107,9 +105,9 @@
       appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
       measurementId: "G-J12PBDK7N1"
     };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const messaging = firebase.messaging();
 
     const itemsContainer = document.getElementById("order-items");
     const statusEl = document.getElementById("order-status");
@@ -123,9 +121,8 @@
     if (!orderId) {
       itemsContainer.innerHTML = "<p>No order found. Please place an order again.</p>";
     } else {
-      const orderRef = doc(db, "orders", orderId);
-      onSnapshot(orderRef, (snap) => {
-        if (!snap.exists()) return;
+      db.collection("orders").doc(orderId).onSnapshot((snap) => {
+        if (!snap.exists) return;
         const data = snap.data();
 
         // Update order number
@@ -164,35 +161,28 @@
         }
       });
     }
-  </script>
-  <script>
-    // Firebase Messaging setup for push notifications (using compat SDK)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
-      authDomain: "unm-caf-orders.firebaseapp.com",
-      projectId: "unm-caf-orders",
-      storageBucket: "unm-caf-orders.appspot.com",
-      messagingSenderId: "562096834985",
-      appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
-      measurementId: "G-J12PBDK7N1"
-    };
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const messaging = firebase.messaging();
 
     // Register service worker for push notifications
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('firebase-messaging-sw.js')
         .then(function(registration) {
-          // No need to call messaging.useServiceWorker(registration)
-
-          // Request notification permission using browser API
           Notification.requestPermission().then(permission => {
             if (permission === "granted") {
-              messaging.getToken().then(token => {
-                console.log('FCM Token:', token);
-                // Save token to Firestore for this user (implement this in your backend)
+              messaging.getToken({
+                vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bD0hWJ6mEO7lLwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KD0lqwKds"
+              }).then(token => {
+                console.log("FCM Token:", token);
+
+                // Save token to Firestore (optional but recommended)
+                firebase.firestore()
+                  .collection("fcmTokens")
+                  .doc(token)
+                  .set({
+                    token: token,
+                    createdAt: Date.now()
+                  });
+              }).catch(err => {
+                console.error("Unable to get token", err);
               });
             } else {
               console.log('Permission denied');
