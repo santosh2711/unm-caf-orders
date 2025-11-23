@@ -169,8 +169,7 @@
           Notification.requestPermission().then(permission => {
             if (permission === "granted") {
               messaging.getToken({
-                vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bDOhWJ6mEO7ILwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KDOlqwKds"
-"
+                vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bD0hWJ6mEO7lLwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KD0lqwKds"
               }).then(token => {
                 console.log("FCM Token:", token);
 
@@ -201,6 +200,3 @@
   </script>
 </body>
 </html>
-
-
-
