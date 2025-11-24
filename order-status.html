@@ -164,7 +164,7 @@
 
     // Register service worker for push notifications
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/unm-caf-orders/firebase-messaging-sw.js')
+      navigator.serviceWorker.register('firebase-messaging-sw.js')
         .then(function(registration) {
           Notification.requestPermission().then(permission => {
             if (permission === "granted") {
@@ -200,4 +200,5 @@
   </script>
 </body>
 </html>
+
 
