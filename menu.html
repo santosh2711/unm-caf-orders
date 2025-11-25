@@ -202,20 +202,20 @@
     }
     .menu-card {
       width: 100%;
-      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      background: linear-gradient(90deg, #ffffff 60%, #ffffff 100%);
       border-radius: 16px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      border: 2.5px solid #005f73;
       overflow: hidden;
       text-align: left;
       cursor: pointer;
       position: relative;
-      border: 2px solid rgba(255,255,255,0.2);
       display: flex;
       flex-direction: row;
       align-items: center;
       padding: 14px 16px;
       min-height: 100px;
-      color: white;
+      color: rgb(255, 255, 255);
       margin: 0 auto 18px auto;
       box-sizing: border-box;
       gap: 16px;
@@ -267,17 +267,17 @@
     }
     .menu-card h3 {
       margin: 0 0 4px 0;
-      color: white;
+      color: rgb(0, 0, 0);
       font-size: 1.1rem;
       font-weight: 700;
       letter-spacing: 0.2px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      text-shadow: 0 0.5px 0px rgba(0,0,0,0.5);
       white-space: normal;
       word-break: break-word;
     }
     .menu-card p {
       margin: 0;
-      color: #ddd;
+      color: #000000;
       font-size: 1rem;
     }
     .menu-card button {
@@ -308,7 +308,7 @@
     }
     /* Cart section as floating, centered, hidden by default */
     #cart-section {
-      background: linear-gradient(120deg, #ff7e2d 60%, #ffb347 100%);
+      background: linear-gradient(120deg, #ffffff 60%, #bdb6a8 100%);
       padding: 1.5rem 2rem 1.5rem 2rem;
       position: fixed;
       bottom: 100px;
@@ -415,7 +415,7 @@
       transform: translateX(-50%);
       z-index: 400;
       font-size: 2.5rem;
-      background: linear-gradient(90deg, #ff7e2d 60%, #ffb347 100%);
+      background: linear-gradient(90deg, #ffffff 60%, #ebddd1 100%);
       color: #fff;
       border: none;
       border-radius: 22px;
@@ -648,6 +648,19 @@
         margin-right: 4vw;
       }
     }
+
+    /* Add this CSS in your <style> section (at the end) */
+    .menu-animate-img {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      transition: transform 0.7s cubic-bezier(.5,1.5,.5,1), opacity 0.7s;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -673,7 +686,7 @@
     <div id="cart-items"></div>
     <p id="cart-count">Cart: 0 items</p>
     <p id="cart-total">Total: RM 0.00</p>
-    <button onclick="goToSummary()">Place Order</button>
+    <button onclick="goToSummary()">Checkout</button>
   </div>
   <!-- Cart icon floating button -->
   <button id="cart-toggle-btn" title="Show Cart">
@@ -753,7 +766,7 @@
         coldDrinkId = `cold-drink-${btoa(data.name).replace(/=/g, "")}`;
         coldDrinkBox = `
           <div style="margin-top:8px;">
-            <label style="color:#fff; font-size:0.98em; cursor:pointer;">
+            <label style="color:#000; font-size:0.98em; cursor:pointer;">
               <input type="checkbox" id="${coldDrinkId}" style="transform:scale(1.2);margin-right:6px;vertical-align:middle;" />
               Cold (+RM 1.00)
             </label>
@@ -766,7 +779,7 @@
         juiceTakeawayId = `juice-takeaway-${btoa(data.name).replace(/=/g, "")}`;
         juiceTakeawayBox = `
           <div style="margin-top:8px;">
-            <label style="color:#fff; font-size:0.98em; cursor:pointer;">
+            <label style="color:#000; font-size:0.98em; cursor:pointer;">
               <input type="checkbox" id="${juiceTakeawayId}" style="transform:scale(1.2);margin-right:6px;vertical-align:middle;" />
               Ice-Blended (+RM 1.50)
             </label>
@@ -867,6 +880,17 @@
         cart.push({ ...item, name: cartItemName, price, qty: 1, cold, beverageType, category, takeaway });
       }
       updateCartStatus();
+
+      // Animation: find the image in the menu card and animate
+      const menuCards = document.querySelectorAll('.menu-card');
+      for (const card of menuCards) {
+        const btn = card.querySelector("button[data-name]");
+        if (btn && btn.getAttribute("data-name") === item.name && btn.getAttribute("data-category") === category) {
+          const imgElem = card.querySelector("img");
+          if (imgElem) animateToCart(imgElem);
+          break;
+        }
+      }
     }
 
     function changeQty(index, delta) {
@@ -1009,6 +1033,59 @@
       window.location.href = "summary.html";
     }
 
+    function animateToCart(imgElem) {
+      const cartBtn = document.getElementById("cart-toggle-btn");
+      if (!imgElem || !cartBtn) return;
+
+      // Get positions
+      const rect = imgElem.getBoundingClientRect();
+      const cartRect = cartBtn.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      // Middle of viewport
+      const middleX = viewportWidth / 2 - rect.width / 2;
+      const middleY = viewportHeight / 2 - rect.height / 2;
+
+      // Clone the image
+      const clone = imgElem.cloneNode(true);
+      clone.classList.add("menu-animate-img");
+      clone.style.left = rect.left + "px";
+      clone.style.top = rect.top + "px";
+      clone.style.width = rect.width + "px";
+      clone.style.height = rect.height + "px";
+      clone.style.position = "fixed";
+      clone.style.opacity = "1";
+      clone.style.pointerEvents = "none";
+      clone.style.transition = "transform 0.7s cubic-bezier(.5,1.5,.5,1), opacity 0.7s";
+      document.body.appendChild(clone);
+
+      // Step 1: Move to center
+      const deltaX1 = middleX - rect.left;
+      const deltaY1 = middleY - rect.top;
+      setTimeout(() => {
+        clone.style.transform = `translate(${deltaX1}px, ${deltaY1}px) scale(1.1)`;
+      }, 10);
+
+      // Step 2: Pause at center, then move to cart
+      setTimeout(() => {
+        // Step 2a: Pause for 0.5s
+        clone.style.transition = "transform 0.5s cubic-bezier(.5,1.5,.5,1)";
+        // Step 2b: Move to cart
+        const deltaX2 = cartRect.left + cartRect.width / 2 - middleX - rect.width / 2;
+        const deltaY2 = cartRect.top + cartRect.height / 2 - middleY - rect.height / 2;
+        setTimeout(() => {
+          clone.style.transition = "transform 0.7s cubic-bezier(.5,1.5,.5,1), opacity 0.7s";
+          clone.style.transform = `translate(${deltaX1 + deltaX2}px, ${deltaY1 + deltaY2}px) scale(0.3)`;
+          clone.style.opacity = "0.2";
+        }, 500);
+      }, 700);
+
+      setTimeout(() => {
+        clone.remove();
+      }, 1900);
+    }
+
     window.changeQty = changeQty;
     window.goToSummary = goToSummary;
 
@@ -1036,3 +1113,4 @@
   </script>
 </body>
 </html>
+
