@@ -197,23 +197,6 @@
         alert(payload.notification.title + ": " + payload.notification.body);
       }
     });
-
-    firebase.auth().onAuthStateChanged(async (user) => {
-      if (!user) return;
-
-      const token = await messaging.getToken({
-        vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bD0hWJ6mEO7lLwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KD0lqwKds"
-        serviceWorkerRegistration: registration,
-
-      });
-
-      if (!token) return;
-
-      await firebase.firestore()
-        .collection("students")
-        .doc(user.uid)
-        .set({ fcmToken: token }, { merge: true });
-    });
   </script>
 </body>
 </html>
