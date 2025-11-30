@@ -157,7 +157,6 @@
         statusEl.textContent = data.status;
 
         if (oldStatus !== "Ready" && data.status === "Ready") {
-          dingSound.play();
           alert("🎉 Your order is ready! Please collect it from the shop.");
         }
       });
