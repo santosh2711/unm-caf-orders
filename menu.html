@@ -4,8 +4,66 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Menu</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
+    /* Use Lato font for the whole page */
+    @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
+
+    html, body {
+      font-family: 'Lato', Arial, sans-serif;
+      font-size: 15px;
+      min-height: 100vh;
+      background: transparent;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Header bar styling similar to shop-list.html */
+    .header-bar {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0 0 0;
+      position: relative;
+      z-index: 2;
+      background: transparent;
+    }
+
+    /* Title styling */
+    .menu-title {
+      font-size: 2.7rem;
+      font-weight: 900;
+      letter-spacing: 2.5px;
+      margin: 0 auto;
+      color: #fff !important;
+      background: none !important;
+      text-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 2px 4px rgba(0,0,0,0.18);
+      font-family: 'Lato', Arial, sans-serif;
+      line-height: 1.25;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center horizontally */
+      gap: 16px;
+      text-align: center;      /* Center text */
+    }
+
+    /* Responsive for mobile */
+    @media (max-width: 700px) {
+      .menu-title {
+        font-size: 1.7rem;
+        margin-left: 8px;
+        letter-spacing: 1.2px;
+        line-height: 1.3;
+        gap: 8px;
+        margin-top: 12px;
+      }
+    }
+
     html, body {
       height: 100%;
       margin: 0;
@@ -61,38 +119,23 @@
       min-width: 0;
       padding-right: 8px;
     }
-    .menu-title {
-      font-size: 2.3rem;
-      font-weight: 900;
-      letter-spacing: 1.2px;
-      margin: 0;
-      padding: 0 0 2px 0;
-      background: linear-gradient(90deg, #005f73 30%, #00aaff 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-align: center;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.10);
-      font-family: 'Roboto', Arial, sans-serif;
-      line-height: 1.1;
-      word-break: break-word;
-      width: 100%;
-      max-width: 100vw;
-      overflow-wrap: break-word;
-    }
     .menu-subtitle {
       font-size: 1.1rem;
       font-weight: 500;
-      color: #00796b;
       margin-top: 2px;
       margin-bottom: 0;
       text-align: center;
       letter-spacing: 0.5px;
-      opacity: 0.85;
-      font-family: 'Roboto', Arial, sans-serif;
+      opacity: 0.95;
+      font-family: 'Lato', Arial, sans-serif;
       width: 100%;
       max-width: 100vw;
       overflow-wrap: break-word;
+      background: linear-gradient(90deg, #fff 60%, #ffe066 90%, #00eaff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.12);
     }
     .search-bar-container {
       max-width: 900px;
@@ -268,7 +311,7 @@
     .menu-card h3 {
       margin: 0 0 4px 0;
       color: rgb(0, 0, 0);
-      font-size: 1.1rem;
+      font-size: 0.98rem;
       font-weight: 700;
       letter-spacing: 0.2px;
       text-shadow: 0 0.5px 0px rgba(0,0,0,0.5);
@@ -278,7 +321,7 @@
     .menu-card p {
       margin: 0;
       color: #000000;
-      font-size: 1rem;
+      font-size: 0.92rem;
     }
     .menu-card button {
       background: #005f73;
@@ -649,30 +692,58 @@
       }
     }
 
-    /* Add this CSS in your <style> section (at the end) */
-    .menu-animate-img {
-      position: fixed;
-      z-index: 9999;
-      pointer-events: none;
-      transition: transform 0.7s cubic-bezier(.5,1.5,.5,1), opacity 0.7s;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-      opacity: 1;
-    }
-  </style>
+    /* --- HEADER BAR DECORATIONS --- */
+.hex-bg {
+  width: 100vw;
+  min-height: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(135deg, #073a47 0%, #0077b6 50%, #0097a7 100%);
+  transition: opacity 0.3s;
+  opacity: 1;
+}
+.hex-bg::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background-image: 
+    repeating-linear-gradient(60deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 70px),
+    repeating-linear-gradient(-60deg, transparent, transparent 35px, rgba(255,255,255,0.05) 35px, rgba(255,255,255,0.05) 70px);
+}
+.hex-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 50%, rgba(77, 208, 225, 0.22), transparent 60%),
+              radial-gradient(circle at 70% 30%, rgba(0,170,255,0.13), transparent 50%);
+}
+
+/* Smaller font size for menu items */
+.menu-card h3 {
+  font-size: 0.98rem;
+}
+.menu-card p {
+  font-size: 0.92rem;
+}
+    </style>
 </head>
 <body>
+  <div class="hex-bg"></div>
   <div class="background"></div>
-  <div class="top-bar">
-    <button class="back-btn" onclick="window.location.href='shop-list.html'">
-      &#8592; Shop List
-    </button>
-    <div class="menu-header-wrapper">
-      <h1 class="menu-title" id="menu-header">Menu</h1>
-      <div class="menu-subtitle" id="menu-subtitle"></div>
-    </div>
+  <div class="header-bar">
+    <h1 class="menu-title" id="menu-header">Menu</h1>
+    <!-- You can add a profile button here if needed -->
+  </div>
+  <div class="menu-header-wrapper">
+    <div class="menu-subtitle" id="menu-subtitle"></div>
   </div>
   <div class="search-bar-container">
     <input type="text" id="search-bar" placeholder="Search menu items..." autocomplete="off" />
@@ -1091,6 +1162,7 @@
 
     setHeader();
     loadMenuRealtime();
+    setTimeout(setupCategoryScrollSpy, 1200);
 
     // Cart toggle logic
     const cartSection = document.getElementById("cart-section");
@@ -1110,6 +1182,32 @@
     searchBar.addEventListener("input", function() {
       renderMenuSections(groupedMenu, categories, this.value.trim().toLowerCase());
     });
+
+    // Highlight category button on scroll
+    function setupCategoryScrollSpy() {
+      const categorySections = Array.from(document.querySelectorAll('.category-section'));
+      const categoryBtns = Array.from(document.querySelectorAll('.category-btn'));
+
+      function getCurrentCategoryIdx() {
+        const scrollY = window.scrollY + document.querySelector('.category-bar').offsetHeight + 60;
+        let currentIdx = 0;
+        for (let i = 0; i < categorySections.length; i++) {
+          const sectionTop = categorySections[i].getBoundingClientRect().top + window.scrollY;
+          if (scrollY >= sectionTop) currentIdx = i;
+        }
+        return currentIdx;
+      }
+
+      function onScroll() {
+        const idx = getCurrentCategoryIdx();
+        categoryBtns.forEach((btn, i) => {
+          btn.classList.toggle('active', i === idx);
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll(); // Initial highlight
+    }
   </script>
 </body>
 </html>
