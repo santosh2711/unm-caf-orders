@@ -348,7 +348,7 @@
           points: 0
         });
         localStorage.setItem("studentEmail", userCredential.user.email);
-        window.location.href = "student-home.html";
+        window.location.href = "shop-list.html";
       } catch (err) {
         if (err.code === 'auth/email-already-in-use') {
           registerError.innerText = "😊 You already have an account — please login.";
@@ -383,5 +383,6 @@
   </script>
 </body>
 </html>
+
 
 
