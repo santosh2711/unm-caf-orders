@@ -322,7 +322,7 @@
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         localStorage.setItem("studentEmail", userCredential.user.email);
-        window.location.href = "student-home.html";
+        window.location.href = "shop-list.html";
       } catch (err) {
         errorMsg.innerText = "Login failed. Please check your credentials or register first.";
       } finally {
@@ -383,4 +383,5 @@
   </script>
 </body>
 </html>
+
 
