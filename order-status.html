@@ -164,26 +164,25 @@
 
     // Register service worker for push notifications
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./firebase-messaging-sw.js')
-        .then(function(registration) {
-          Notification.requestPermission().then(permission => {
+      navigator.serviceWorker.register('firebase-messaging-sw.js')
+        .then(async function(registration) {
+          Notification.requestPermission().then(async permission => {
             if (permission === "granted") {
-              messaging.getToken({
+              const token = await messaging.getToken({
                 vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bD0hWJ6mEO7lLwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KD0lqwKds",
-                serviceWorkerRegistration: registration,
-              }).then(token => {
-                console.log("FCM Token:", token);
+                serviceWorkerRegistration: registration
+              });
+              console.log("FCM Token:", token);
 
-                // Save token to Firestore (optional but recommended)
-                firebase.firestore()
-                  .collection("fcmTokens")
-                  .doc(token)
-                  .set({
-                    token: token,
-                    createdAt: Date.now()
-                  });
-              }).catch(err => {
-                console.error("Unable to get token", err);
+              // Save token to students collection if user is logged in
+              firebase.auth().onAuthStateChanged(async (user) => {
+                if (user && token) {
+                  await firebase.firestore()
+                    .collection("students")
+                    .doc(user.uid)
+                    .set({ fcmToken: token }, { merge: true });
+                  console.log("🔥 FCM token saved for student:", user.uid);
+                }
               });
             } else {
               console.log('Permission denied');
@@ -198,9 +197,23 @@
         alert(payload.notification.title + ": " + payload.notification.body);
       }
     });
+
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (!user) return;
+
+      const token = await messaging.getToken({
+        vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bD0hWJ6mEO7lLwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KD0lqwKds"
+        serviceWorkerRegistration: registration,
+
+      });
+
+      if (!token) return;
+
+      await firebase.firestore()
+        .collection("students")
+        .doc(user.uid)
+        .set({ fcmToken: token }, { merge: true });
+    });
   </script>
 </body>
 </html>
-
-
-
