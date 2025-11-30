@@ -1,10 +1,8 @@
-// Import Firebase scripts
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
 
-// Initialize Firebase
 firebase.initializeApp({
-  apiKey: "AIzaSyBQzrBURFwenjWEnQMMIH7sOSqPq0Qtx0",
+  apiKey: "AIzaSyBQzrBURFwenjWEnQMMIH7sOSqPq0Q0tx0",
   authDomain: "unm-caf-orders.firebaseapp.com",
   projectId: "unm-caf-orders",
   storageBucket: "unm-caf-orders.appspot.com",
@@ -13,23 +11,21 @@ firebase.initializeApp({
   measurementId: "G-J12PBDK7N1"
 });
 
-// Retrieve messaging instance
 const messaging = firebase.messaging();
 
-// Handle background messages
-messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Received background message:', payload);
+messaging.onBackgroundMessage(function(payload) {
+  const title = payload.notification?.title || payload.data.title;
+  const body = payload.notification?.body || payload.data.body;
 
-  // Support both notification payloads & data payloads
-  const notificationTitle =
-    payload.notification?.title || payload.data?.title || "Notification";
-
-  const notificationOptions = {
-    body:
-      payload.notification?.body || payload.data?.body || "You have a new message.",
-    icon: "favicon.ico"
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(title, {
+    body: body,
+    icon: 'favicon.ico'
+  });
 });
 
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('/order-status.html')
+  );
+});
