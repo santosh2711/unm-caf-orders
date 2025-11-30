@@ -362,7 +362,7 @@
       radio.addEventListener('change', updateTotal);
     });
 
-    window.submitOrder = function () {
+    window.submitOrder = async function () {
       onAuthStateChanged(auth, async (user) => {
         if (!user) {
           alert("You must be logged in to place an order.");
@@ -384,6 +384,17 @@
         const vendorSnap = await getDoc(vendorRef);
         const nextOrderNumber = vendorSnap.data().nextOrderNumber || 1;
 
+        // Get FCM token for the user
+        let fcmToken = null;
+        try {
+          // Use Firebase Messaging to get the token
+          const messagingModule = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js');
+          const messaging = messagingModule.getMessaging(app);
+          fcmToken = await messagingModule.getToken(messaging, { vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bD0hWJ6mEO7lLwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KD0lqwKds" });
+        } catch (err) {
+          console.warn("FCM token not available:", err);
+        }
+
         try {
           // Save new order
           const docRef = await addDoc(collection(db, "orders"), {
@@ -396,7 +407,8 @@
             note: note || null,
             deliveryOption: deliveryOption,
             displayColor: displayColor,
-            orderNumber: nextOrderNumber
+            orderNumber: nextOrderNumber,
+            fcmToken: fcmToken || null // <-- Save FCM token with order
           });
 
           // Award points
