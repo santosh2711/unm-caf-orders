@@ -3,62 +3,20 @@
 <head>
   <title>UNM Cafeteria – Food Shops</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* Reduce font size and make it professional */
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      font-family: 'Lato', Arial, sans-serif; /* changed to Lato */
+      font-family: 'Roboto', Arial, sans-serif;
       min-height: 100vh;
       box-sizing: border-box;
       background: transparent;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
       font-size: 15px;
-    }
-
-    /* Hexagon header background */
-    .hex-bg {
-      width: 100vw;
-      min-height: 200px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-      background: linear-gradient(135deg, #002a33 0%, #005a6e 50%, #006d7a 100%);
-    }
-    .hex-bg::before {
-      content: '';
-      position: absolute;
-      width: 150%;
-      height: 150%;
-      background-image: 
-        repeating-linear-gradient(60deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 70px),
-        repeating-linear-gradient(-60deg, transparent, transparent 35px, rgba(255,255,255,0.05) 35px, rgba(255,255,255,0.05) 70px);
-      animation: wave 15s linear infinite;
-    }
-    .hex-bg::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 30% 50%, rgba(0, 106, 122, 0.3), transparent 60%),
-                  radial-gradient(circle at 70% 30%, rgba(0, 90, 110, 0.2), transparent 50%);
-    }
-    @keyframes wave {
-      0% { transform: translateX(0) translateY(0); }
-      100% { transform: translateX(-70px) translateY(-70px); }
-    }
-    .header-bar {
-      position: relative;
-      z-index: 2;
-      background: transparent;
     }
 
     .background {
@@ -83,23 +41,25 @@
     .caf-title {
       flex: 1;
       text-align: left;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 900;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
       margin: 0 0 0 24px;
-      color: #ffffff;
-      text-shadow: 0 3px 15px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.4);
-      font-family: 'Lato', Arial, sans-serif;
-      line-height: 1.2;
+      background: linear-gradient(90deg, #005f73 30%, #00aaff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      font-family: 'Roboto', Arial, sans-serif;
+      line-height: 1.1;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .caf-title span {
-      font-size: 1.6rem;
+      font-size: 1.3rem;
       margin-right: 4px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
 
     .profile-btn {
@@ -217,11 +177,6 @@
       border: 1.5px solid #005f73;
     }
 
-    .shop-card:hover {
-      transform: scale(0.96);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.18);
-    }
-
     .shop-card.closed {
       cursor: default;
       opacity: 0.7;
@@ -284,31 +239,29 @@
         height: 90px;
       }
       .caf-title {
-        font-size: 1.3rem;
-        margin-left: 12px;
-        letter-spacing: 1px;
-      }
-      .caf-title span {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        margin-left: 8px;
       }
     }
   </style>
 </head>
+
 <body>
-  <div class="hex-bg"></div>
   <div class="background"></div>
-  
+
   <div class="header-bar">
     <div class="caf-title"><span>🍴</span>UNM Cafeteria</div>
+
     <button class="profile-btn" id="profileBtn">
       <img id="profilePic" src="https://ui-avatars.com/api/?name=U&background=00aaff&color=fff&rounded=true">
     </button>
+
     <div class="profile-menu" id="profileMenu">
       <button onclick="window.location.href='student-home.html'">🏠 Home</button>
       <button onclick="window.open('mailto:absmods538@gmail.com')">💬 Feedback</button>
     </div>
   </div>
-  
+
   <div class="container" id="shopList"></div>
 
   <script type="module">
