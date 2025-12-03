@@ -36,7 +36,7 @@
 
     /* Title styling */
     .menu-title {
-      font-size: 6rem; /* Much bigger on desktop/laptop */
+      font-size: 6rem; /* Very big on desktop */
       font-weight: 900;
       letter-spacing: 2.5px;
       margin: 0 auto;
@@ -57,11 +57,17 @@
     /* Responsive for mobile */
     @media (max-width: 700px) {
       .menu-title {
-        font-size: 4rem; /* Still big on phone, but fits screen */
+        font-size: 3.5rem !important; /* Big on phone */
         margin-left: 0;
         margin-top: 18px;
         justify-content: center;
         text-align: center;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .menu-title {
+        font-size: 2.5rem !important; /* Still big on small phones */
       }
     }
 
