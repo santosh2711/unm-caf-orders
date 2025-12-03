@@ -202,6 +202,64 @@
         margin-right: 4px;
       }
     }
+
+    /* Dark mode styles for student-home.html */
+    body.dark-mode {
+      background: #181a20 !important;
+      color: #f4f6f9 !important;
+    }
+    body.dark-mode .background {
+      background: #181a20 !important;
+    }
+    body.dark-mode .container {
+      background: #23262f !important;
+      color: #f4f6f9 !important;
+      border-color: #0077b6 !important;
+    }
+    body.dark-mode .avatar {
+      background: linear-gradient(135deg, #23262f, #0077b6) !important;
+      color: #f4f6f9 !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.32);
+    }
+    body.dark-mode h1 {
+      color: #f4f6f9 !important;
+      text-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 2px 4px rgba(0,0,0,0.28);
+      background: none !important;
+      -webkit-background-clip: initial;
+      background-clip: initial;
+    }
+    body.dark-mode .info {
+      color: #b0bec5 !important;
+    }
+    body.dark-mode .points {
+      background: linear-gradient(90deg, #388e3c, #66bb6a) !important;
+      color: #fff !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+    }
+    body.dark-mode .actions button {
+      background: #0077b6 !important;
+      color: #fff !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.32);
+    }
+    body.dark-mode .actions button.shop-list {
+      background: #23262f !important;
+      color: #00eaff !important;
+    }
+    body.dark-mode .actions button.shop-list span {
+      color: #00eaff !important;
+    }
+    body.dark-mode .actions button.history {
+      background: #23262f !important;
+      color: #ffe066 !important;
+    }
+    body.dark-mode .actions button.logout {
+      background: #23262f !important;
+      color: #ff5252 !important;
+    }
+    body.dark-mode .actions button:hover {
+      background: #0097a7 !important;
+      color: #fff !important;
+    }
   </style>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -218,7 +276,13 @@
       measurementId: "G-J12PBDK7N1"
     };
 
-    const app = initializeApp(firebaseConfig);
+    // Prevent double initialization if already initialized
+    let app;
+    try {
+      app = initializeApp(firebaseConfig);
+    } catch (e) {
+      app = firebase.app();
+    }
     const auth = getAuth(app);
     const db = getFirestore(app);
 
@@ -229,7 +293,6 @@
       } else {
         document.getElementById("user-email").textContent = user.email;
         document.getElementById("avatar").textContent = user.email ? user.email[0].toUpperCase() : "U";
-        // Save userId/email for order history page
         localStorage.setItem("userId", user.uid);
         localStorage.setItem("email", user.email);
         const studentRef = doc(db, "students", user.uid);
@@ -253,6 +316,39 @@
         window.location.href = "student-login.html";
       });
     }
+
+    // Apply saved theme and dark mode settings from localStorage
+    function applyTitleTheme() {
+      const theme = localStorage.getItem('titleTheme') || 'default';
+      const title = document.querySelector('h1');
+      if (!title) return;
+      if (theme === 'blue') {
+        title.style.background = 'linear-gradient(90deg, #0077b6 40%, #0097a7 100%)';
+        title.style.webkitBackgroundClip = 'text';
+        title.style.backgroundClip = 'text';
+        title.style.color = 'transparent';
+      } else if (theme === 'yellow') {
+        title.style.background = 'linear-gradient(90deg, #ffe066 60%, #ffb347 100%)';
+        title.style.webkitBackgroundClip = 'text';
+        title.style.backgroundClip = 'text';
+        title.style.color = 'transparent';
+      } else {
+        title.style.background = 'linear-gradient(90deg, black, #005f73)';
+        title.style.webkitBackgroundClip = 'text';
+        title.style.backgroundClip = 'text';
+        title.style.color = 'transparent';
+      }
+    }
+    applyTitleTheme();
+
+    function applyDarkMode() {
+      if (localStorage.getItem('darkMode') === 'on') {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    }
+    applyDarkMode();
   </script>
 </head>
 <body>
