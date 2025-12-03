@@ -825,6 +825,126 @@
   box-shadow: 0 4px 16px rgba(0,0,0,0.18);
   opacity: 1;
 }
+
+/* Dark mode styles for menu.html */
+body.dark-mode {
+  background: #181a20 !important;
+  color: #f4f6f9 !important;
+}
+body.dark-mode .background {
+  background: #181a20 !important;
+}
+body.dark-mode .container-bg {
+  background: #23262f !important;
+  color: #f4f6f9 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+}
+body.dark-mode .container {
+  color: #f4f6f9 !important;
+}
+body.dark-mode .menu-title,
+body.dark-mode #menu-header {
+  color: #f4f6f9 !important;
+  text-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 2px 4px rgba(0,0,0,0.28);
+}
+body.dark-mode .menu-subtitle {
+  color: #b0bec5 !important;
+  background: none !important;
+  text-shadow: none !important;
+}
+body.dark-mode .category-title {
+  color: #00eaff !important;
+  background: none !important;
+}
+body.dark-mode .category-bar {
+  background: #23262f !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+body.dark-mode .category-btn {
+  background: #23262f !important;
+  color: #f4f6f9 !important;
+  border: 1px solid #444 !important;
+}
+body.dark-mode .category-btn.active,
+body.dark-mode .category-btn:focus {
+  background: #0077b6 !important;
+  color: #fff !important;
+}
+body.dark-mode .menu-card {
+  background: #23262f !important;
+  color: #f4f6f9 !important;
+  border: 2.5px solid #0077b6 !important;
+}
+body.dark-mode .menu-card h3,
+body.dark-mode .menu-card p {
+  color: #f4f6f9 !important;
+}
+body.dark-mode .menu-card .not-available-overlay {
+  background: rgba(30,30,30,0.7) !important;
+  color: #ff5252 !important;
+  text-shadow: none !important;
+}
+body.dark-mode .menu-card button {
+  background: #0077b6 !important;
+  color: #fff !important;
+}
+body.dark-mode .menu-card button:active {
+  background: #00eaff !important;
+}
+body.dark-mode #search-bar {
+  background: #23262f !important;
+  color: #f4f6f9 !important;
+  border: 1.5px solid #444 !important;
+}
+body.dark-mode #search-bar::placeholder {
+  color: #b0bec5 !important;
+}
+body.dark-mode #cart-section {
+  background: #23262f !important;
+  color: #f4f6f9 !important;
+  border: 2px solid #0077b6 !important;
+}
+body.dark-mode .cart-item {
+  background: #181a20 !important;
+  color: #f4f6f9 !important;
+}
+body.dark-mode .cart-item-name {
+  color: #00eaff !important;
+}
+body.dark-mode .cart-item-price {
+  color: #ffe066 !important;
+}
+body.dark-mode .cart-item-controls button {
+  background: #0077b6 !important;
+  color: #fff !important;
+}
+body.dark-mode .cart-item-controls button:hover {
+  background: #00eaff !important;
+  color: #23262f !important;
+}
+body.dark-mode #cart-count,
+body.dark-mode #cart-total {
+  color: #ffe066 !important;
+}
+body.dark-mode #cart-toggle-btn {
+  background: #23262f !important;
+  color: #fff !important;
+  border: 1.5px solid #0077b6 !important;
+}
+body.dark-mode #cart-toggle-btn:active {
+  background: #0077b6 !important;
+  color: #fff !important;
+}
+body.dark-mode #cart-badge {
+  background: #ff5252 !important;
+  color: #fff !important;
+}
+body.dark-mode .hex-bg {
+  background: linear-gradient(135deg, #181a20 0%, #23262f 100%) !important;
+}
+body.dark-mode .menu-animate-img {
+  background: #23262f !important;
+}
     </style>
 </head>
 <body>
@@ -1303,6 +1423,39 @@
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll(); // Initial highlight
     }
+
+// Apply saved theme and dark mode settings from localStorage
+function applyTitleTheme() {
+  const theme = localStorage.getItem('titleTheme') || 'default';
+  const title = document.querySelector('.menu-title, .caf-title, #menu-header');
+  if (!title) return;
+  if (theme === 'blue') {
+    title.style.background = 'linear-gradient(90deg, #0077b6 40%, #0097a7 100%)';
+    title.style.webkitBackgroundClip = 'text';
+    title.style.backgroundClip = 'text';
+    title.style.color = 'transparent';
+  } else if (theme === 'yellow') {
+    title.style.background = 'linear-gradient(90deg, #ffe066 60%, #ffb347 100%)';
+    title.style.webkitBackgroundClip = 'text';
+    title.style.backgroundClip = 'text';
+    title.style.color = 'transparent';
+  } else {
+    title.style.background = 'linear-gradient(90deg, #fff 40%, #ffe066 80%, #00eaff 100%)';
+    title.style.webkitBackgroundClip = 'text';
+    title.style.backgroundClip = 'text';
+    title.style.color = 'transparent';
+  }
+}
+applyTitleTheme();
+
+function applyDarkMode() {
+  if (localStorage.getItem('darkMode') === 'on') {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+}
+applyDarkMode();
   </script>
 </body>
 </html>
