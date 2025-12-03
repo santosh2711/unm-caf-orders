@@ -201,13 +201,72 @@
       .box { padding: 18px 12px; }
       .logo { width:68px; height:68px; }
     }
+    /* Dark mode for login page */
+    body.dark-mode {
+      background: #181a20 !important;
+    }
+    body.dark-mode .box {
+      background: #23262f !important;
+      color: #f4f6f9 !important;
+      border-color: #0077b6 !important;
+    }
+    body.dark-mode input,
+    body.dark-mode button {
+      background: #181a20 !important;
+      color: #f4f6f9 !important;
+      border: 1px solid #444 !important;
+    }
+    body.dark-mode label {
+      color: #00aaff !important;
+    }
+    body.dark-mode h2#form-title {
+      color: #f4f6f9 !important;
+      text-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 2px 4px rgba(0,0,0,0.28);
+    }
+    body.dark-mode .error {
+      color: #ff5252 !important;
+    }
+    body.dark-mode .success {
+      color: #00eaff !important;
+    }
+    body.dark-mode .logo {
+      background: #23262f !important;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+    }
+    /* Make text visible according to theme mode */
+    body.dark-mode,
+    body.dark-mode .box,
+    body.dark-mode label,
+    body.dark-mode .toggle,
+    body.dark-mode .forgot,
+    body.dark-mode input,
+    body.dark-mode button {
+      color: #f4f6f9 !important;
+    }
+
+    body.dark-mode input::placeholder {
+      color: #b0bec5 !important;
+    }
+
+    body.dark-mode h2#form-title {
+      color: #f4f6f9 !important;
+      text-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 2px 4px rgba(0,0,0,0.28);
+    }
+
+    body.dark-mode .error {
+      color: #ff5252 !important;
+    }
+
+    body.dark-mode .success {
+      color: #00eaff !important;
+    }
   </style>
 </head>
 <body>
   <div class="background"></div>
   <div class="box" id="loginBox">
     <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRael_4f3Iv0L-t9WvqLQ8XBoMMa6m-L82gjg&s" alt="University of Nottingham Logo">
-    <h2 id="form-title">User Login</h2>
+    <h2 id="form-title">Student Login</h2>
     <div id="loginForm">
       <label for="email">Email</label>
       <input type="email" id="email" placeholder="Enter your email" />
@@ -380,9 +439,39 @@
         forgotSpinner.style.display = "none";
       }
     };
+
+    // Apply saved theme and dark mode settings from localStorage
+    function applyTitleTheme() {
+      const theme = localStorage.getItem('titleTheme') || 'default';
+      const title = document.querySelector('.caf-title, .menu-title, #form-title');
+      if (!title) return;
+      if (theme === 'blue') {
+        title.style.background = 'linear-gradient(90deg, #0077b6 40%, #0097a7 100%)';
+        title.style.webkitBackgroundClip = 'text';
+        title.style.backgroundClip = 'text';
+        title.style.color = 'transparent';
+      } else if (theme === 'yellow') {
+        title.style.background = 'linear-gradient(90deg, #ffe066 60%, #ffb347 100%)';
+        title.style.webkitBackgroundClip = 'text';
+        title.style.backgroundClip = 'text';
+        title.style.color = 'transparent';
+      } else {
+        title.style.background = 'linear-gradient(90deg, black, #005f73)';
+        title.style.webkitBackgroundClip = 'text';
+        title.style.backgroundClip = 'text';
+        title.style.color = 'transparent';
+      }
+    }
+    applyTitleTheme();
+
+    function applyDarkMode() {
+      if (localStorage.getItem('darkMode') === 'on') {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    }
+    applyDarkMode();
   </script>
 </body>
 </html>
-
-
-
