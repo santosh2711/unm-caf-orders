@@ -28,21 +28,91 @@
     body {
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
+      background: transparent;
     }
     .container {
-      background: rgba(255,255,255,0.95);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      padding: 36px 24px 28px 24px;
-      max-width: 370px;
+      background: rgba(255,255,255,0.97);
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      padding: 32px 24px 24px 24px;
+      max-width: 410px;
       width: 100%;
-      text-align: center;
-      margin: 0;
+      margin: 32px 0 32px 0;
       position: relative;
       z-index: 1;
       border: 2px solid #40E0D0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .profile-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .profile-btn {
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 0;
+      margin-left: auto;
+      margin-right: 0;
+      position: relative;
+      z-index: 10;
+    }
+    .profile-btn img {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      border: 2px solid #40E0D0;
+      background: #073a47;
+      object-fit: cover;
+      transition: box-shadow 0.2s;
+    }
+    .profile-menu {
+      display: none;
+      position: absolute;
+      top: 62px;
+      right: 0;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      min-width: 160px;
+      z-index: 100;
+      padding: 0;
+      overflow: hidden;
+      border: 1.5px solid #00aaff;
+      animation: fadeIn 0.18s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .profile-menu button {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 14px 18px;
+      font-size: 1.1rem;
+      color: #000000;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid #e0f7fa;
+    }
+    .profile-menu button:last-child {
+      border-bottom: none;
+    }
+    .profile-menu button:hover, .profile-menu button:focus {
+      background: #e0f7fa;
+      color: #172b90;
     }
     .avatar {
       width: 70px;
@@ -52,15 +122,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 16px auto;
+      margin: 0 auto 10px auto;
       font-size: 2.2rem;
       color: white;
       font-weight: bold;
       box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      letter-spacing: 1px;
     }
     h1 {
       margin: 0 0 10px 0;
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       font-weight: 700;
       background: linear-gradient(90deg, black, #005f73);
       -webkit-background-clip: text;
@@ -68,11 +139,13 @@
       color: transparent;
       letter-spacing: 0.5px;
       text-shadow: none;
+      text-align: center;
     }
     .info {
-      margin: 16px 0;
+      margin: 10px 0 18px 0;
       font-size: 1rem;
       color: #444;
+      text-align: center;
     }
     .points {
       background: linear-gradient(90deg, #388e3c, #66bb6a);
@@ -85,125 +158,113 @@
       font-size: 1rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .actions {
-      margin-top: 22px;
+    .quick-links {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 18px 0 24px 0;
+    }
+    .quick-link-box {
+      background: linear-gradient(120deg, #e0f7fa 60%, #f4f6f9 100%);
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      padding: 22px 10px 18px 10px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-    .actions button {
-      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 13px 0;
-      font-size: 1.08em;
-      font-weight: 600;
+      align-items: center;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-      transition: background 0.2s, transform 0.2s;
-      letter-spacing: 0.5px;
+      transition: box-shadow 0.18s, transform 0.18s, background 0.18s;
+      border: 1.5px solid #00aaff;
+      min-height: 90px;
       position: relative;
     }
-    .actions button:hover {
-      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
-      transform: scale(0.98);
+    .quick-link-box:hover {
+      box-shadow: 0 8px 32px rgba(0,119,182,0.13);
+      background: linear-gradient(120deg, #b2ebf2 60%, #e0f7fa 100%);
+      transform: translateY(-2px) scale(1.03);
     }
-    .actions button.shop-list {
-      border-radius: 50%;
-      width: 120px;
-      height: 120px;
-      padding: 0;
-      font-size: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    .quick-link-icon {
+      font-size: 2.1rem;
+      margin-bottom: 8px;
+      color: #00aaff;
+      filter: drop-shadow(0 2px 8px #00aaff22);
+      transition: color 0.18s;
     }
-    .actions button.shop-list::before {
-      content: "🛒";
-      font-size: 2.5rem;
-      margin-bottom: 4px;
-    }
-    .actions button.shop-list span {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: white;
+    .quick-link-label {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #005f73;
       text-align: center;
-      line-height: 1.2;
+      letter-spacing: 0.2px;
     }
-    .actions button.shop-list:hover {
-      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
-      transform: scale(1.05);
+    .fav-list, .food-list {
+      margin-top: 10px;
+      width: 100%;
+      text-align: left;
+      font-size: 0.98rem;
+      color: #333;
+      padding-left: 8px;
     }
-    .actions button.history {
-      background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+    .fav-list li, .food-list li {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .fav-list li .fav-icon, .food-list li .fav-icon {
+      color: #e53935;
+      font-size: 1.1em;
+    }
+    .fav-list li .shop-img, .food-list li .shop-img {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      object-fit: cover;
+      margin-right: 4px;
+      border: 1px solid #eee;
+      background: #fff;
+    }
+    .logout-btn {
+      width: 100%;
+      margin-top: 30px;
+      padding: 14px 0;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.08em;
+      background: linear-gradient(90deg, #dc3545 60%, #ff6f6f 100%);
       color: #fff;
       font-weight: 700;
-      font-size: 1.05em;
-      border-radius: 8px;
-      box-shadow: 0 4px 16px rgba(255,152,0,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(220,53,69,0.12);
+      letter-spacing: 0.4px;
+      transition: background 0.18s, transform 0.18s;
+      display: block;
     }
-    .actions button.history::before {
-      content: "📜";
-      font-size: 1.3em;
-      margin-right: 6px;
-    }
-    .actions button.logout {
-      background: linear-gradient(90deg, #dc3545 60%, #ff6f6f 100%);
-    }
-    .actions button.logout:hover {
+    .logout-btn:hover {
       background: linear-gradient(90deg, #b71c1c 60%, #dc3545 100%);
+      transform: translateY(-2px) scale(1.03);
     }
     @media (max-width: 500px) {
       .container {
-        padding: 18px 4px;
+        padding: 12px 2vw;
         max-width: 98vw;
       }
-      h1 {
-        font-size: 1.2rem;
+      .quick-links {
+        gap: 10px;
       }
-      .avatar {
-        width: 54px;
-        height: 54px;
+      .quick-link-box {
+        padding: 16px 2px 12px 2px;
+        min-height: 70px;
+      }
+      .quick-link-icon {
         font-size: 1.5rem;
       }
-      .points {
-        font-size: 0.95rem;
-        padding: 6px 10px;
-      }
-      .actions button {
-        font-size: 1em;
-        padding: 12px 0;
-      }
-      .actions button.shop-list {
-        width: 100px;
-        height: 100px;
-        font-size: 1.8rem;
-      }
-      .actions button.shop-list::before {
-        font-size: 2rem;
-      }
-      .actions button.shop-list span {
-        font-size: 0.6rem;
-      }
-      .actions button.history {
-        font-size: 0.98em;
-        gap: 6px;
-      }
-      .actions button.history::before {
-        font-size: 1em;
-        margin-right: 4px;
+      .quick-link-label {
+        font-size: 0.98rem;
       }
     }
-
-    /* Dark mode styles for student-home.html */
+    /* Dark mode styles */
     body.dark-mode {
       background: #181a20 !important;
       color: #f4f6f9 !important;
@@ -236,29 +297,129 @@
       color: #fff !important;
       box-shadow: 0 2px 8px rgba(0,0,0,0.22);
     }
-    body.dark-mode .actions button {
-      background: #0077b6 !important;
-      color: #fff !important;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.32);
+    body.dark-mode .quick-link-box {
+      background: linear-gradient(120deg, #23262f 60%, #181a20 100%) !important;
+      color: #f4f6f9 !important;
+      border: 1.5px solid #00aaff !important;
     }
-    body.dark-mode .actions button.shop-list {
-      background: #23262f !important;
+    body.dark-mode .quick-link-label {
       color: #00eaff !important;
     }
-    body.dark-mode .actions button.shop-list span {
+    body.dark-mode .quick-link-icon {
       color: #00eaff !important;
     }
-    body.dark-mode .actions button.history {
-      background: #23262f !important;
-      color: #ffe066 !important;
+    body.dark-mode .fav-list, body.dark-mode .food-list {
+      color: #f4f6f9 !important;
     }
-    body.dark-mode .actions button.logout {
-      background: #23262f !important;
+    body.dark-mode .logout-btn {
+      background: linear-gradient(90deg, #23262f 60%, #ff5252 100%) !important;
       color: #ff5252 !important;
     }
-    body.dark-mode .actions button:hover {
-      background: #0097a7 !important;
+    body.dark-mode .logout-btn:hover {
+      background: linear-gradient(90deg, #b71c1c 60%, #dc3545 100%) !important;
       color: #fff !important;
+    }
+    body.dark-mode .profile-menu {
+      background: #23262f !important;
+      color: #f4f6f9 !important;
+      border: 1.5px solid #00aaff !important;
+    }
+    body.dark-mode .profile-menu button {
+      color: #f4f6f9 !important;
+      border-bottom: 1px solid #23262f !important;
+    }
+    body.dark-mode .profile-menu button:hover,
+    body.dark-mode .profile-menu button:focus {
+      background: #181a20 !important;
+      color: #00eaff !important;
+    }
+    .fav-popup-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.32);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.18s;
+    }
+    .fav-popup-content {
+      background: linear-gradient(120deg, #f4f6f9 60%, #e0f7fa 100%);
+      border-radius: 18px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.22);
+      padding: 32px 18px 24px 18px;
+      min-width: 270px;
+      max-width: 90vw;
+      animation: modalPop 0.4s cubic-bezier(.4,1.6,.4,1);
+    }
+    .fav-popup-content h2 {
+      margin-top: 0;
+      font-size: 1.18rem;
+      color: #0077b6;
+      text-align: center;
+      margin-bottom: 18px;
+      font-weight: 900;
+    }
+    .fav-popup-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px 0;
+    }
+    .fav-popup-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 8px 8px;
+      transition: background 0.15s;
+      font-size: 1.05rem;
+    }
+    .fav-popup-list li:hover {
+      background: #e0f7fa;
+    }
+    .fav-popup-list .shop-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid #eee;
+      background: #fff;
+    }
+    .fav-popup-close {
+      display: block;
+      margin: 0 auto;
+      padding: 10px 0;
+      width: 90%;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, #0077b6 40%, #00aaff 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.18s;
+    }
+    .fav-popup-close:hover {
+      background: linear-gradient(90deg, #00aaff 40%, #0077b6 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    body.dark-mode .fav-popup-content {
+      background: linear-gradient(120deg, #23262f 60%, #181a20 100%);
+      color: #f4f6f9;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.48);
+    }
+    body.dark-mode .fav-popup-list li:hover {
+      background: #23262f;
+    }
+    body.dark-mode .fav-popup-close {
+      background: linear-gradient(90deg, #23262f 40%, #00aaff 100%);
+      color: #f4f6f9;
+    }
+    body.dark-mode .fav-popup-close:hover {
+      background: linear-gradient(90deg, #00aaff 40%, #23262f 100%);
     }
   </style>
   <script type="module">
@@ -276,7 +437,6 @@
       measurementId: "G-J12PBDK7N1"
     };
 
-    // Prevent double initialization if already initialized
     let app;
     try {
       app = initializeApp(firebaseConfig);
@@ -286,6 +446,19 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Profile menu logic
+    window.openProfileMenu = function() {
+      const menu = document.getElementById('profileMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    };
+    document.addEventListener('click', (e) => {
+      const btn = document.getElementById('profileBtn');
+      const menu = document.getElementById('profileMenu');
+      if (btn && btn.contains(e.target)) return;
+      if (menu && !menu.contains(e.target)) menu.style.display = 'none';
+    });
+
+    // User info and points
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         alert("Please log in first.");
@@ -293,6 +466,8 @@
       } else {
         document.getElementById("user-email").textContent = user.email;
         document.getElementById("avatar").textContent = user.email ? user.email[0].toUpperCase() : "U";
+        document.getElementById("profilePic").src =
+          `https://ui-avatars.com/api/?name=${user.email[0]}&background=00aaff&color=fff&rounded=true`;
         localStorage.setItem("userId", user.uid);
         localStorage.setItem("email", user.email);
         const studentRef = doc(db, "students", user.uid);
@@ -305,8 +480,17 @@
       }
     });
 
+    // Quick links
     window.goToShopList = function() {
       window.location.href = 'shop-list.html';
+    }
+    window.goToFavourites = function() {
+      // Scroll to favourite shops section
+      document.getElementById('favShopsSection').scrollIntoView({behavior: "smooth"});
+    }
+    window.goToFavFoods = function() {
+      // Scroll to favourite foods section
+      document.getElementById('favFoodsSection').scrollIntoView({behavior: "smooth"});
     }
     window.goToOrderHistory = function() {
       window.location.href = 'order-history.html';
@@ -317,7 +501,32 @@
       });
     }
 
-    // Apply saved theme and dark mode settings from localStorage
+    // Load favourite shops and foods from localStorage
+    function renderFavourites() {
+      // Favourite shops
+      const favShops = JSON.parse(localStorage.getItem('favouriteShopsData') || '[]');
+      const favList = document.getElementById('favShopsList');
+      if (favShops.length === 0) {
+        favList.innerHTML = `<li style="color:#888;">No favourite shops yet.</li>`;
+      } else {
+        favList.innerHTML = favShops.map(shop =>
+          `<li><span class="fav-icon">❤️</span> <img class="shop-img" src="${shop.imageURL || 'https://via.placeholder.com/40'}" alt="">${shop.name}</li>`
+        ).join('');
+      }
+      // Favourite foods
+      const favFoods = JSON.parse(localStorage.getItem('favouriteFoodsData') || '[]');
+      const foodList = document.getElementById('favFoodsList');
+      if (favFoods.length === 0) {
+        foodList.innerHTML = `<li style="color:#888;">No favourite foods yet.</li>`;
+      } else {
+        foodList.innerHTML = favFoods.map(food =>
+          `<li><span class="fav-icon">🍔</span> ${food.name}</li>`
+        ).join('');
+      }
+    }
+    renderFavourites();
+
+    // Theme
     function applyTitleTheme() {
       const theme = localStorage.getItem('titleTheme') || 'default';
       const title = document.querySelector('h1');
@@ -349,11 +558,73 @@
       }
     }
     applyDarkMode();
+
+    // Show favourite shops as popup modal
+    window.showFavShopsPopup = function() {
+      const favShops = JSON.parse(localStorage.getItem('favouriteShopsData') || '[]');
+      const popup = document.getElementById('favShopsPopup');
+      if (!popup) return;
+      if (favShops.length === 0) {
+        popup.innerHTML = `
+          <div class="fav-popup-modal">
+            <div class="fav-popup-content">
+              <h2>Favourite Shops</h2>
+              <div style="color:#888;text-align:center;margin-bottom:18px;">No favourite shops yet.</div>
+              <button class="fav-popup-close" onclick="closeFavShopsPopup()">Close</button>
+            </div>
+          </div>
+        `;
+      } else {
+        popup.innerHTML = `
+          <div class="fav-popup-modal">
+            <div class="fav-popup-content">
+              <h2>Favourite Shops</h2>
+              <ul class="fav-popup-list">
+                ${favShops.map(shop => `
+                  <li onclick="goToShopMenu('${shop.id}')">
+                    <img class="shop-img" src="${shop.imageURL || 'https://via.placeholder.com/40'}" alt="">
+                    <span>${shop.name}</span>
+                  </li>
+                `).join('')}
+              </ul>
+              <button class="fav-popup-close" onclick="closeFavShopsPopup()">Close</button>
+            </div>
+          </div>
+        `;
+      }
+      popup.style.display = "flex";
+      setTimeout(() => {
+        document.addEventListener('keydown', escFavPopup, { once: true });
+      }, 0);
+    };
+    window.closeFavShopsPopup = function() {
+      const popup = document.getElementById('favShopsPopup');
+      if (popup) popup.style.display = "none";
+      document.removeEventListener('keydown', escFavPopup);
+    };
+    function escFavPopup(e) {
+      if (e.key === "Escape") closeFavShopsPopup();
+    }
+    window.goToShopMenu = function(shopId) {
+      window.location.href = `menu.html?vendor=${shopId}`;
+    };
   </script>
 </head>
 <body>
   <div class="background"></div>
   <div class="container">
+    <div class="profile-bar">
+      <button class="profile-btn" id="profileBtn" onclick="openProfileMenu()">
+        <img id="profilePic" src="https://ui-avatars.com/api/?name=U&background=00aaff&color=fff&rounded=true" alt="Profile">
+      </button>
+      <div class="profile-menu" id="profileMenu">
+        <div style="padding:16px 18px; font-size:1.05rem; color:#0077b6; border-bottom:1px solid #e0f7fa;">
+          <strong>Email:</strong>
+          <span id="profileMenuEmail" style="word-break:break-all;"></span>
+        </div>
+        <button onclick="goToShopList()">🛒 Shop List</button>
+      </div>
+    </div>
     <div class="avatar" id="avatar">U</div>
     <h1>Welcome!</h1>
     <div class="info">
@@ -362,11 +633,88 @@
     <div class="points">
       Points: <span id="points">Loading...</span>
     </div>
-    <div class="actions">
-      <button class="shop-list" onclick="goToShopList()" title="Go to Shop List"><span>Shop List</span></button>
-      <button class="history" onclick="goToOrderHistory()" title="Order History">Order History</button>
-      <button class="logout" onclick="logout()">Logout</button>
+    <div class="quick-links">
+      <div class="quick-link-box" onclick="goToShopList()">
+        <span class="quick-link-icon">🛒</span>
+        <span class="quick-link-label">Shop List</span>
+      </div>
+      <div class="quick-link-box" onclick="showFavShopsPopup()">
+        <span class="quick-link-icon">❤️</span>
+        <span class="quick-link-label">Favourite Shops</span>
+      </div>
+      <div class="quick-link-box" onclick="goToFavFoods()">
+        <span class="quick-link-icon">🍔</span>
+        <span class="quick-link-label">Favourite Foods</span>
+      </div>
+      <div class="quick-link-box" onclick="goToOrderHistory()">
+        <span class="quick-link-icon">📜</span>
+        <span class="quick-link-label">Order History</span>
+      </div>
     </div>
+    <div id="favShopsSection" style="width:100%;">
+      <h3 style="margin:18px 0 8px 0; color:#0077b6; font-size:1.13rem;">Favourite Shops</h3>
+      <ul class="fav-list" id="favShopsList"></ul>
+    </div>
+    <div id="favFoodsSection" style="width:100%;">
+      <h3 style="margin:18px 0 8px 0; color:#0077b6; font-size:1.13rem;">Favourite Foods</h3>
+      <ul class="food-list" id="favFoodsList"></ul>
+    </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div id="favShopsPopup" style="display:none;"></div>
   </div>
-</body>
-</html>
+  <script type="module">
+    // ...existing code...
+    // Show favourite shops as popup modal
+    window.showFavShopsPopup = function() {
+      const favShops = JSON.parse(localStorage.getItem('favouriteShopsData') || '[]');
+      const popup = document.getElementById('favShopsPopup');
+      if (!popup) return;
+      if (favShops.length === 0) {
+        popup.innerHTML = `
+          <div class="fav-popup-modal">
+            <div class="fav-popup-content">
+              <h2>Favourite Shops</h2>
+              <div style="color:#888;text-align:center;margin-bottom:18px;">No favourite shops yet.</div>
+              <button class="fav-popup-close" onclick="closeFavShopsPopup()">Close</button>
+            </div>
+          </div>
+        `;
+      } else {
+        popup.innerHTML = `
+          <div class="fav-popup-modal">
+            <div class="fav-popup-content">
+              <h2>Favourite Shops</h2>
+              <ul class="fav-popup-list">
+                ${favShops.map(shop => `
+                  <li onclick="goToShopMenu('${shop.id}')">
+                    <img class="shop-img" src="${shop.imageURL || 'https://via.placeholder.com/40'}" alt="">
+                    <span>${shop.name}</span>
+                  </li>
+                `).join('')}
+              </ul>
+              <button class="fav-popup-close" onclick="closeFavShopsPopup()">Close</button>
+            </div>
+          </div>
+        `;
+      }
+      popup.style.display = "flex";
+      setTimeout(() => {
+        document.addEventListener('keydown', escFavPopup, { once: true });
+      }, 0);
+    };
+    window.closeFavShopsPopup = function() {
+      const popup = document.getElementById('favShopsPopup');
+      if (popup) popup.style.display = "none";
+      document.removeEventListener('keydown', escFavPopup);
+    };
+    function escFavPopup(e) {
+      if (e.key === "Escape") closeFavShopsPopup();
+    }
+    window.goToShopMenu = function(shopId) {
+      window.location.href = `menu.html?vendor=${shopId}`;
+    };
+    // Show email in profile menu
+    document.addEventListener('DOMContentLoaded', function() {
+      const email = localStorage.getItem("email") || "";
+      const emailSpan = document.getElementById("profileMenuEmail");
+      if
