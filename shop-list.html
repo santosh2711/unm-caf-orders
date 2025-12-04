@@ -427,14 +427,34 @@
       }
       .shoplist-bar {
         max-width: 100vw;
-        flex-direction: column;
+        width: 100vw;
+        flex-direction: row;
         gap: 8px;
-        padding: 0 8px;
+        padding: 0 2vw;
+        align-items: center;
+        justify-content: center;
       }
-      #shopSearch, #shopSort {
-        width: 100%;
+      #shopSearch {
+        width: 65vw;
+        min-width: 120px;
+        max-width: 70vw;
         font-size: 1rem;
-        border-radius: 18px;
+        border-radius: 14px;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 10px 12px;
+        display: inline-block;
+      }
+      #shopSort {
+        width: 28vw;
+        min-width: 70px;
+        max-width: 32vw;
+        font-size: 1rem;
+        border-radius: 14px;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 10px 12px;
+        display: inline-block;
       }
       .shop-card .fav-icon {
         bottom: 10px;
