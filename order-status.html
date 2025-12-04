@@ -142,6 +142,10 @@
     </div>
     <h3>Your Items:</h3>
     <div id="order-items"></div>
+    <!-- Add this inside .order-box, after the items and before the note -->
+    <div id="order-total" style="font-size:1.15em; font-weight:700; color:#005f73; text-align:right; margin:18px 0 8px 0;">
+      Total: RM <span id="order-total-value">0.00</span>
+    </div>
     <p><strong>Note:</strong> <span id="order-note">No note provided.</span></p>
     <p class="status">Status: <span id="order-status">Pending</span></p>
   </div>
@@ -201,11 +205,14 @@
         }
         orderDatetimeEl.textContent = dt;
 
-        // Render items
+        // Render items and calculate total
+        let total = 0;
         itemsContainer.innerHTML = "";
         (data.items || []).forEach(i => {
           itemsContainer.innerHTML += `<div class="item"><span>${i.name} × ${i.qty}</span><span>RM ${(i.qty * i.price).toFixed(2)}</span></div>`;
+          total += i.qty * i.price;
         });
+        document.getElementById("order-total-value").textContent = total.toFixed(2);
 
         // Update note
         noteEl.textContent = data.note || "No note provided.";
