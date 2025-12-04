@@ -5,26 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
     html, body {
       font-family: 'Lato', Arial, sans-serif;
-      height: auto;
       min-height: 100vh;
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      background: transparent;
+      background: #f4f6f9;
       overflow-x: hidden;
       font-size: 15px;
-    }
-    body {
-      min-height: 100vh;
-      width: 100vw;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      background: #f4f6f9;
     }
     .background {
       position: fixed;
@@ -32,38 +21,6 @@
       width: 100vw; height: 100vh;
       background: white;
       z-index: -1;
-    }
-    .hex-bg {
-      width: 100vw;
-      min-height: 200px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-      background: linear-gradient(135deg, #073a47 0%, #0077b6 50%, #0097a7 100%);
-      transition: opacity 0.3s;
-      opacity: 1;
-    }
-    .hex-bg::before {
-      content: '';
-      position: absolute;
-      width: 150%;
-      height: 150%;
-      background-image: 
-        repeating-linear-gradient(60deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 70px),
-        repeating-linear-gradient(-60deg, transparent, transparent 35px, rgba(255,255,255,0.05) 35px, rgba(255,255,255,0.05) 70px);
-    }
-    .hex-bg::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 30% 50%, rgba(77, 208, 225, 0.22), transparent 60%),
-                  radial-gradient(circle at 70% 30%, rgba(0,170,255,0.13), transparent 50%);
     }
     .header-bar {
       width: 100%;
@@ -95,11 +52,6 @@
       align-items: center;
       gap: 16px;
     }
-    .caf-title span {
-      font-size: 2.2rem;
-      margin-right: 10px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.18));
-    }
     .profile-btn {
       background: none;
       border: none;
@@ -120,9 +72,6 @@
       background: #073a47;
       object-fit: cover;
       transition: box-shadow 0.2s;
-    }
-    .profile-btn:active img, .profile-btn:focus img {
-      box-shadow: 0 4px 16px #00aaff44;
     }
     .profile-menu {
       display: none;
@@ -161,6 +110,48 @@
     .profile-menu button:hover, .profile-menu button:focus {
       background: #e0f7fa;
       color: #172b90;
+    }
+    .shoplist-bar {
+      max-width: 900px;
+      width: 100%;
+      margin: 18px auto 0 auto;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      background: none !important; /* Remove background */
+      box-shadow: none !important;  /* Remove any shadow */
+      border-radius: 0 !important;
+      padding: 0;
+    }
+    #shopSearch {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 24px;
+      border: 1.5px solid #b0b0b0;
+      font-size: 1.08rem;
+      background: #fafbfc;
+      color: #222;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      box-shadow: none;
+    }
+    #shopSearch:focus {
+      border: 1.5px solid #0077b6;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,119,182,0.08);
+    }
+    #shopSort {
+      padding: 12px 18px;
+      border-radius: 24px;
+      border: 1.5px solid #b0b0b0;
+      font-size: 1.08rem;
+      background: #fafbfc;
+      color: #222;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      box-shadow: none;
     }
     .container {
       border-radius: 18px;
@@ -233,6 +224,168 @@
       width: 90%;
       text-align: center;
     }
+    .shop-card .fav-icon {
+      position: absolute;
+      bottom: 14px;
+      right: 16px;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      z-index: 2;
+      user-select: none;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: transform 0.18s;
+    }
+    .shop-card .fav-icon svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: transparent;
+      stroke: #bbb;
+      stroke-width: 2.2;
+      transition: fill 0.2s, stroke 0.2s;
+    }
+    .shop-card .fav-icon.fav svg {
+      fill: #e53935;
+      stroke: #e53935;
+      filter: drop-shadow(0 2px 8px #e5393533);
+    }
+    .shop-card .fav-icon:active {
+      transform: scale(1.18);
+    }
+    body.dark-mode .shop-card .fav-icon svg {
+      stroke: #888 !important;
+    }
+    body.dark-mode .shop-card .fav-icon.fav svg {
+      fill: #ff5252 !important;
+      stroke: #ff5252 !important;
+    }
+    /* Popup animation */
+    .fav-popup {
+      position: fixed;
+      left: 50%;
+      top: 12%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: #fff;
+      color: #222;
+      padding: 14px 28px;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      font-size: 1.08rem;
+      font-weight: 700;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      animation: favPopAnim 1.2s cubic-bezier(.4,1.6,.4,1) forwards;
+    }
+    @keyframes favPopAnim {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8);}
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.08);}
+      60% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8);}
+    }
+    body.dark-mode .fav-popup {
+      background: #23262f;
+      color: #f4f6f9;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.48);
+    }
+    #settingsModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.28);
+      z-index: 9998;
+      display: none;
+      backdrop-filter: blur(2px);
+    }
+    .settings-modal-content {
+      background: linear-gradient(120deg, #f4f6f9 60%, #e0f7fa 100%);
+      color: #222;
+      padding: 38px 32px 32px 32px;
+      border-radius: 22px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.22);
+      max-width: 370px;
+      margin: 100px auto;
+      position: relative;
+      top: 10vh;
+      animation: modalPop 0.4s cubic-bezier(.4,1.6,.4,1);
+    }
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.92);}
+      80% { opacity: 1; transform: scale(1.04);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    .settings-modal-content h2 {
+      margin-top: 0;
+      font-size: 1.45rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #0077b6;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .settings-modal-content label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0 0 0;
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #005f73;
+    }
+    .settings-modal-content select,
+    .settings-modal-content input[type="checkbox"] {
+      margin-left: 18px;
+      font-size: 1.08rem;
+      border-radius: 8px;
+      border: 1.5px solid #b0b0b0;
+      padding: 6px 12px;
+      background: #fff;
+      color: #222;
+      transition: border 0.2s;
+    }
+    .settings-modal-content button {
+      width: 100%;
+      margin-top: 28px;
+      padding: 14px 0;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.08em;
+      background: linear-gradient(90deg, #0077b6 40%, #00aaff 100%);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,95,115,0.12);
+      letter-spacing: 0.4px;
+      transition: background 0.18s, transform 0.18s;
+    }
+    .settings-modal-content button:hover {
+      background: linear-gradient(90deg, #00aaff 40%, #0077b6 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    body.dark-mode #settingsModal {
+      background: rgba(0,0,0,0.48);
+    }
+    body.dark-mode .settings-modal-content {
+      background: linear-gradient(120deg, #23262f 60%, #181a20 100%);
+      color: #f4f6f9;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.48);
+    }
+    body.dark-mode .settings-modal-content h2 {
+      color: #00eaff;
+    }
+    body.dark-mode .settings-modal-content label {
+      color: #00aaff;
+    }
+    body.dark-mode .settings-modal-content select,
+    body.dark-mode .settings-modal-content input[type="checkbox"] {
+      background: #23262f;
+      color: #f4f6f9;
+      border: 1.5px solid #444;
+    }
     @media (max-width: 700px) {
       .container {
         max-width: 100vw;
@@ -258,11 +411,7 @@
         letter-spacing: 1.2px;
         line-height: 1.3;
         gap: 8px;
-        margin-top: 18px; /* moved down a bit more */
-      }
-      .caf-title span {
-        font-size: 1.3rem;
-        margin-right: 4px;
+        margin-top: 18px;
       }
       .header-bar {
         max-width: 100vw;
@@ -272,9 +421,29 @@
       }
       .profile-btn {
         position: absolute;
-        top: 18px; /* moved down a bit more */
+        top: 18px;
         right: 8px;
         margin: 0;
+      }
+      .shoplist-bar {
+        max-width: 100vw;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 8px;
+      }
+      #shopSearch, #shopSort {
+        width: 100%;
+        font-size: 1rem;
+        border-radius: 18px;
+      }
+      .shop-card .fav-icon {
+        bottom: 10px;
+        right: 12px;
+        font-size: 2rem;
+      }
+      .shop-card .fav-icon svg {
+        width: 2rem;
+        height: 2rem;
       }
     }
     /* Dark mode styles */
@@ -315,83 +484,23 @@
       background: #181a20 !important;
       color: #00eaff !important;
     }
-    body.dark-mode .hex-bg {
-      background: linear-gradient(135deg, #181a20 0%, #23262f 100%) !important;
+    body.dark-mode .shoplist-bar {
+      background: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
     }
-    body.dark-mode .background {
-      background: #181a20 !important;
+    body.dark-mode #shopSearch,
+    body.dark-mode #shopSort {
+      background: #23262f !important;
+      color: #f4f6f9 !important;
+      border: 1.5px solid #444 !important;
     }
-    #settingsModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.18);
-      z-index: 999;
-    }
-    .settings-modal-content {
-      background: #fff;
-      border-radius: 18px;
-      max-width: 340px;
-      margin: 60px auto;
-      padding: 28px 24px 24px 24px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.13);
-      position: relative;
-      font-family: 'Lato', Arial, sans-serif;
-    }
-    .settings-modal-content h2 {
-      margin-top: 0;
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: #222;
-      letter-spacing: 1px;
-      text-align: center;
-    }
-    .settings-modal-content label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      font-size: 1.08rem;
-      color: #333;
-    }
-    .settings-modal-content select,
-    .settings-modal-content input[type="checkbox"] {
-      margin-left: 16px;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      padding: 6px 12px;
-      background: #f7fafd;
-      color: #222;
-      outline: none;
-    }
-    .settings-modal-content input[type="checkbox"] {
-      width: 22px;
-      height: 22px;
-      accent-color: #0077b6;
-    }
-    .settings-modal-content button {
-      display: block;
-      margin: 24px auto 0 auto;
-      padding: 10px 32px;
-      border-radius: 8px;
-      border: none;
-      background: #f7fafd;
-      color: #222;
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      transition: background 0.2s;
-    }
-    .settings-modal-content button:hover {
-      background: #e0f7fa;
+    body.dark-mode #shopSearch::placeholder {
+      color: #b0bec5 !important;
     }
   </style>
 </head>
 <body>
-  <div class="hex-bg" id="hexBg"></div>
   <div class="background"></div>
   <div class="header-bar">
     <div class="caf-title">UNM Cafeteria</div>
@@ -404,9 +513,18 @@
       <button onclick="openSettings()">⚙️ Settings</button>
     </div>
   </div>
+  <!-- Search and Sort Bar -->
+  <div class="shoplist-bar">
+    <input type="text" id="shopSearch" placeholder="Search shops..." />
+    <select id="shopSort">
+      <option value="asc">A-Z</option>
+      <option value="desc">Z-A</option>
+    </select>
+  </div>
   <div class="container" id="shopList"></div>
+  <div id="favPopup" style="display:none;"></div>
   <!-- Settings Modal -->
-  <div id="settingsModal">
+  <div id="settingsModal" style="display:none;">
     <div class="settings-modal-content">
       <h2>Settings</h2>
       <label>
@@ -442,7 +560,13 @@
     const db = getFirestore(app);
     const shopList = document.getElementById("shopList");
     const vendorsRef = collection(db, "vendors");
-    onAuthStateChanged(auth, user => {
+    const favPopup = document.getElementById("favPopup");
+
+    // --- Search, Sort, Favourite Logic ---
+    let shopsData = [];
+    let favouriteShops = JSON.parse(localStorage.getItem('favouriteShops') || '[]');
+
+    onAuthStateChanged(auth, async user => {
       if (!user) {
         alert("Please log in first.");
         window.location.href = "student-login.html";
@@ -451,22 +575,81 @@
       document.getElementById("profilePic").src =
         `https://ui-avatars.com/api/?name=${user.email[0]}&background=00aaff&color=fff&rounded=true`;
       onSnapshot(vendorsRef, (snapshot) => {
-        let html = "";
+        shopsData = [];
         snapshot.forEach(doc => {
           const d = doc.data();
-          html += `
-            <div class="shop-card ${!d.isOpen ? 'closed' : ''}"
-              ${d.isOpen ? `onclick="window.location.href='menu.html?vendor=${doc.id}'"` : ""}>
-              <img src="${d.imageURL || 'https://via.placeholder.com/300'}">
-              <h3>${d.name}</h3>
-              <p>${d.description || "No description yet"}</p>
-              ${!d.isOpen ? `<div class="shop-closed">Shop is Closed</div>` : ""}
-            </div>
-          `;
+          shopsData.push({
+            id: doc.id,
+            ...d
+          });
         });
-        shopList.innerHTML = html;
+        renderShopList();
       });
     });
+
+    document.getElementById('shopSearch').addEventListener('input', renderShopList);
+    document.getElementById('shopSort').addEventListener('change', renderShopList);
+
+    function renderShopList() {
+      const searchVal = document.getElementById('shopSearch').value.trim().toLowerCase();
+      const sortVal = document.getElementById('shopSort').value;
+      let filtered = shopsData.filter(shop =>
+        shop.name.toLowerCase().includes(searchVal)
+      );
+      // No sort by favourites, just A-Z or Z-A
+      filtered.sort((a, b) => {
+        if (sortVal === 'asc') return a.name.localeCompare(b.name);
+        if (sortVal === 'desc') return b.name.localeCompare(a.name);
+        return 0;
+      });
+      let html = "";
+      filtered.forEach(d => {
+        const isFav = favouriteShops.includes(d.id);
+        html += `
+          <div class="shop-card ${!d.isOpen ? 'closed' : ''}" data-shopid="${d.id}"
+            ${d.isOpen ? `onclick="window.location.href='menu.html?vendor=${d.id}'"` : ""}>
+            <img src="${d.imageURL || 'https://via.placeholder.com/300'}">
+            <h3>${d.name}</h3>
+            <p>${d.description || "No description yet"}</p>
+            ${!d.isOpen ? `<div class="shop-closed">Shop is Closed</div>` : ""}
+            <button class="fav-icon${isFav ? ' fav' : ''}" title="Mark as favourite" onclick="event.stopPropagation();toggleFavourite('${d.id}', '${d.name}')">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.2 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.2 6.86-8.55 11.54L12 21.35z"
+                  ${isFav ? 'fill="#e53935" stroke="#e53935"' : 'fill="transparent" stroke="#bbb"'} />
+              </svg>
+            </button>
+          </div>
+        `;
+      });
+      shopList.innerHTML = html;
+    }
+
+    window.toggleFavourite = function(shopId, shopName) {
+      const idx = favouriteShops.indexOf(shopId);
+      if (idx === -1) {
+        favouriteShops.push(shopId);
+        showFavPopup(`${shopName} added to favourites`);
+      } else {
+        favouriteShops.splice(idx, 1);
+        showFavPopup(`${shopName} removed from favourites`);
+      }
+      localStorage.setItem('favouriteShops', JSON.stringify(favouriteShops));
+      localStorage.setItem('favouriteShopsData', JSON.stringify(favouriteShops.map(id => {
+        const shop = shopsData.find(s => s.id === id);
+        return shop ? {id: shop.id, name: shop.name, imageURL: shop.imageURL || ''} : null;
+      }).filter(Boolean)));
+      renderShopList();
+    };
+
+    function showFavPopup(msg) {
+      favPopup.innerText = msg;
+      favPopup.className = "fav-popup";
+      favPopup.style.display = "block";
+      setTimeout(() => {
+        favPopup.style.display = "none";
+      }, 1200);
+    }
+
     // Profile Menu Toggle
     const profileBtn = document.getElementById('profileBtn');
     const profileMenu = document.getElementById('profileMenu');
@@ -477,6 +660,7 @@
         profileMenu.style.display = 'none';
       }
     });
+
     shopList.addEventListener('touchstart', function(e) {
       const card = e.target.closest('.shop-card');
       if (card) card.classList.add('pressed');
@@ -493,16 +677,7 @@
       const card = e.target.closest('.shop-card');
       if (card) setTimeout(() => card.classList.remove('pressed'), 120);
     });
-    window.addEventListener('scroll', function() {
-      const hexBg = document.getElementById('hexBg');
-      if (window.scrollY > 10) {
-        hexBg.style.opacity = '0';
-        hexBg.style.pointerEvents = 'none';
-      } else {
-        hexBg.style.opacity = '1';
-        hexBg.style.pointerEvents = 'auto';
-      }
-    });
+
     // Settings modal logic
     window.openSettings = function() {
       document.getElementById('settingsModal').style.display = 'block';
