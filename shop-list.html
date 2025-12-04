@@ -28,23 +28,20 @@
       margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       padding: 24px 0 0 0;
       position: relative;
       z-index: 2;
       background: transparent;
     }
     .caf-title {
-      flex: 1;
-      text-align: left;
+      flex: 0 0 auto;
+      text-align: center;
       font-size: 2.7rem;
       font-weight: 900;
       letter-spacing: 2.5px;
-      margin: 0 0 0 24px;
-      background: linear-gradient(90deg, #fff 40%, #ffe066 80%, #00eaff 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      margin: 0 auto;
+      color: #0f4c81;
       text-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 2px 4px rgba(0,0,0,0.18);
       font-family: 'Lato', Arial, sans-serif;
       line-height: 1.25;
@@ -57,10 +54,11 @@
       border: none;
       outline: none;
       cursor: pointer;
-      margin-right: 24px;
-      margin-left: 12px;
+      margin: 0;
       padding: 0;
-      position: relative;
+      position: absolute;
+      top: 24px;
+      right: 24px;
       z-index: 10;
     }
     .profile-btn img {
@@ -746,10 +744,10 @@
         title.style.backgroundClip = 'text';
         title.style.color = 'transparent';
       } else {
-        title.style.background = 'linear-gradient(90deg, #fff 40%, #ffe066 80%, #00eaff 100%)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
+        title.style.background = 'none';
+        title.style.webkitBackgroundClip = 'unset';
+        title.style.backgroundClip = 'unset';
+        title.style.color = '#0f4c81';
       }
     }
     applyTitleTheme();
