@@ -751,5 +751,34 @@
     }
     applyDarkMode();
   </script>
+  <script>
+  // Set refresh rate based on device type
+  const refreshRate = () => {
+    const width = window.innerWidth;
+
+    if (width <= 700) {
+      // Mobile devices
+      return 60; // 60Hz refresh rate
+    } else if (width <= 1200) {
+      // Tablets
+      return 90; // 90Hz refresh rate
+    } else {
+      // Laptops/Desktops
+      return 120; // 120Hz refresh rate
+    }
+  };
+
+  // Apply refresh rate
+  const applyRefreshRate = () => {
+    const rate = refreshRate();
+    document.body.style.animationDuration = `${1000 / rate}ms`;
+  };
+
+  // Listen for resize events to adjust refresh rate dynamically
+  window.addEventListener('resize', applyRefreshRate);
+
+  // Apply refresh rate on page load
+  applyRefreshRate();
+</script>
 </body>
 </html>
