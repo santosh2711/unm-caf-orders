@@ -28,32 +28,32 @@
       max-width: 900px;
       margin: 0 auto;
       display: flex;
-      flex-direction: row; /* Align title and profile icon horizontally */
+      flex-direction: row; /* Change to row for alignment */
       align-items: center;
       justify-content: space-between; /* Space between title and profile icon */
-      padding: 16px 12px; /* Adjust padding for smaller screens */
+      padding: 20px 16px;
+      position: relative;
     }
     /* Title Alignment */
     .caf-title {
       text-align: left; /* Align title to the left */
-      font-size: 1.8rem; /* Adjust font size for mobile */
+      font-size: 2.2rem;
       font-weight: 900;
-      letter-spacing: 1.2px;
+      letter-spacing: 1.5px;
       color: #004aad;
       text-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       margin: 0;
     }
-    /* Profile Picture Alignment */
     .profile-btn {
-      position: relative;
+      position: relative; /* Remove absolute positioning */
       margin-left: auto; /* Push the icon to the far right */
       background: none;
       border: none;
       cursor: pointer;
     }
     .profile-btn img {
-      width: 40px; /* Reduce size for mobile */
-      height: 40px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
       border: 2px solid #ffe066;
@@ -269,45 +269,31 @@
       color: #f4f6f9;
       box-shadow: 0 8px 32px rgba(0,0,0,0.48);
     }
-    /* Settings Modal */
     #settingsModal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.28);
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.28);
       z-index: 9998;
-      display: flex; /* Use flexbox for centering */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
+      display: none;
       backdrop-filter: blur(2px);
     }
-
     .settings-modal-content {
       background: linear-gradient(120deg, #f4f6f9 60%, #e0f7fa 100%);
       color: #222;
       padding: 38px 32px 32px 32px;
       border-radius: 22px;
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.22);
       max-width: 370px;
-      width: 90%; /* Ensure responsiveness on smaller screens */
-      animation: modalPop 0.4s cubic-bezier(.4, 1.6, .4, 1);
+      margin: 100px auto;
+      position: relative;
+      top: 10vh;
+      animation: modalPop 0.4s cubic-bezier(.4,1.6,.4,1);
     }
-
     @keyframes modalPop {
-      0% {
-        opacity: 0;
-        transform: scale(0.92);
-      }
-      80% {
-        opacity: 1;
-        transform: scale(1.04);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+      0% { opacity: 0; transform: scale(0.92);}
+      80% { opacity: 1; transform: scale(1.04);}
+      100% { opacity: 1; transform: scale(1);}
     }
     .settings-modal-content h2 {
       margin-top: 0;
