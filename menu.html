@@ -101,22 +101,27 @@
       background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
       color: #fff;
       border: none;
-      border-radius: 16px;
-      padding: 10px 22px;
-      font-size: 1.1rem;
+      border-radius: 8px; /* Rounded corners */
+      padding: 10px 16px;
+      font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      margin-right: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      margin: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: background 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-left: 16px;
     }
-    .back-btn:active {
+
+    .back-btn:hover {
       background: linear-gradient(90deg, #00aaff 60%, #005f73 100%);
     }
+
+    @media (max-width: 700px) {
+      .back-btn {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+      }
+    }
+
     .menu-header-wrapper {
       flex: 1;
       display: flex;
@@ -947,9 +952,9 @@ body.dark-mode .menu-animate-img {
   <div class="hex-bg"></div>
   <div class="background"></div>
   <div class="header-bar">
-    <h1 class="menu-title" id="menu-header">Menu</h1>
-    <!-- You can add a profile button here if needed -->
-  </div>
+  <button class="back-btn" onclick="window.location.href='shop-list.html'">← Back</button>
+  <h1 class="menu-title" id="menu-header">Menu</h1>
+</div>
   <div class="top-bar">
     <button class="back-btn" onclick="window.location.href='shop-list.html'">← Shop List</button>
   </div>
@@ -1038,84 +1043,17 @@ body.dark-mode .menu-animate-img {
     function renderMenuItem(data, category) {
       const card = document.createElement("div");
       card.className = "menu-card" + (data.available === false ? " unavailable" : "");
-      let coldDrinkId = "";
-      let coldDrinkBox = "";
-      let juiceTakeawayId = "";
-      let juiceTakeawayBox = "";
-
-      // Only for mamak and Beverages
-      if (isMamak && category === "Beverages") {
-        coldDrinkId = `cold-drink-${btoa(data.name).replace(/=/g, "")}`;
-        coldDrinkBox = `
-          <div style="margin-top:8px;">
-            <label style="color:#000; font-size:0.98em; cursor:pointer;">
-              <input type="checkbox" id="${coldDrinkId}" style="transform:scale(1.2);margin-right:6px;vertical-align:middle;" />
-              Cold (+RM 1.00)
-            </label>
-          </div>
-        `;
-      }
-
-      // Only for mamak and Fresh Juice
-      if (isMamak && category === "Fresh Juice") {
-        juiceTakeawayId = `juice-takeaway-${btoa(data.name).replace(/=/g, "")}`;
-        juiceTakeawayBox = `
-          <div style="margin-top:8px;">
-            <label style="color:#000; font-size:0.98em; cursor:pointer;">
-              <input type="checkbox" id="${juiceTakeawayId}" style="transform:scale(1.2);margin-right:6px;vertical-align:middle;" />
-              Ice-Blended (+RM 1.50)
-            </label>
-          </div>
-        `;
-      }
 
       card.innerHTML = `
         <img src="${data.imageURL || 'https://via.placeholder.com/200x140'}" alt="${data.name}" />
         <div class="details">
-          <h3>${data.name || 'Unnamed Item'}</h3>
-          <p>RM <span id="price-${coldDrinkId || juiceTakeawayId || btoa(data.name).replace(/=/g, "")}">${parseFloat(data.price).toFixed(2)}</span></p>
-          ${coldDrinkBox}
-          ${juiceTakeawayBox}
+          <!-- Redirect food item name to menu-note.html -->
+          <h3 onclick="redirectToMenuNote('${data.name}', '${data.price}', '${category}')">${data.name || 'Unnamed Item'}</h3>
+          <p>RM ${parseFloat(data.price).toFixed(2)}</p>
         </div>
         <button ${data.available === false ? "disabled" : ""} data-name="${data.name}" data-category="${category}">+</button>
         ${data.available === false ? `<div class="not-available-overlay">Finished</div>` : ""}
       `;
-
-      // Add event for cold drink checkbox (only for mamak beverages)
-      if (isMamak && category === "Beverages") {
-        setTimeout(() => {
-          const cb = document.getElementById(coldDrinkId);
-          if (cb) {
-            cb.addEventListener("change", function() {
-              coldDrinkState[data.name] = cb.checked;
-              const priceSpan = document.getElementById("price-" + coldDrinkId);
-              if (cb.checked) {
-                priceSpan.textContent = (parseFloat(data.price) + 1.0).toFixed(2);
-              } else {
-                priceSpan.textContent = parseFloat(data.price).toFixed(2);
-              }
-            });
-          }
-        }, 0);
-      }
-
-      // Add event for juice takeaway checkbox (only for mamak fresh juice)
-      if (isMamak && category === "Fresh Juice") {
-        setTimeout(() => {
-          const cb = document.getElementById(juiceTakeawayId);
-          if (cb) {
-            cb.addEventListener("change", function() {
-              juiceTakeawayState[data.name] = cb.checked;
-              const priceSpan = document.getElementById("price-" + juiceTakeawayId);
-              if (cb.checked) {
-                priceSpan.textContent = (parseFloat(data.price) + 1.5).toFixed(2);
-              } else {
-                priceSpan.textContent = parseFloat(data.price).toFixed(2);
-              }
-            });
-          }
-        }, 0);
-      }
 
       setTimeout(() => {
         const btn = card.querySelector("button[data-name]");
@@ -1126,6 +1064,12 @@ body.dark-mode .menu-animate-img {
         }
       }, 0);
       return card;
+    }
+
+    // Redirect to menu-note.html and pass data via query parameters
+    function redirectToMenuNote(name, price, category) {
+      const url = `menu-note.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&category=${encodeURIComponent(category)}`;
+      window.location.href = url;
     }
 
     function addToCart(item, category) {
