@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,32 +29,32 @@
       max-width: 900px;
       margin: 0 auto;
       display: flex;
-      flex-direction: row; /* Change to row for alignment */
+      flex-direction: row; /* Align title and profile icon horizontally */
       align-items: center;
       justify-content: space-between; /* Space between title and profile icon */
-      padding: 20px 16px;
-      position: relative;
+      padding: 16px 12px; /* Adjust padding for smaller screens */
     }
     /* Title Alignment */
     .caf-title {
       text-align: left; /* Align title to the left */
-      font-size: 2.2rem;
+      font-size: 1.8rem; /* Adjust font size for mobile */
       font-weight: 900;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
       color: #004aad;
       text-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       margin: 0;
     }
+    /* Profile Picture Alignment */
     .profile-btn {
-      position: relative; /* Remove absolute positioning */
+      position: relative;
       margin-left: auto; /* Push the icon to the far right */
       background: none;
       border: none;
       cursor: pointer;
     }
     .profile-btn img {
-      width: 48px;
-      height: 48px;
+      width: 40px; /* Reduce size for mobile */
+      height: 40px;
       border-radius: 50%;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
       border: 2px solid #ffe066;
