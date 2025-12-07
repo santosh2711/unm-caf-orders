@@ -1043,12 +1043,10 @@ body.dark-mode .menu-animate-img {
     function renderMenuItem(data, category) {
       const card = document.createElement("div");
       card.className = "menu-card" + (data.available === false ? " unavailable" : "");
-
       card.innerHTML = `
         <img src="${data.imageURL || 'https://via.placeholder.com/200x140'}" alt="${data.name}" />
         <div class="details">
-          <!-- Redirect food item name to menu-note.html -->
-          <h3 onclick="redirectToMenuNote('${data.name}', '${data.price}', '${category}')">${data.name || 'Unnamed Item'}</h3>
+          <h3 onclick="redirectToMenuNote('${data.name}', '${data.price}', '${category}', '${data.imageURL || ''}')">${data.name || 'Unnamed Item'}</h3>
           <p>RM ${parseFloat(data.price).toFixed(2)}</p>
         </div>
         <button ${data.available === false ? "disabled" : ""} data-name="${data.name}" data-category="${category}">+</button>
@@ -1067,8 +1065,8 @@ body.dark-mode .menu-animate-img {
     }
 
     // Redirect to menu-note.html and pass data via query parameters
-    function redirectToMenuNote(name, price, category) {
-      const url = `menu-note.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&category=${encodeURIComponent(category)}`;
+    function redirectToMenuNote(name, price, category, imageURL = '') {
+      const url = `menu-note.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&category=${encodeURIComponent(category)}&img=${encodeURIComponent(imageURL || '')}`;
       window.location.href = url;
     }
 
@@ -1399,4 +1397,5 @@ applyDarkMode();
   </script>
 </body>
 </html>
+
 
