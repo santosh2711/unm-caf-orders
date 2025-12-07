@@ -60,21 +60,18 @@
 
 .container {
   width: 100%;
-  max-width: 500px;
+  max-width: 900px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 0;
+  padding: 0;
   box-sizing: border-box;
-}
-
-.category-section {
-  margin-bottom: 28px;
-  scroll-margin-top: 90px;
 }
 
 .menu-card {
   width: 100%;
+  max-width: 900px;
   margin: 0 auto 18px;
   padding: 14px 16px;
   border-radius: 16px;
@@ -86,16 +83,13 @@
 }
 
 @media (max-width: 700px) {
-  .container-bg {
-    padding: 24px var(--mobile-gutter) 170px;
-  }
   .container {
-    max-width: 100%;
-    padding: 0;
+    padding: 0 var(--mobile-gutter);
   }
   .menu-card {
-    margin-left: 0;
-    margin-right: 0;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     padding: 12px 10px;
     gap: 12px;
   }
