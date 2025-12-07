@@ -164,6 +164,18 @@
       localStorage.setItem("cart", JSON.stringify(cart));
       window.location.href = returnUrl;
     };
+
+    function applyDarkMode() {
+      if (localStorage.getItem("darkMode") === "on") {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.remove("dark-mode");
+      }
+    }
+    applyDarkMode();
+    window.addEventListener("storage", (evt) => {
+      if (evt.key === "darkMode") applyDarkMode();
+    });
   </script>
 </body>
 </html>
