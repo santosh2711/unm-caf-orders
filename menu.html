@@ -191,6 +191,77 @@
     body.dark-mode #cart-toggle-btn:active { background:#005f73 !important; color:#fff !important; }
     body.dark-mode #cart-badge { background:#ff5252 !important; color:#fff !important; }
     body.dark-mode .hex-bg { background: linear-gradient(135deg, #181a20 0%, #23262f 100%) !important; }
+    /* Cart toggle button (basket bar) */
+    #cart-toggle-btn {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92vw;
+      max-width: 520px;
+      height: 64px;
+      background: #005f73;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.12);
+      z-index: 1000;
+      cursor: pointer;
+      gap: 12px;
+    }
+    #cart-toggle-btn .cart-label { display:flex; align-items:center; gap:6px; font-weight:800; }
+    #cart-toggle-btn .cart-total { font-weight:900; }
+    #cart-badge { display:none !important; }
+
+    /* Floating cart panel */
+    #cart-section {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vw;
+      max-width: 500px;
+      background: #ffffff;
+      border: 1px solid #e5e9f0;
+      box-shadow: 0 8px 24px rgba(15,23,42,0.15);
+      border-radius: 16px;
+      padding: 12px 16px;
+      gap: 8px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 999;
+    }
+    #cart-items { width:100%; max-width:460px; max-height:200px; overflow-y:auto; }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr auto 100px;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      background: #f8fafc;
+      border: 1px solid #e5e9f0;
+      border-radius: 8px;
+    }
+    .cart-item-controls { display:flex; justify-content:flex-end; gap:6px; }
+    #cart-section > button {
+      background:#10b981;
+      color:#ffffff;
+      font-size:1rem;
+      font-weight:800;
+      padding:12px 16px;
+      border-radius:12px;
+      width:100%;
+      max-width:300px;
+      box-shadow:0 6px 16px rgba(16,185,129,0.25);
+    }
   </style>
 </head>
 <body>
@@ -225,7 +296,8 @@
   </div>
 
   <button id="cart-toggle-btn" title="Show Cart">
-    🛒<span id="cart-badge"></span>
+    <span class="cart-label">Cart - 0 Items</span>
+    <span class="cart-total">RM 0.00</span>
   </button>
 
   <script type="module">
