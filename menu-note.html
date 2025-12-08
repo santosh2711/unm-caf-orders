@@ -146,6 +146,8 @@
     const category = params.get("category") || "";
     const img = params.get("img") || "https://via.placeholder.com/800x400?text=Food+image";
     const returnUrl = params.get("returnUrl") || "menu.html";
+    const vendorId = params.get("vendor") || "";
+    const cartKey = vendorId ? `cart_${vendorId}` : "cart";
     // Populate UI
     document.getElementById("item-name").textContent = name;
     document.getElementById("item-category").textContent = category;
@@ -159,9 +161,9 @@
 
     document.getElementById("add-cart-btn").onclick = () => {
       const note = document.getElementById("note-input").value.trim();
-      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
       cart.push({ name, price: Number(price), category, notes: note, qty, imageURL: img });
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(cartKey, JSON.stringify(cart));
       window.location.href = returnUrl;
     };
 
