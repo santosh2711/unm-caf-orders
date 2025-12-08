@@ -315,10 +315,6 @@
       </div>
       <div id="mamak-note"></div>
     </div>
-    <div class="note-section">
-      <label for="order-note">Add a note for the vendor (optional):</label>
-      <textarea id="order-note" placeholder="e.g., More rice, less spice, etc."></textarea>
-    </div>
     <div class="actions">
       <button class="cancel" onclick="window.history.back()">Cancel</button>
       <button class="confirm" onclick="submitOrder()">Confirm Order</button>
@@ -344,8 +340,9 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const vendorId = localStorage.getItem('vendorId');
+    const cartKey = vendorId ? `cart_${vendorId}` : 'cart';
+    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
     const orderItemsContainer = document.getElementById("order-items");
     const totalPriceContainer = document.getElementById("total-price");
     const mamakNoteDiv = document.getElementById("mamak-note");
@@ -410,6 +407,9 @@
         baseTotal += itemTotal;
         let feeLabel = fee > 0 ? " <span style='color:#00796b;font-size:0.95em;'>(+RM 1.00 Take Away)</span>" : "";
         orderItemsContainer.innerHTML += `<div class="item"><span>${item.name} × ${item.qty}${feeLabel}</span><span>RM ${itemTotal.toFixed(2)}</span></div>`;
+        if (item.notes) {
+          orderItemsContainer.innerHTML += `<div style="font-size:0.95em;color:#888;margin-bottom:8px;margin-left:8px;">Note: ${item.notes}</div>`;
+        }
       });
       return baseTotal;
     }
