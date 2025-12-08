@@ -305,7 +305,8 @@
       "Dosai Corner","Roti Canai","White Bread","Fresh Juice","Beverages"
     ];
 
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const CART_KEY = "cart_" + vendorId;
+    let cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
     normalizeCart();
     updateCartStatus();
 
@@ -403,7 +404,7 @@
         const price = Number(i.price ?? 0);
         return { ...i, qty, price };
       });
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
     }
 
     function changeQty(index, delta) {
@@ -457,7 +458,7 @@
       document.getElementById("cart-count").textContent = `Cart: ${itemCount} items`;
       document.getElementById("cart-total").textContent = `Total: RM ${total.toFixed(2)}`;
       updateCartBadge();
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
     }
 
     function loadMenuRealtime() {
@@ -544,7 +545,7 @@
 
     function goToSummary() {
       if (!cart.length) return alert("Cart is empty");
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
       localStorage.setItem("vendorId", vendorId);
       window.location.href = "summary.html";
     }
