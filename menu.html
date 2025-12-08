@@ -193,7 +193,7 @@
       cursor: pointer;
       gap: 12px;
     }
-    #cart-toggle-btn .cart-label { display:flex; align-items:center; gap:6px; font-weight:800; }
+    #cart-toggle-btn .cart-label { display:flex; align-items:center; gap=6px; font-weight:800; }
     #cart-toggle-btn .cart-total { font-weight:900; }
     #cart-badge { display:none !important; }
 
@@ -359,7 +359,7 @@
 
     function redirectToMenuNote(name, price, category, imageURL = "") {
       const returnUrl = encodeURIComponent(window.location.href);
-      const url = `menu-note.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&category=${encodeURIComponent(category)}&img=${encodeURIComponent(imageURL || '')}&returnUrl=${returnUrl}`;
+      const url = `menu-note.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&category=${encodeURIComponent(category)}&img=${encodeURIComponent(imageURL || '')}&returnUrl=${returnUrl}&vendor=${encodeURIComponent(vendorId || '')}`;
       window.location.href = url;
     }
     window.redirectToMenuNote = redirectToMenuNote;
