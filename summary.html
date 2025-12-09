@@ -346,7 +346,7 @@
     const orderItemsContainer = document.getElementById("order-items");
     const totalPriceContainer = document.getElementById("total-price");
     const mamakNoteDiv = document.getElementById("mamak-note");
-    const noteInput = document.getElementById("order-note");
+    const noteInput = document.getElementById('order-note');
 
     // Pre-fill note if available from previous order
     const savedNote = localStorage.getItem("orderNote");
@@ -442,7 +442,7 @@
           return;
         }
 
-        const note = noteInput.value.trim();
+        const note = noteInput ? noteInput.value.trim() : "";
         const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
         const displayColor = deliveryOption === 'take-away' ? '#ff6666' : '#ccffcc';
 
