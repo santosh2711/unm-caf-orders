@@ -748,6 +748,7 @@
     const titleEl = document.querySelector(".caf-title");
     const quoteChip = document.getElementById("quoteChip");
     const dotLoader = document.getElementById("dotLoader");
+    const MIN_LOAD_DURATION = 2000;
 
     const quotes = [
       "Bringing campus together, one plate at a time.",
@@ -790,13 +791,7 @@
       renderSkeletonCards();
       toggleLoader(true);
       onSnapshot(vendorsRef, snapshot => {
-        shopsData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        isLoading = false;
-        toggleLoader(false);
-        renderShopList();
+        handleSnapshot(snapshot);
       });
     });
 
@@ -887,6 +882,40 @@
         fragment.appendChild(sk);
       }
       shopList.replaceChildren(fragment);
+    }
+
+    async function preloadImages(urls = []) {
+      if (!urls.length) return;
+      const uniqueUrls = Array.from(new Set(urls.filter(Boolean)));
+      const loaders = uniqueUrls.map(url => new Promise(resolve => {
+        const img = new Image();
+        img.onload = img.onerror = () => resolve();
+        img.src = url;
+      }));
+      await Promise.all(loaders);
+    }
+
+    async function handleSnapshot(snapshot) {
+      isLoading = true;
+      toggleLoader(true);
+      renderSkeletonCards();
+
+      shopsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      const imageUrls = shopsData.map(s => s.imageURL).filter(Boolean);
+      const start = performance.now();
+      await preloadImages(imageUrls);
+      const elapsed = performance.now() - start;
+      if (elapsed < MIN_LOAD_DURATION) {
+        await new Promise(res => setTimeout(res, MIN_LOAD_DURATION - elapsed));
+      }
+
+      isLoading = false;
+      toggleLoader(false);
+      renderShopList();
     }
 
     function toggleLoader(show) {
