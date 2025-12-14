@@ -78,6 +78,11 @@
 		body.dark-mode .hero {
 			background: linear-gradient(130deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
 		}
+		.hero-main {
+			display: grid;
+			gap: 10px;
+			align-content: center;
+		}
 		.brand {
 			display: flex;
 			gap: 12px;
@@ -104,22 +109,6 @@
 			background-clip: text;
 			color: transparent;
 		}
-		.meta {
-			display: flex;
-			gap: 10px;
-			align-items: center;
-			color: var(--subtle);
-			font-size: 0.98rem;
-		}
-		.meta .pill {
-			padding: 6px 10px;
-			border-radius: 999px;
-			background: rgba(0,0,0,0.05);
-			border: 1px solid var(--stroke);
-			color: var(--text);
-			font-weight: 700;
-			letter-spacing: 0.3px;
-		}
 		.quote-chip {
 			margin-top: 10px;
 			display: inline-flex;
@@ -138,10 +127,12 @@
 		.quote-chip::after { content: '”'; color: var(--accent); font-size: 1.1rem; }
 		body.dark-mode .quote-chip { background: rgba(255,255,255,0.08); color: var(--text); }
 		.actions {
-			display: grid;
+			display: flex;
+			flex-direction: column;
 			gap: 10px;
 			width: min(360px, 100%);
-			justify-items: end;
+			align-items: flex-end;
+			justify-content: center;
 		}
 		.profile {
 			display: flex;
@@ -152,6 +143,7 @@
 			background: var(--panel);
 			border: 1px solid var(--stroke);
 			box-shadow: var(--shadow);
+			cursor: pointer;
 		}
 		.profile .profile-badge {
 			width: 42px;
@@ -168,18 +160,27 @@
 		}
 		.filters {
 			position: sticky;
-			top: 78px;
+			top: 12px;
 			z-index: 5;
-			margin-top: 14px;
 			display: grid;
-			gap: 10px;
-			grid-template-columns: 1.2fr 0.6fr 0.4fr;
+			gap: 8px;
 			background: rgba(255,255,255,0.9);
 			backdrop-filter: blur(var(--blur));
 			padding: 10px;
 			border-radius: 14px;
 		}
 		body.dark-mode .filters { background: rgba(11,13,16,0.7); }
+		.filter-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+		.filter-box {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 10px;
+			border-radius: 12px;
+			border: 1px solid var(--stroke);
+			background: var(--panel);
+			box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+		}
 		.input, select {
 			width: 100%;
 			padding: 12px 14px;
@@ -238,6 +239,31 @@
 		.dot-loader span:nth-child(2) { animation-delay: 0.16s; }
 		.dot-loader span:nth-child(3) { animation-delay: 0.32s; }
 		@keyframes floatDots { 0%,80%,100%{transform:translateY(0);opacity:0.6;} 40%{transform:translateY(-6px);opacity:1;} }
+		.page-loader {
+			position: fixed;
+			inset: 0;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			gap: 12px;
+			background: rgba(248,249,252,0.78);
+			backdrop-filter: blur(6px);
+			z-index: 50;
+			color: var(--text);
+			font-weight: 800;
+			letter-spacing: 0.3px;
+		}
+		body.dark-mode .page-loader { background: rgba(11,13,16,0.72); }
+		.page-loader .spinner {
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			border: 4px solid rgba(255,255,255,0.65);
+			border-top-color: var(--accent);
+			animation: spin 0.8s linear infinite;
+			box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+		}
+		@keyframes spin { to { transform: rotate(360deg); } }
 		.skeleton { position: relative; border-radius: 18px; border: 1px solid var(--stroke); background: var(--panel); overflow: hidden; min-height: 320px; box-shadow: var(--shadow); }
 		.sk-img, .sk-line, .sk-pill {
 			background: linear-gradient(90deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 100%);
@@ -250,38 +276,37 @@
 		.sk-pill { height: 22px; width: 120px; border-radius: 999px; }
 		@keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 		.empty { grid-column: 1 / -1; text-align: center; padding: 28px 14px; background: var(--panel); border: 1px solid var(--stroke); border-radius: 14px; color: var(--subtle); }
-		@media (max-width: 880px) { .hero { grid-template-columns: 1fr; } .actions { justify-items: start; width: 100%; } .filters { grid-template-columns: 1fr; position: static; } }
-		@media (max-width: 620px) { .card { grid-template-rows: 150px auto; } }
+		@media (max-width: 880px) { .hero { grid-template-columns: 1fr; } .actions { width: 100%; align-items: flex-start; flex-direction: row; flex-wrap: wrap; } .filters { position: static; } }
+		@media (max-width: 620px) { .card { grid-template-rows: 150px auto; } .filter-row { flex-direction: column; align-items: flex-start; } .filter-box { width: 100%; } }
 		@media (max-width: 720px) {
 			body { background: #f8f9fc; }
 			.topbar { position: static; margin: 0; padding: 8px 0 0 0; backdrop-filter: none; background: transparent; }
 			.hero { padding: 14px; border-radius: 14px; box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+			.hero-main { gap: 8px; }
 			.quote-chip { max-width: 100%; }
 		}
 	</style>
 </head>
 <body>
 	<div class="page">
+		<div id="pageLoader" class="page-loader" aria-live="polite" aria-label="Loading shops">
+			<div class="spinner"></div>
+			<span id="loaderText">Loading shops…</span>
+		</div>
 		<div class="topbar">
 			<div class="hero">
-				<div>
+				<div class="hero-main">
 					<div class="brand">
+						<div class="brand-mark">UNM</div>
 						<div>
 							<h1>UNM Cafeteria</h1>
-							<div class="meta">
-								<span class="pill">Live shop status</span>
-								<span class="pill">Fresh menus</span>
-							</div>
 						</div>
 					</div>
 					<div class="quote-chip" id="quoteChip" aria-live="polite">Good food. Good friends. Good day.</div>
 				</div>
 				<div class="actions">
-					<div class="profile">
-						<div>
-							<div style="font-weight:700; color:var(--text);">Welcome back</div>
-							<div style="color:var(--subtle); font-size:0.95rem;">Stay logged in to keep orders quick.</div>
-						</div>
+					<div class="profile" id="profileCard" title="Tap to sign out">
+						<div style="font-weight:700; color:var(--text);">Welcome back</div>
 						<div id="profileBadge" class="profile-badge" aria-label="Profile badge">U</div>
 					</div>
 					<button id="settingsBtn" style="padding:10px 12px; border-radius:12px; border:1px solid var(--stroke); background:var(--panel); color:var(--text); font-weight:700; cursor:pointer; box-shadow:var(--shadow);">Settings</button>
@@ -289,16 +314,21 @@
 			</div>
 			<div class="filters">
 				<input class="input" id="shopSearch" placeholder="Search shops" aria-label="Search shops" />
-				<select id="shopSort" aria-label="Sort shops">
-					<option value="asc">A-Z</option>
-					<option value="desc">Z-A</option>
-				</select>
-				<select id="shopFilter" aria-label="Filter status">
-					<option value="all">All</option>
-					<option value="open">Open now</option>
-					<option value="closed">Closed</option>
-					<option value="fav">Favourites</option>
-				</select>
+				<div class="filter-row">
+					<div style="flex:1; min-width: 140px; color:var(--subtle); font-weight:700;">Quick filters</div>
+					<div class="filter-box" aria-label="Sort and filter">
+						<select id="shopSort" aria-label="Sort shops">
+							<option value="asc">A-Z</option>
+							<option value="desc">Z-A</option>
+						</select>
+						<select id="shopFilter" aria-label="Filter status">
+							<option value="all">All</option>
+							<option value="open">Open now</option>
+							<option value="closed">Closed</option>
+							<option value="fav">Favourites</option>
+						</select>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -325,7 +355,7 @@
 
 	<script type="module">
 		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-		import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+		import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 		import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 		const firebaseConfig = {
@@ -348,12 +378,20 @@
 		const filterSelect = document.getElementById('shopFilter');
 		const quoteChip = document.getElementById('quoteChip');
 		const profileBadge = document.getElementById('profileBadge');
+		const profileCard = document.getElementById('profileCard');
 		const dotLoader = document.getElementById('dotLoader');
+		const pageLoader = document.getElementById('pageLoader');
+		const loaderText = document.getElementById('loaderText');
 		const settingsBtn = document.getElementById('settingsBtn');
 		const settingsModal = document.getElementById('settingsModal');
 		const darkModeSwitch = document.getElementById('darkModeSwitch');
 		const vendorsRef = collection(db, 'vendors');
 		const MIN_LOAD = 0;
+
+		const setPageLoading = (on, text = 'Loading shops…') => {
+			if (pageLoader) pageLoader.style.display = on ? 'flex' : 'none';
+			if (loaderText) loaderText.textContent = text;
+		};
 
 		const quotes = [
 			'Good food. Good friends. Good day.',
@@ -389,8 +427,17 @@
 				profileBadge.textContent = initial;
 				profileBadge.setAttribute('aria-label', `Profile badge ${initial}`);
 			}
+			setPageLoading(true, 'Loading shops…');
 			onSnapshot(vendorsRef, snap => handleSnapshot(snap));
 		});
+
+		if (profileCard) {
+			profileCard.addEventListener('click', async () => {
+				setPageLoading(true, 'Signing out…');
+				try { await signOut(auth); } catch (e) {}
+				window.location.href = 'student-login.html';
+			});
+		}
 
 		searchInput.addEventListener('input', debounce(render));
 		sortSelect.addEventListener('change', render);
@@ -405,9 +452,11 @@
 
 		async function handleSnapshot(snapshot) {
 			isLoading = true;
+			setPageLoading(true, 'Loading shops…');
 			shopsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 			isLoading = false;
 			render();
+			setPageLoading(false);
 		}
 
 		function render() {
@@ -520,7 +569,7 @@
 			shopList.replaceChildren(frag);
 		}
 
-		function toggleLoader(show) { dotLoader.style.display = 'none'; }
+		function toggleLoader(show) { dotLoader.style.display = show ? 'flex' : 'none'; }
 		function wait() { return Promise.resolve(); }
 		async function preloadImages() { return; }
 
