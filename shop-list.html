@@ -1,81 +1,161 @@
 
-
 <!DOCTYPE html>
 <html>
 <head>
   <title>UNM Cafeteria – Food Shops</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23f97316' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #fffaf2;
+      --panel: rgba(255,255,255,0.94);
+      --panel-strong: rgba(255,244,229,0.9);
+      --text-primary: #0b0b0b;
+      --text-secondary: #3d3d3d;
+      --accent: #f97316;
+      --accent-2: #ffb703;
+      --border: rgba(12,12,12,0.08);
+      --shadow: 0 18px 50px rgba(0,0,0,0.14);
+      --blur: 16px;
+    }
+    body.dark-mode {
+      --bg: #0b0b0b;
+      --panel: rgba(18,18,18,0.95);
+      --panel-strong: rgba(26,26,26,0.86);
+      --text-primary: #f5f5f5;
+      --text-secondary: #d8d8d8;
+      --accent: #f97316;
+      --accent-2: #ffb703;
+      --border: rgba(255,255,255,0.08);
+      --shadow: 0 18px 50px rgba(0,0,0,0.55);
+      --blur: 18px;
+    }
+    * {
+      box-sizing: border-box;
+    }
     html, body {
-      font-family: 'Lato', Arial, sans-serif;
+      font-family: 'Space Grotesk', 'Lato', Arial, sans-serif;
       min-height: 100vh;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      background: #f4f6f9;
+      background: var(--bg);
+      color: var(--text-primary);
       overflow-x: hidden;
       font-size: 15px;
+      letter-spacing: 0.1px;
     }
     .background {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: white;
+      background:
+        radial-gradient(900px 900px at 12% 8%, rgba(249,115,22,0.18), transparent 50%),
+        radial-gradient(900px 900px at 88% 20%, rgba(255,183,3,0.16), transparent 50%),
+        radial-gradient(1100px 1100px at 42% 92%, rgba(255,132,0,0.12), transparent 55%),
+        var(--bg);
       z-index: -1;
+      filter: saturate(110%);
     }
-    /* Header Bar */
     .header-bar {
       width: 100%;
-      max-width: 900px;
+      max-width: 1180px;
       margin: 0 auto;
       display: flex;
-      flex-direction: row; /* Align title and profile icon horizontally */
       align-items: center;
-      justify-content: space-between; /* Space between title and profile icon */
-      padding: 16px 12px; /* Adjust padding for smaller screens */
+      justify-content: space-between;
+      padding: 18px 18px 6px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(var(--blur));
     }
-    /* Title Alignment */
+    .header-shell {
+      width: 100%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.82), var(--panel));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur));
+    }
+    body.dark-mode .header-shell {
+      background: linear-gradient(120deg, rgba(32,32,32,0.95), rgba(16,16,16,0.9));
+    }
+    .title-stack {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
     .caf-title {
-      text-align: left; /* Align title to the left */
-      font-size: 1.8rem; /* Adjust font size for mobile */
-      font-weight: 900;
-      letter-spacing: 1.2px;
-      color: #004aad;
-      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      text-align: left;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1.4px;
       margin: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: none;
+      line-height: 1.1;
     }
-    /* Profile Picture Alignment */
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+    .header-meta .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+      box-shadow: 0 0 0 6px rgba(249,115,22,0.18);
+    }
     .profile-btn {
       position: relative;
-      margin-left: auto; /* Push the icon to the far right */
-      background: none;
-      border: none;
+      margin-left: auto;
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
       cursor: pointer;
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur));
+      transition: transform 0.12s ease, box-shadow 0.2s ease;
+    }
+    .profile-btn:hover {
+      transform: translateY(-1px);
     }
     .profile-btn img {
-      width: 40px; /* Reduce size for mobile */
-      height: 40px;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
-      border: 2px solid #ffe066;
-      background: #073a47;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 2px solid var(--accent);
       object-fit: cover;
-      transition: box-shadow 0.2s;
+      display: block;
     }
     .profile-menu {
       display: none;
       position: absolute;
-      top: 60px;
-      right: 24px;
-      background: #fff;
+      top: 70px;
+      right: 6px;
+      background: var(--panel);
       border-radius: 14px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-      min-width: 160px;
+      box-shadow: var(--shadow);
+      min-width: 180px;
       z-index: 100;
-      padding: 0;
+      padding: 6px;
       overflow: hidden;
-      border: 1.5px solid #00aaff;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(var(--blur));
       animation: fadeIn 0.18s;
     }
     @keyframes fadeIn {
@@ -86,190 +166,347 @@
       width: 100%;
       background: none;
       border: none;
-      padding: 14px 18px;
-      font-size: 1.1rem;
-      color: #000000;
+      padding: 12px 14px;
+      font-size: 1.05rem;
+      color: var(--text-primary);
       text-align: left;
       cursor: pointer;
-      transition: background 0.15s;
-      border-bottom: 1px solid #e0f7fa;
-    }
-    .profile-menu button:last-child {
-      border-bottom: none;
+      transition: background 0.15s, color 0.15s;
+      border-radius: 10px;
     }
     .profile-menu button:hover, .profile-menu button:focus {
-      background: #e0f7fa;
-      color: #172b90;
+      background: rgba(249,115,22,0.12);
+      color: var(--accent);
+      outline: none;
     }
-    /* Search bar alignment */
+    .quote-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: linear-gradient(120deg, rgba(249,115,22,0.12), rgba(255,183,3,0.16));
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 1px solid rgba(249,115,22,0.22);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur));
+      max-width: 560px;
+    }
+    .quote-chip::before {
+      content: "“";
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
     .shoplist-bar {
       width: 100%;
-      max-width: 900px; /* Ensure it stays within the container */
-      margin: 10px auto;
+      max-width: 1180px;
+      margin: 14px auto 10px auto;
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: stretch;
-      padding: 0 16px; /* Add padding for consistent margins */
+      gap: 12px;
+      align-items: center;
+      padding: 0 18px;
+      position: sticky;
+      top: 96px;
+      z-index: 4;
+      box-sizing: border-box;
+    }
+    .shoplist-shell {
+      flex: 1;
+      display: flex;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur));
     }
     #shopSearch {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 24px;
-      border: 1.5px solid #b0b0b0;
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
       font-size: 1rem;
-      background: #fafbfc;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: var(--panel-strong);
+      color: var(--text-primary);
+      outline: none;
+      transition: border 0.16s ease, box-shadow 0.16s ease;
+    }
+    #shopSearch:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 6px rgba(249,115,22,0.14);
     }
     #shopSort {
-      width: 100%;
-      max-width: 120px;
-      align-self: flex-end;
-      padding: 10px 12px;
-      border-radius: 24px;
-      border: 1.5px solid #b0b0b0;
+      width: 130px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
       font-size: 1rem;
-      background: #fafbfc;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: var(--panel-strong);
+      color: var(--text-primary);
+      outline: none;
+      transition: border 0.16s ease, box-shadow 0.16s ease;
+    }
+    #shopSort:focus {
+      border-color: var(--accent-2);
+      box-shadow: 0 0 0 6px rgba(255,183,3,0.18);
     }
     .container {
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      padding: 40px 24px 40px 24px;
-      max-width: 900px;
+      max-width: 1180px;
       width: 100%;
-      margin: 24px auto 32px auto;
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 28px;
+      margin: 18px auto 36px auto;
+      padding: 0 18px 40px 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
       box-sizing: border-box;
-      background: #fff;
     }
     .shop-card {
-      flex: 1 1 340px;
-      min-width: 180px;
-      max-width: 320px;
-      background: linear-gradient(90deg, #ffffff 60%, #dee2e3 100%);
-      border-radius: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-      overflow: hidden;
-      text-align: center;
-      cursor: pointer;
       position: relative;
-      border: 1.5px solid #005f73;
+      background: var(--panel);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      cursor: pointer;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      color: white;
-      transition: transform 0.12s cubic-bezier(.4,0,.2,1), box-shadow 0.12s;
-      background: linear-gradient(90deg, #fff 60%, #f4f6f9 100%);
-      border: 1.5px solid #005f73;
+      min-height: 320px;
+      transition: transform 0.14s ease, box-shadow 0.2s ease, border-color 0.16s ease;
+      backdrop-filter: blur(var(--blur));
+    }
+    .shop-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(249,115,22,0.14), rgba(255,183,3,0.12));
+      opacity: 0;
+      transition: opacity 0.18s ease;
+      pointer-events: none;
+    }
+    .shop-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(249,115,22,0.4);
+      box-shadow: 0 18px 60px rgba(249,115,22,0.22);
+    }
+    .shop-card:hover::before {
+      opacity: 1;
     }
     .shop-card.closed {
       cursor: default;
-      opacity: 0.7;
-      filter: grayscale(0.2);
+      opacity: 0.86;
+    }
+    .shop-card.pressed {
+      transform: translateY(2px) scale(0.99);
+      box-shadow: 0 12px 38px rgba(15,23,42,0.18);
     }
     .shop-card img {
       width: 100%;
-      height: 120px;
+      height: 160px;
       object-fit: cover;
     }
+    .shop-card-content {
+      padding: 14px 14px 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
     .shop-card h3 {
-      margin: 12px 0 6px 0;
-      color: rgb(0, 0, 0);
-      font-size: 1.1rem;
+      margin: 0;
+      color: var(--text-primary);
+      font-size: 1.15rem;
       font-weight: 700;
+      letter-spacing: 0.2px;
+      flex: 1;
+      line-height: 1.2;
+    }
+    .status-chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      background: rgba(249,115,22,0.14);
+      color: var(--accent);
+    }
+    .status-chip::before {
+      content: "";
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 0 6px rgba(249,115,22,0.18);
+    }
+    .status-chip.closed {
+      background: rgba(239,68,68,0.1);
+      color: #ef4444;
+      border-color: rgba(239,68,68,0.18);
+      box-shadow: none;
     }
     .shop-card p {
-      color: #000000;
-      padding: 0 12px 12px 12px;
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+    .shop-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px 14px 14px;
+      gap: 10px;
+    }
+    /* Dot loader */
+    .loader-wrap {
+      width: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 0 6px 0;
+    }
+    .dot-loader {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot-loader span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: floatDots 1s ease-in-out infinite;
+    }
+    .dot-loader span:nth-child(2) { animation-delay: 0.15s; }
+    .dot-loader span:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes floatDots {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.6; }
+      40% { transform: translateY(-6px); opacity: 1; }
+    }
+    /* Skeleton loading cards */
+    .skeleton-card {
+      position: relative;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      overflow: hidden;
+      min-height: 320px;
+      box-shadow: var(--shadow);
+    }
+    .skeleton-card .sk-img,
+    .skeleton-card .sk-line,
+    .skeleton-card .sk-pill {
+      background: linear-gradient(90deg,
+        rgba(0,0,0,0.04) 0%,
+        rgba(0,0,0,0.08) 50%,
+        rgba(0,0,0,0.04) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s ease-in-out infinite;
+      border-radius: 12px;
+    }
+    .skeleton-card .sk-img { height: 160px; width: 100%; border-radius: 14px 14px 10px 10px; }
+    .skeleton-card .sk-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .skeleton-card .sk-line { height: 14px; }
+    .skeleton-card .sk-pill { height: 22px; width: 120px; border-radius: 999px; }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: linear-gradient(120deg, rgba(249,115,22,0.14), rgba(249,115,22,0.24));
+      color: var(--accent);
+      font-weight: 700;
       font-size: 0.95rem;
+      border: 1px solid rgba(249,115,22,0.26);
+      transition: transform 0.12s ease, box-shadow 0.16s ease;
     }
-    .shop-card:active,
-    .shop-card.pressed {
-      transform: scale(0.96);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.18);
-    }
-    .shop-closed {
-      color: white;
-      font-weight: bold;
-      background: #d32f2f;
-      padding: 8px 0;
-      border-radius: 8px;
-      margin: 10px 0;
-      width: 90%;
-      text-align: center;
+    .cta::after {
+      content: "→";
+      font-weight: 800;
     }
     .shop-card .fav-icon {
       position: absolute;
-      bottom: 14px;
-      right: 16px;
-      font-size: 1.5rem;
-      background: none;
-      border: none;
+      top: 12px;
+      right: 12px;
+      font-size: 1.4rem;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--border);
       outline: none;
       cursor: pointer;
       z-index: 2;
       user-select: none;
-      padding: 0;
-      display: flex;
+      padding: 8px;
+      display: inline-flex;
       align-items: center;
-      transition: transform 0.18s;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: var(--shadow);
+      transition: transform 0.12s ease, box-shadow 0.14s ease;
+    }
+    body.dark-mode .shop-card .fav-icon {
+      background: rgba(20,26,43,0.94);
     }
     .shop-card .fav-icon svg {
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.6rem;
+      height: 1.6rem;
       fill: transparent;
-      stroke: #bbb;
-      stroke-width: 2.2;
+      stroke: #94a3b8;
+      stroke-width: 2.1;
       transition: fill 0.2s, stroke 0.2s;
     }
     .shop-card .fav-icon.fav svg {
-      fill: #e53935;
-      stroke: #e53935;
-      filter: drop-shadow(0 2px 8px #e5393533);
+      fill: #ef4444;
+      stroke: #ef4444;
+      filter: drop-shadow(0 2px 8px #ef444433);
     }
     .shop-card .fav-icon:active {
-      transform: scale(1.18);
+      transform: scale(1.05);
     }
-    body.dark-mode .shop-card .fav-icon svg {
-      stroke: #888 !important;
+    .shop-card.closed .cta {
+      background: rgba(148,163,184,0.18);
+      color: #94a3b8;
+      border-color: rgba(148,163,184,0.28);
     }
-    body.dark-mode .shop-card .fav-icon.fav svg {
-      fill: #ff5252 !important;
-      stroke: #ff5252 !important;
-    }
-    /* Popup animation */
     .fav-popup {
       position: fixed;
       left: 50%;
       top: 12%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: #fff;
-      color: #222;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: var(--panel);
+      color: var(--text-primary);
       padding: 14px 28px;
       border-radius: 14px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-      font-size: 1.08rem;
+      box-shadow: var(--shadow);
+      font-size: 1.02rem;
       font-weight: 700;
       z-index: 9999;
       opacity: 0;
       pointer-events: none;
       animation: favPopAnim 1.2s cubic-bezier(.4,1.6,.4,1) forwards;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(var(--blur));
     }
     @keyframes favPopAnim {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8);}
-      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.08);}
-      60% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8);}
-    }
-    body.dark-mode .fav-popup {
-      background: #23262f;
-      color: #f4f6f9;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.48);
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.82);}
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.06);}
+      60% { opacity: 1; transform: translate(-50%, -50%) scale(1);} 
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9);} 
     }
     #settingsModal {
       position: fixed;
@@ -281,16 +518,18 @@
       backdrop-filter: blur(2px);
     }
     .settings-modal-content {
-      background: linear-gradient(120deg, #f4f6f9 60%, #e0f7fa 100%);
-      color: #222;
-      padding: 38px 32px 32px 32px;
-      border-radius: 22px;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.22);
-      max-width: 370px;
+      background: linear-gradient(120deg, var(--panel), rgba(255,255,255,0.92));
+      color: var(--text-primary);
+      padding: 32px 28px 28px 28px;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      max-width: 390px;
       margin: 100px auto;
       position: relative;
       top: 10vh;
       animation: modalPop 0.4s cubic-bezier(.4,1.6,.4,1);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(var(--blur));
     }
     @keyframes modalPop {
       0% { opacity: 0; transform: scale(0.92);}
@@ -298,250 +537,167 @@
       100% { opacity: 1; transform: scale(1);}
     }
     .settings-modal-content h2 {
-      margin-top: 0;
-      font-size: 1.45rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: #0077b6;
+      margin: 0 0 12px 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
       text-align: center;
-      margin-bottom: 18px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     .settings-modal-content label {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 18px 0 0 0;
-      font-size: 1.08rem;
+      margin: 16px 0 0 0;
+      font-size: 1.02rem;
       font-weight: 700;
-      color: #005f73;
+      color: var(--text-primary);
     }
     .settings-modal-content select,
     .settings-modal-content input[type="checkbox"] {
       margin-left: 18px;
-      font-size: 1.08rem;
-      border-radius: 8px;
-      border: 1.5px solid #b0b0b0;
-      padding: 6px 12px;
-      background: #fff;
-      color: #222;
-      transition: border 0.2s;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      padding: 8px 12px;
+      background: var(--panel-strong);
+      color: var(--text-primary);
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    .settings-modal-content select:focus,
+    .settings-modal-content input[type="checkbox"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 6px rgba(249,115,22,0.14);
     }
     .settings-modal-content button {
       width: 100%;
-      margin-top: 28px;
+      margin-top: 22px;
       padding: 14px 0;
       border-radius: 12px;
       border: none;
-      font-size: 1.08em;
-      background: linear-gradient(90deg, #0077b6 40%, #00aaff 100%);
+      font-size: 1.02rem;
+      background: linear-gradient(90deg, var(--accent) 40%, var(--accent-2) 100%);
       color: #fff;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0,95,115,0.12);
+      box-shadow: var(--shadow);
       letter-spacing: 0.4px;
-      transition: background 0.18s, transform 0.18s;
+      transition: transform 0.16s, box-shadow 0.18s;
     }
     .settings-modal-content button:hover {
-      background: linear-gradient(90deg, #00aaff 40%, #0077b6 100%);
-      transform: translateY(-2px) scale(1.03);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 18px 48px rgba(249,115,22,0.28);
     }
-    body.dark-mode #settingsModal {
-      background: rgba(0,0,0,0.48);
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 32px 18px;
+      border-radius: 16px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur));
     }
-    body.dark-mode .settings-modal-content {
-      background: linear-gradient(120deg, #23262f 60%, #181a20 100%);
-      color: #f4f6f9;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.48);
-    }
-    body.dark-mode .settings-modal-content h2 {
-      color: #00eaff;
-    }
-    body.dark-mode .settings-modal-content label {
-      color: #00aaff;
-    }
-    body.dark-mode .settings-modal-content select,
-    body.dark-mode .settings-modal-content input[type="checkbox"] {
-      background: #23262f;
-      color: #f4f6f9;
-      border: 1.5px solid #444;
-    }
-    @media (max-width: 700px) {
-      .container {
-        max-width: 100vw;
-        margin: 0 0 32px 0;
-        padding: 8px 4px 48px 4px;
-        gap: 12px;
-        border-radius: 10px;
-        margin-top: 56px !important;
+    @media (max-width: 960px) {
+      .header-bar {
+        position: static;
+        padding: 12px;
       }
-      .shop-card {
-        min-width: 98vw;
-        max-width: 99vw;
-        margin: 0 auto 10px auto;
-        border-radius: 10px;
-        font-size: 0.98rem;
-      }
-      .shop-card img {
-        height: 90px;
+      .header-shell {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
       }
       .caf-title {
         font-size: 1.7rem;
-        margin-left: 8px;
-        letter-spacing: 1.2px;
-        line-height: 1.3;
-        gap: 8px;
-        margin-top: 18px;
-      }
-      .header-bar {
-        max-width: 100vw;
-        padding-top: 4px;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-      }
-      .profile-btn {
-        position: absolute;
-        top: 18px;
-        right: 8px;
-        margin: 0;
       }
       .shoplist-bar {
-        max-width: 100vw;
-        width: 100vw;
-        flex-direction: row;
-        gap: 8px;
-        padding: 0 2vw;
-        align-items: center;
-        justify-content: center;
+        position: static;
+        top: auto;
+        padding: 0 12px;
+        margin-top: 8px;
       }
-      #shopSearch {
-        width: 65vw;
-        min-width: 120px;
-        max-width: 70vw;
-        font-size: 1rem;
-        border-radius: 14px;
-        box-sizing: border-box;
-        margin: 0;
-        padding: 10px 12px;
-        display: inline-block;
+      .shoplist-shell {
+        flex-direction: column;
       }
       #shopSort {
-        width: 28vw;
-        min-width: 70px;
-        max-width: 32vw;
-        font-size: 1rem;
-        border-radius: 14px;
-        box-sizing: border-box;
-        margin: 0;
-        padding: 10px 12px;
-        display: inline-block;
-      }
-      .shop-card .fav-icon {
-        bottom: 10px;
-        right: 12px;
-        font-size: 2rem;
-      }
-      .shop-card .fav-icon svg {
-        width: 2rem;
-        height: 2rem;
+        width: 100%;
       }
     }
     @media (max-width: 700px) {
-      .shoplist-bar {
-        max-width: 96vw;
-        width: 96vw;
-        margin: 30px auto 10px auto;
-        padding: 0 3vw;
-        gap: 8px;
-        flex-direction: column;
-        align-items: stretch;
+      .container {
+        grid-template-columns: 1fr;
+        margin: 8px auto 28px auto;
+        padding: 0 10px 28px 10px;
       }
-      #shopSearch {
-        width: 100%;
-        max-width: none;
-        margin: 0;
+      .shop-card {
+        min-width: 0;
       }
-      #shopSort {
-        width: 32vw;
-        max-width: 32vw;
+      .shop-card img {
+        height: 150px;
+      }
+      .header-shell {
+        border-radius: 14px;
+      }
+      .profile-btn {
+        margin-left: 0;
         align-self: flex-end;
-        margin: 6px 0 0 0;
       }
+      .skeleton-card { min-height: 260px; }
+      .skeleton-card .sk-img { height: 150px; }
     }
-    /* Dark mode styles */
     body.dark-mode {
-      background: #181a20 !important;
-      color: #f4f6f9 !important;
-    }
-    body.dark-mode .container {
-      background: #23262f !important;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
-    }
-    body.dark-mode .shop-card {
-      background: linear-gradient(90deg, #23262f 60%, #181a20 100%) !important;
-      color: #f4f6f9 !important;
-      border: 1.5px solid #00aaff !important;
-    }
-    body.dark-mode .shop-card h3,
-    body.dark-mode .shop-card p {
-      color: #f4f6f9 !important;
-    }
-    body.dark-mode .header-bar {
-      background: transparent !important;
-    }
-    body.dark-mode .caf-title {
-      text-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 2px 4px rgba(0,0,0,0.28);
-    }
-    body.dark-mode .profile-menu {
-      background: #23262f !important;
-      color: #f4f6f9 !important;
-      border: 1.5px solid #00aaff !important;
-    }
-    body.dark-mode .profile-menu button {
-      color: #f4f6f9 !important;
-      border-bottom: 1px solid #23262f !important;
-    }
-    body.dark-mode .profile-menu button:hover,
-    body.dark-mode .profile-menu button:focus {
-      background: #181a20 !important;
-      color: #00eaff !important;
-    }
-    body.dark-mode .shoplist-bar {
-      background: none !important;
-      box-shadow: none !important;
-      border-radius: 0 !important;
+      background: var(--bg) !important;
+      color: var(--text-primary);
     }
     body.dark-mode #shopSearch,
     body.dark-mode #shopSort {
-      background: #23262f !important;
-      color: #f4f6f9 !important;
-      border: 1.5px solid #444 !important;
+      background: rgba(20,26,43,0.9);
+      color: var(--text-primary);
+      border: 1.5px solid var(--border);
     }
     body.dark-mode #shopSearch::placeholder {
-      color: #b0bec5 !important;
+      color: #8ba1c2;
     }
   </style>
 </head>
 <body>
   <div class="background"></div>
   <div class="header-bar">
-    <div class="caf-title">UNM Cafeteria</div>
-    <button class="profile-btn" id="profileBtn">
-      <img id="profilePic" src="https://ui-avatars.com/api/?name=U&background=00aaff&color=fff&rounded=true">
-    </button>
-    <div class="profile-menu" id="profileMenu">
-      <button onclick="window.location.href='student-home.html'">🏠 Home</button>
-      <button onclick="window.open('mailto:absmods538@gmail.com')">💬 Feedback</button>
-      <button onclick="openSettings()">⚙️ Settings</button>
+    <div class="header-shell">
+      <div class="title-stack">
+        <div class="caf-title">UNM Cafeteria</div>
+        <div class="header-meta"><span class="dot"></span> Fresh menus and live shop status</div>
+        <div class="quote-chip" id="quoteChip" aria-live="polite">Bringing campus together, one plate at a time.</div>
+      </div>
+      <button class="profile-btn" id="profileBtn">
+        <img id="profilePic" src="https://ui-avatars.com/api/?name=U&background=00aaff&color=fff&rounded=true" alt="Profile" aria-label="Profile" />
+      </button>
+      <div class="profile-menu" id="profileMenu">
+        <button onclick="window.location.href='student-home.html'">🏠 Home</button>
+        <button onclick="window.open('mailto:absmods538@gmail.com')">💬 Feedback</button>
+        <button onclick="openSettings()">⚙️ Settings</button>
+      </div>
     </div>
   </div>
-  <!-- Search and Sort Bar -->
   <div class="shoplist-bar">
-    <input type="text" id="shopSearch" placeholder="Search shops..." />
-    <select id="shopSort">
-      <option value="asc">A-Z</option>
-      <option value="desc">Z-A</option>
-    </select>
+    <div class="shoplist-shell">
+      <input type="text" id="shopSearch" placeholder="Search shops..." aria-label="Search shops" />
+      <select id="shopSort" aria-label="Sort shops">
+        <option value="asc">A-Z</option>
+        <option value="desc">Z-A</option>
+      </select>
+    </div>
+  </div>
+  <div class="loader-wrap" id="dotLoader" aria-live="polite" aria-label="Loading shops">
+    <div class="dot-loader">
+      <span></span><span></span><span></span>
+    </div>
   </div>
   <div class="container" id="shopList"></div>
   <div id="favPopup" style="display:none;"></div>
@@ -568,6 +724,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
       authDomain: "unm-caf-orders.firebaseapp.com",
@@ -577,102 +734,75 @@
       appId: "1:562096834985:web:f4bfe451e5482521e49cb8",
       measurementId: "G-J12PBDK7N1"
     };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
     const shopList = document.getElementById("shopList");
     const vendorsRef = collection(db, "vendors");
     const favPopup = document.getElementById("favPopup");
+    const searchInput = document.getElementById("shopSearch");
+    const sortSelect = document.getElementById("shopSort");
+    const profilePic = document.getElementById("profilePic");
+    const titleEl = document.querySelector(".caf-title");
+    const quoteChip = document.getElementById("quoteChip");
+    const dotLoader = document.getElementById("dotLoader");
 
-    // --- Search, Sort, Favourite Logic ---
+    const quotes = [
+      "Bringing campus together, one plate at a time.",
+      "Fuel up, focus up, Nottingham style.",
+      "Good food, good mood, go further.",
+      "Cafeteria moments make campus memories.",
+      "Study hard, eat happily, repeat."
+    ];
+    let quoteIndex = 0;
+
+    function cycleQuote() {
+      if (!quoteChip) return;
+      quoteChip.textContent = `"${quotes[quoteIndex]}"`;
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+    }
+    cycleQuote();
+    setInterval(cycleQuote, 12000);
+
     let shopsData = [];
     let favouriteShops = JSON.parse(localStorage.getItem('favouriteShops') || '[]');
+    let isLoading = true;
 
-    onAuthStateChanged(auth, async user => {
+    const debounce = (fn, wait = 180) => {
+      let timeoutId;
+      return (...args) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn.apply(null, args), wait);
+      };
+    };
+
+    onAuthStateChanged(auth, user => {
       if (!user) {
         alert("Please log in first.");
         window.location.href = "student-login.html";
         return;
       }
-      document.getElementById("profilePic").src =
-        `https://ui-avatars.com/api/?name=${user.email[0]}&background=00aaff&color=fff&rounded=true`;
-      onSnapshot(vendorsRef, (snapshot) => {
-        shopsData = [];
-        snapshot.forEach(doc => {
-          const d = doc.data();
-          shopsData.push({
-            id: doc.id,
-            ...d
-          });
-        });
+
+      profilePic.src = `https://ui-avatars.com/api/?name=${user.email[0]}&background=00aaff&color=fff&rounded=true`;
+
+      renderSkeletonCards();
+      toggleLoader(true);
+      onSnapshot(vendorsRef, snapshot => {
+        shopsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        isLoading = false;
+        toggleLoader(false);
         renderShopList();
       });
     });
 
-    document.getElementById('shopSearch').addEventListener('input', renderShopList);
-    document.getElementById('shopSort').addEventListener('change', renderShopList);
+    searchInput.addEventListener('input', debounce(renderShopList, 200));
+    sortSelect.addEventListener('change', renderShopList);
 
-    function renderShopList() {
-      const searchVal = document.getElementById('shopSearch').value.trim().toLowerCase();
-      const sortVal = document.getElementById('shopSort').value;
-      let filtered = shopsData.filter(shop =>
-        shop.name.toLowerCase().includes(searchVal)
-      );
-      // No sort by favourites, just A-Z or Z-A
-      filtered.sort((a, b) => {
-        if (sortVal === 'asc') return a.name.localeCompare(b.name);
-        if (sortVal === 'desc') return b.name.localeCompare(a.name);
-        return 0;
-      });
-      let html = "";
-      filtered.forEach(d => {
-        const isFav = favouriteShops.includes(d.id);
-        html += `
-          <div class="shop-card ${!d.isOpen ? 'closed' : ''}" data-shopid="${d.id}"
-            ${d.isOpen ? `onclick="window.location.href='menu.html?vendor=${d.id}'"` : ""}>
-            <img src="${d.imageURL || 'https://via.placeholder.com/300'}">
-            <h3>${d.name}</h3>
-            <p>${d.description || "No description yet"}</p>
-            ${!d.isOpen ? `<div class="shop-closed">Shop is Closed</div>` : ""}
-            <button class="fav-icon${isFav ? ' fav' : ''}" title="Mark as favourite" onclick="event.stopPropagation();toggleFavourite('${d.id}', '${d.name}')">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.2 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.2 6.86-8.55 11.54L12 21.35z"
-                  ${isFav ? 'fill="#e53935" stroke="#e53935"' : 'fill="transparent" stroke="#bbb"'} />
-              </svg>
-            </button>
-          </div>
-        `;
-      });
-      shopList.innerHTML = html;
-    }
-
-    window.toggleFavourite = function(shopId, shopName) {
-      const idx = favouriteShops.indexOf(shopId);
-      if (idx === -1) {
-        favouriteShops.push(shopId);
-        showFavPopup(`${shopName} added to favourites`);
-      } else {
-        favouriteShops.splice(idx, 1);
-        showFavPopup(`${shopName} removed from favourites`);
-      }
-      localStorage.setItem('favouriteShops', JSON.stringify(favouriteShops));
-      localStorage.setItem('favouriteShopsData', JSON.stringify(favouriteShops.map(id => {
-        const shop = shopsData.find(s => s.id === id);
-        return shop ? {id: shop.id, name: shop.name, imageURL: shop.imageURL || ''} : null;
-      }).filter(Boolean)));
-      renderShopList();
-    };
-
-    function showFavPopup(msg) {
-      favPopup.innerText = msg;
-      favPopup.className = "fav-popup";
-      favPopup.style.display = "block";
-      setTimeout(() => {
-        favPopup.style.display = "none";
-      }, 1200);
-    }
-
-    // Profile Menu Toggle
     const profileBtn = document.getElementById('profileBtn');
     const profileMenu = document.getElementById('profileMenu');
     document.addEventListener('click', (e) => {
@@ -683,24 +813,172 @@
       }
     });
 
-    shopList.addEventListener('touchstart', function(e) {
+    shopList.addEventListener('click', (e) => {
+      const favBtn = e.target.closest('.fav-icon');
+      if (favBtn) {
+        toggleFavourite(favBtn.dataset.shopid, favBtn.dataset.shopname);
+        return;
+      }
+
+      const card = e.target.closest('.shop-card');
+      if (card && card.dataset.isOpen === 'true') {
+        window.location.href = `menu.html?vendor=${card.dataset.shopid}`;
+      }
+    });
+
+    shopList.addEventListener('touchstart', (e) => {
       const card = e.target.closest('.shop-card');
       if (card) card.classList.add('pressed');
     }, {passive: true});
-    shopList.addEventListener('touchend', function(e) {
+    shopList.addEventListener('touchend', (e) => {
       const card = e.target.closest('.shop-card');
       if (card) setTimeout(() => card.classList.remove('pressed'), 120);
     }, {passive: true});
-    shopList.addEventListener('mousedown', function(e) {
+    shopList.addEventListener('mousedown', (e) => {
       const card = e.target.closest('.shop-card');
       if (card) card.classList.add('pressed');
     });
-    shopList.addEventListener('mouseup', function(e) {
+    shopList.addEventListener('mouseup', (e) => {
       const card = e.target.closest('.shop-card');
       if (card) setTimeout(() => card.classList.remove('pressed'), 120);
     });
 
-    // Settings modal logic
+    function renderShopList() {
+      if (isLoading) {
+        renderSkeletonCards();
+        toggleLoader(true);
+        return;
+      }
+      toggleLoader(false);
+
+      const searchVal = searchInput.value.trim().toLowerCase();
+      const sortVal = sortSelect.value;
+
+      const filtered = shopsData
+        .filter(shop => (shop.name || '').toLowerCase().includes(searchVal));
+
+      filtered.sort((a, b) => {
+        if (sortVal === 'desc') return b.name.localeCompare(a.name);
+        return a.name.localeCompare(b.name);
+      });
+
+      if (!filtered.length) {
+        shopList.innerHTML = '<div class="empty-state">No shops match your search yet.</div>';
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      filtered.forEach(shop => fragment.appendChild(buildShopCard(shop)));
+      shopList.replaceChildren(fragment);
+    }
+
+    function renderSkeletonCards(count = 6) {
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < count; i++) {
+        const sk = document.createElement('div');
+        sk.className = 'skeleton-card';
+        sk.innerHTML = `
+          <div class="sk-img"></div>
+          <div class="sk-body">
+            <div class="sk-line" style="width: 70%"></div>
+            <div class="sk-line" style="width: 90%"></div>
+            <div class="sk-pill" style="width: 36%"></div>
+          </div>`;
+        fragment.appendChild(sk);
+      }
+      shopList.replaceChildren(fragment);
+    }
+
+    function toggleLoader(show) {
+      if (!dotLoader) return;
+      dotLoader.style.display = show ? 'flex' : 'none';
+    }
+
+    function buildShopCard(shop) {
+      const isFav = favouriteShops.includes(shop.id);
+      const card = document.createElement('article');
+      card.className = `shop-card ${!shop.isOpen ? 'closed' : ''}`;
+      card.dataset.shopid = shop.id;
+      card.dataset.shopname = shop.name;
+      card.dataset.isOpen = shop.isOpen ? 'true' : 'false';
+
+      const img = document.createElement('img');
+      img.src = shop.imageURL || 'https://via.placeholder.com/600x320?text=Menu+coming+soon';
+      img.alt = `${shop.name || 'Shop'} cover`;
+
+      const body = document.createElement('div');
+      body.className = 'shop-card-content';
+
+      const titleRow = document.createElement('div');
+      titleRow.className = 'title-row';
+
+      const heading = document.createElement('h3');
+      heading.textContent = shop.name;
+
+      const status = document.createElement('span');
+      status.className = `status-chip ${shop.isOpen ? '' : 'closed'}`;
+      status.textContent = shop.isOpen ? 'Open now' : 'Closed';
+
+      titleRow.append(heading, status);
+
+      const desc = document.createElement('p');
+      desc.textContent = shop.description || 'No description yet.';
+
+      body.append(titleRow, desc);
+
+      const footer = document.createElement('div');
+      footer.className = 'shop-card-footer';
+
+      const cta = document.createElement('div');
+      cta.className = 'cta';
+      cta.textContent = shop.isOpen ? 'View menu' : 'Preview menu';
+
+      footer.append(cta);
+
+      const favBtn = document.createElement('button');
+      favBtn.className = `fav-icon${isFav ? ' fav' : ''}`;
+      favBtn.type = 'button';
+      favBtn.dataset.shopid = shop.id;
+      favBtn.dataset.shopname = shop.name;
+      favBtn.setAttribute('aria-label', 'Toggle favourite');
+      favBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 21.35l-1.45-1.32C5.2 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.2 6.86-8.55 11.54L12 21.35z" />
+        </svg>`;
+
+      card.append(img, body, footer, favBtn);
+      return card;
+    }
+
+    function toggleFavourite(shopId, shopName) {
+      const idx = favouriteShops.indexOf(shopId);
+      if (idx === -1) {
+        favouriteShops.push(shopId);
+        showFavPopup(`${shopName} added to favourites`);
+      } else {
+        favouriteShops.splice(idx, 1);
+        showFavPopup(`${shopName} removed from favourites`);
+      }
+
+      localStorage.setItem('favouriteShops', JSON.stringify(favouriteShops));
+      localStorage.setItem('favouriteShopsData', JSON.stringify(favouriteShops.map(id => {
+        const shop = shopsData.find(s => s.id === id);
+        return shop ? {id: shop.id, name: shop.name, imageURL: shop.imageURL || ''} : null;
+      }).filter(Boolean)));
+
+      renderShopList();
+    }
+    window.toggleFavourite = toggleFavourite;
+
+    function showFavPopup(msg) {
+      favPopup.innerText = msg;
+      favPopup.className = 'fav-popup';
+      favPopup.style.display = 'block';
+      setTimeout(() => {
+        favPopup.style.display = 'none';
+      }, 1200);
+    }
+
     window.openSettings = function() {
       document.getElementById('settingsModal').style.display = 'block';
       document.getElementById('titleThemeSelect').value = localStorage.getItem('titleTheme') || 'default';
@@ -713,27 +991,31 @@
       localStorage.setItem('titleTheme', this.value);
       applyTitleTheme();
     });
+
     function applyTitleTheme() {
       const theme = localStorage.getItem('titleTheme') || 'default';
-      const title = document.querySelector('.caf-title');
+      const baseColor = '#0b0b0b';
+      if (!titleEl) return;
+
       if (theme === 'blue') {
-        title.style.background = 'linear-gradient(90deg, #0077b6 40%, #0097a7 100%)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
+        titleEl.style.background = 'linear-gradient(90deg, #0ea5e9 20%, #2563eb 100%)';
+        titleEl.style.webkitBackgroundClip = 'text';
+        titleEl.style.backgroundClip = 'text';
+        titleEl.style.color = 'transparent';
       } else if (theme === 'yellow') {
-        title.style.background = 'linear-gradient(90deg, #ffe066 60%, #ffb347 100%)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
+        titleEl.style.background = 'linear-gradient(90deg, #fbbf24 10%, #f97316 90%)';
+        titleEl.style.webkitBackgroundClip = 'text';
+        titleEl.style.backgroundClip = 'text';
+        titleEl.style.color = 'transparent';
       } else {
-        title.style.background = 'none';
-        title.style.webkitBackgroundClip = 'unset';
-        title.style.backgroundClip = 'unset';
-        title.style.color = '#0f4c81';
+        titleEl.style.background = 'none';
+        titleEl.style.webkitBackgroundClip = 'unset';
+        titleEl.style.backgroundClip = 'unset';
+        titleEl.style.color = baseColor;
       }
     }
     applyTitleTheme();
+
     document.getElementById('darkModeSwitch').addEventListener('change', function() {
       if (this.checked) {
         localStorage.setItem('darkMode', 'on');
@@ -744,6 +1026,7 @@
       }
       applyDarkMode();
     });
+
     function applyDarkMode() {
       if (localStorage.getItem('darkMode') === 'on') {
         document.body.classList.add('dark-mode');
@@ -753,34 +1036,5 @@
     }
     applyDarkMode();
   </script>
-  <script>
-  // Set refresh rate based on device type
-  const refreshRate = () => {
-    const width = window.innerWidth;
-
-    if (width <= 700) {
-      // Mobile devices
-      return 60; // 60Hz refresh rate
-    } else if (width <= 1200) {
-      // Tablets
-      return 90; // 90Hz refresh rate
-    } else {
-      // Laptops/Desktops
-      return 120; // 120Hz refresh rate
-    }
-  };
-
-  // Apply refresh rate
-  const applyRefreshRate = () => {
-    const rate = refreshRate();
-    document.body.style.animationDuration = `${1000 / rate}ms`;
-  };
-
-  // Listen for resize events to adjust refresh rate dynamically
-  window.addEventListener('resize', applyRefreshRate);
-
-  // Apply refresh rate on page load
-  applyRefreshRate();
-</script>
 </body>
 </html>
