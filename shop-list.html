@@ -85,20 +85,8 @@
 		}
 		.brand {
 			display: flex;
-			gap: 12px;
+			gap: 10px;
 			align-items: center;
-		}
-		.brand-mark {
-			width: 50px;
-			height: 50px;
-			border-radius: 14px;
-			background: linear-gradient(135deg, #0ea5e9, #0f766e 60%, #0b172a 110%);
-			display: grid;
-			place-items: center;
-			color: #fff;
-			font-weight: 800;
-			letter-spacing: 0.8px;
-			box-shadow: 0 10px 28px rgba(0,0,0,0.35);
 		}
 		.hero h1 {
 			margin: 0;
@@ -137,13 +125,14 @@
 		.profile {
 			display: flex;
 			align-items: center;
-			gap: 10px;
-			padding: 8px 10px;
+			justify-content: center;
+			padding: 6px;
 			border-radius: 14px;
 			background: var(--panel);
 			border: 1px solid var(--stroke);
 			box-shadow: var(--shadow);
 			cursor: pointer;
+			min-width: 54px;
 		}
 		.profile .profile-badge {
 			width: 42px;
@@ -297,16 +286,12 @@
 			<div class="hero">
 				<div class="hero-main">
 					<div class="brand">
-						<div class="brand-mark">UNM</div>
-						<div>
-							<h1>UNM Cafeteria</h1>
-						</div>
+						<h1>UNM Cafeteria</h1>
 					</div>
 					<div class="quote-chip" id="quoteChip" aria-live="polite">Good food. Good friends. Good day.</div>
 				</div>
 				<div class="actions">
 					<div class="profile" id="profileCard" title="Tap to sign out">
-						<div style="font-weight:700; color:var(--text);">Welcome back</div>
 						<div id="profileBadge" class="profile-badge" aria-label="Profile badge">U</div>
 					</div>
 					<button id="settingsBtn" style="padding:10px 12px; border-radius:12px; border:1px solid var(--stroke); background:var(--panel); color:var(--text); font-weight:700; cursor:pointer; box-shadow:var(--shadow);">Settings</button>
@@ -533,17 +518,24 @@
 			fav.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.2 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.2 6.86-8.55 11.54L12 21.35z"/></svg>';
 
 			card.append(imgWrap, body, fav);
-
-			card.addEventListener('click', e => {
-				if (e.target.closest('.fav-btn')) return;
-				if (card.dataset.isOpen === 'true') window.location.href = `menu.html?vendor=${shop.id}`;
-			});
-			fav.addEventListener('click', e => {
-				e.stopPropagation();
-				toggleFavourite(shop.id);
-			});
 			return card;
 		}
+
+		// Delegate clicks to reduce per-card listeners
+		shopList.addEventListener('click', e => {
+			const favBtn = e.target.closest('.fav-btn');
+			if (favBtn) {
+				e.stopPropagation();
+				const id = favBtn.dataset.shopid;
+				if (id) toggleFavourite(id);
+				return;
+			}
+			const card = e.target.closest('.card');
+			if (card && card.dataset.isOpen === 'true') {
+				const vendor = card.dataset.shopid;
+				if (vendor) window.location.href = `menu.html?vendor=${vendor}`;
+			}
+		});
 
 		function toggleFavourite(id) {
 			const idx = favouriteShops.indexOf(id);
