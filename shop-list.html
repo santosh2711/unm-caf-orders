@@ -195,7 +195,13 @@
       max-width: 560px;
     }
     .quote-chip::before {
-      content: "“";
+      content: '“';
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    .quote-chip::after {
+      content: '”';
       color: var(--accent);
       font-size: 1.2rem;
       line-height: 1;
@@ -673,7 +679,7 @@
       <div class="title-stack">
         <div class="caf-title">UNM Cafeteria</div>
         <div class="header-meta"><span class="dot"></span> Fresh menus and live shop status</div>
-        <div class="quote-chip" id="quoteChip" aria-live="polite">Bringing campus together, one plate at a time.</div>
+        <div class="quote-chip" id="quoteChip" aria-live="polite">Great food, less rush, happier campus days.</div>
       </div>
       <button class="profile-btn" id="profileBtn">
         <img id="profilePic" src="https://ui-avatars.com/api/?name=U&background=00aaff&color=fff&rounded=true" alt="Profile" aria-label="Profile" />
@@ -751,17 +757,17 @@
     const MIN_LOAD_DURATION = 2000;
 
     const quotes = [
-      "Bringing campus together, one plate at a time.",
-      "Fuel up, focus up, Nottingham style.",
-      "Good food, good mood, go further.",
-      "Cafeteria moments make campus memories.",
-      "Study hard, eat happily, repeat."
+      "Good food. Good friends. Good day.",
+      "Grab a bite, skip the stress.",
+      "Fast lines, fresh plates, full focus.",
+      "Eat well now, ace it later.",
+      "Campus life tastes better together."
     ];
     let quoteIndex = 0;
 
     function cycleQuote() {
       if (!quoteChip) return;
-      quoteChip.textContent = `"${quotes[quoteIndex]}"`;
+      quoteChip.textContent = quotes[quoteIndex];
       quoteIndex = (quoteIndex + 1) % quotes.length;
     }
     cycleQuote();
