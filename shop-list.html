@@ -116,11 +116,11 @@
 		body.dark-mode .quote-chip { background: rgba(255,255,255,0.08); color: var(--text); }
 		.actions {
 			display: flex;
-			flex-direction: column;
-			gap: 10px;
-			width: min(360px, 100%);
-			align-items: flex-end;
-			justify-content: center;
+			flex-direction: row;
+			gap: 8px;
+			width: auto;
+			align-items: center;
+			justify-content: flex-end;
 		}
 		.profile {
 			display: flex;
@@ -133,7 +133,9 @@
 			box-shadow: var(--shadow);
 			cursor: pointer;
 			min-width: 54px;
+			transition: transform 0.12s ease, box-shadow 0.16s ease;
 		}
+		.profile:active { transform: translateY(1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 		.profile .profile-badge {
 			width: 42px;
 			height: 42px;
@@ -265,12 +267,12 @@
 		.sk-pill { height: 22px; width: 120px; border-radius: 999px; }
 		@keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 		.empty { grid-column: 1 / -1; text-align: center; padding: 28px 14px; background: var(--panel); border: 1px solid var(--stroke); border-radius: 14px; color: var(--subtle); }
-		@media (max-width: 880px) { .hero { grid-template-columns: 1fr; } .actions { width: 100%; align-items: flex-start; flex-direction: row; flex-wrap: wrap; } .filters { position: static; } }
+		@media (max-width: 880px) { .hero { grid-template-columns: 1fr auto; align-items: start; } .actions { width: auto; } .filters { position: static; } }
 		@media (max-width: 620px) { .card { grid-template-rows: 150px auto; } .filter-row { flex-direction: column; align-items: flex-start; } .filter-box { width: 100%; } }
 		@media (max-width: 720px) {
 			body { background: #f8f9fc; }
 			.topbar { position: static; margin: 0; padding: 8px 0 0 0; backdrop-filter: none; background: transparent; }
-			.hero { padding: 14px; border-radius: 14px; box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+			.hero { padding: 12px; border-radius: 14px; box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
 			.hero-main { gap: 8px; }
 			.quote-chip { max-width: 100%; }
 		}
@@ -291,10 +293,9 @@
 					<div class="quote-chip" id="quoteChip" aria-live="polite">Good food. Good friends. Good day.</div>
 				</div>
 				<div class="actions">
-					<div class="profile" id="profileCard" title="Tap to sign out">
+					<div class="profile" id="profileCard" title="Profile menu">
 						<div id="profileBadge" class="profile-badge" aria-label="Profile badge">U</div>
 					</div>
-					<button id="settingsBtn" style="padding:10px 12px; border-radius:12px; border:1px solid var(--stroke); background:var(--panel); color:var(--text); font-weight:700; cursor:pointer; box-shadow:var(--shadow);">Settings</button>
 				</div>
 			</div>
 			<div class="filters">
@@ -326,15 +327,18 @@
 	</div>
 
 		<div id="settingsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.28); backdrop-filter:blur(4px); z-index:20;">
-			<div style="background:var(--panel); color:var(--text); width:min(360px, 92vw); margin:12vh auto; padding:22px; border-radius:16px; border:1px solid var(--stroke); box-shadow:var(--shadow);">
-				<h2 style="margin:0 0 12px 0; font-size:1.2rem; letter-spacing:0.6px;">Settings</h2>
+			<div style="background:var(--panel); color:var(--text); width:min(360px, 92vw); margin:12vh auto; padding:22px; border-radius:16px; border:1px solid var(--stroke); box-shadow:var(--shadow); display:grid; gap:14px;">
+				<div style="display:flex; justify-content:space-between; align-items:center;">
+					<h2 style="margin:0; font-size:1.1rem; letter-spacing:0.6px;">Profile</h2>
+					<button id="settingsClose" aria-label="Close" style="padding:8px 10px; border-radius:10px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); cursor:pointer;">✕</button>
+				</div>
+				<button id="homeLink" style="padding:11px 12px; border-radius:12px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); font-weight:700; text-align:left; cursor:pointer;">Home</button>
+				<button id="settingsEntry" style="padding:11px 12px; border-radius:12px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); font-weight:700; text-align:left; cursor:pointer;">Settings</button>
 				<label style="display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:700;">
 					<span>Dark mode</span>
 					<input type="checkbox" id="darkModeSwitch" />
 				</label>
-				<div style="margin-top:18px; display:flex; gap:10px; justify-content:flex-end;">
-					<button id="settingsClose" style="padding:10px 14px; border-radius:10px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); cursor:pointer;">Close</button>
-				</div>
+				<button id="signOutBtn" style="padding:11px 12px; border-radius:12px; border:1px solid rgba(249,115,22,0.4); background:linear-gradient(120deg, rgba(249,115,22,0.12), rgba(255,183,3,0.16)); color:var(--text); font-weight:800; letter-spacing:0.2px; cursor:pointer;">Sign out</button>
 			</div>
 		</div>
 
@@ -367,11 +371,13 @@
 		const dotLoader = document.getElementById('dotLoader');
 		const pageLoader = document.getElementById('pageLoader');
 		const loaderText = document.getElementById('loaderText');
-		const settingsBtn = document.getElementById('settingsBtn');
 		const settingsModal = document.getElementById('settingsModal');
 		const darkModeSwitch = document.getElementById('darkModeSwitch');
+		const homeLink = document.getElementById('homeLink');
+		const settingsEntry = document.getElementById('settingsEntry');
+		const signOutBtn = document.getElementById('signOutBtn');
 		const vendorsRef = collection(db, 'vendors');
-		const MIN_LOAD = 0;
+		const MIN_LOAD = 450;
 
 		const setPageLoading = (on, text = 'Loading shops…') => {
 			if (pageLoader) pageLoader.style.display = on ? 'flex' : 'none';
@@ -416,32 +422,39 @@
 			onSnapshot(vendorsRef, snap => handleSnapshot(snap));
 		});
 
-		if (profileCard) {
-			profileCard.addEventListener('click', async () => {
-				setPageLoading(true, 'Signing out…');
-				try { await signOut(auth); } catch (e) {}
-				window.location.href = 'student-login.html';
-			});
-		}
+	if (profileCard) {
+		profileCard.addEventListener('click', () => openSettings());
+	}
 
 		searchInput.addEventListener('input', debounce(render));
 		sortSelect.addEventListener('change', render);
 		filterSelect.addEventListener('change', render);
-		settingsBtn.addEventListener('click', () => openSettings());
 		document.getElementById('settingsClose').addEventListener('click', () => closeSettings());
 		settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettings(); });
 		darkModeSwitch.addEventListener('change', () => {
 			localStorage.setItem('darkMode', darkModeSwitch.checked ? 'on' : 'off');
 			applyTheme();
 		});
+		homeLink.addEventListener('click', () => { window.location.href = 'student-home.html'; });
+		settingsEntry.addEventListener('click', () => { alert('Settings coming soon.'); });
+		signOutBtn.addEventListener('click', async () => {
+			setPageLoading(true, 'Signing out…');
+			try { await signOut(auth); } catch (e) {}
+			window.location.href = 'student-login.html';
+		});
 
 		async function handleSnapshot(snapshot) {
 			isLoading = true;
+			const start = Date.now();
 			setPageLoading(true, 'Loading shops…');
 			shopsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-			isLoading = false;
-			render();
-			setPageLoading(false);
+			const elapsed = Date.now() - start;
+			const waitTime = Math.max(MIN_LOAD - elapsed, 0);
+			setTimeout(() => {
+				isLoading = false;
+				render();
+				setPageLoading(false);
+			}, waitTime);
 		}
 
 		function render() {
