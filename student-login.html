@@ -3,320 +3,286 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>User Login</title>
-  <link rel="icon" href="https://www.nottingham.edu.my/SiteAssets/Images/favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>UNM Cafeteria — Student Login</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --accent-1:#005f73;
-      --accent-2:#00aaff;
-      --muted:#6b7a8a;
-      --glass-bg: rgba(255,255,255,0.95);
-      --box-radius:18px;
+    :root {
+      --bg: #fff7ed;
+      --panel: #ffffff;
+      --panel-strong: #fff3e5;
+      --stroke: rgba(249,115,22,0.16);
+      --accent: #f97316;
+      --accent-2: #ea580c;
+      --text: #0c0c0c;
+      --muted: #4b5563;
+      --shadow: 0 18px 45px rgba(234,88,12,0.18);
+      --shadow-soft: 0 12px 30px rgba(234,88,12,0.14);
+      --blur: 14px;
     }
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: 'Roboto', Arial, sans-serif;
-      min-height: 100vh;
-      box-sizing: border-box;
-      background: transparent;
-      background-clip: padding-box;
-    }
-    .background {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background-image: url('https://www.nottingham.edu.my/events/images-multimedia/25th-anniversary/banner-homepage-25th-anniversary.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      filter: blur(6px) brightness(0.7);
-      z-index: -2;
-      transform-origin: center;
-      animation: backgroundShift 18s cubic-bezier(.2,.8,.2,1) infinite alternate;
-    }
-    @keyframes backgroundShift {
-      from { transform: scale(1) translateY(0px); }
-      to { transform: scale(1.02) translateY(-8px); }
-    }
+    * { box-sizing: border-box; }
     body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1400px at 12% 10%, rgba(249,115,22,0.12), transparent 45%),
+                  radial-gradient(1400px at 88% 16%, rgba(234,88,12,0.12), transparent 50%),
+                  linear-gradient(180deg, #fffaf5 0%, #fff4e8 45%, #ffefe1 100%);
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+    .wrap {
+      width: min(460px, 100%);
+      position: relative;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 28px 24px 24px 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur));
+    }
+    header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
-      min-height: 100vh;
+      gap: 12px;
+      margin-bottom: 12px;
     }
-    .box {
-      width: 100%;
-      max-width: 420px;
-      background: var(--glass-bg);
-      border-radius: var(--box-radius);
-      padding: 34px 26px;
-      color: #222;
-      text-align: center;
-      margin: 0;
-      box-shadow: 0 10px 30px rgba(8,20,40,0.18);
-      border: 2px solid #40E0D0;
-      position: relative;
-      z-index: 1;
-      backdrop-filter: blur(6px) saturate(110%);
-      animation: slideUp 540ms cubic-bezier(.2,.9,.3,1) both;
-    }
-    @keyframes slideUp {
-      0% { opacity:0; transform: translateY(18px) scale(.995); }
-      100% { opacity:1; transform: translateY(0) scale(1); }
-    }
-    .logo {
-      width: 96px;
-      height: 96px;
-      margin: 0 auto 14px auto;
+    .badge {
+      width: 54px;
+      height: 54px;
       border-radius: 14px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.9));
-      padding: 10px;
-      display: block;
-      object-fit: contain;
-      transition: transform 220ms ease;
-    }
-    h2#form-title {
-      font-size: 1.28rem;
-      margin: 6px 0 16px 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2) 70%, #7c2d12 115%);
+      color: #fff7ed;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
       letter-spacing: 0.6px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.32rem;
+      letter-spacing: 0.6px;
+      line-height: 1.2;
+    }
+    p.subtitle {
+      margin: 4px 0 12px 0;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .tab-btn {
+      padding: 12px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      background: var(--panel-strong);
       font-weight: 700;
-      background: linear-gradient(90deg, black, #005f73);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border 0.15s, box-shadow 0.15s, color 0.15s, background 0.15s;
+    }
+    .tab-btn.active {
+      color: var(--text);
+      border-color: rgba(249,115,22,0.5);
+      box-shadow: 0 10px 26px rgba(249,115,22,0.18);
+      background: linear-gradient(120deg, rgba(249,115,22,0.14), rgba(234,88,12,0.14));
     }
     label {
       display: block;
-      text-align: left;
-      font-size: 0.95em;
       font-weight: 700;
-      color: var(--accent-1);
-      margin-top: 12px;
-      margin-bottom: 6px;
+      margin: 12px 0 6px 0;
+      color: var(--text);
       letter-spacing: 0.2px;
     }
     input {
       width: 100%;
-      display: block;
-      margin: 6px 0 0 0;
-      padding: 14px 14px;
+      padding: 13px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(100,115,130,0.18);
-      font-size: 1.02em;
-      background: linear-gradient(180deg, #fbfcfd, #f6fbff);
-      color: #0f1720;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-      box-sizing: border-box;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, #ffffff, #fff6eb);
+      font-size: 1rem;
+      color: var(--text);
+      transition: border 0.15s, box-shadow 0.15s, transform 0.12s;
     }
-    input::placeholder { color: #9aa7b4; font-weight:500; }
     input:focus {
-      border: 1.8px solid var(--accent-1);
       outline: none;
-      box-shadow: 0 8px 28px rgba(0,95,115,0.08);
-      background: #ffffff;
+      border-color: rgba(249,115,22,0.7);
+      box-shadow: 0 10px 28px rgba(249,115,22,0.18);
       transform: translateY(-1px);
+      background: #ffffff;
     }
-    button {
+    input::placeholder { color: #9a8f85; }
+    .btn-primary {
       width: 100%;
+      margin-top: 16px;
       padding: 14px 0;
-      margin: 18px 0 8px 0;
       border-radius: 12px;
-      border: none;
-      font-size: 1.06em;
-      background: linear-gradient(90deg, var(--accent-1) 40%, var(--accent-2) 100%);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0,95,115,0.12);
+      border: 1px solid rgba(249,115,22,0.5);
+      background: linear-gradient(120deg, var(--accent) 20%, var(--accent-2) 100%);
+      color: #0c0c0c;
+      font-weight: 800;
       letter-spacing: 0.4px;
-    }
-    button:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,95,115,0.16); filter:brightness(1.02); }
-    button:active { transform: translateY(-1px) scale(.997); }
-    button:focus { outline: none; box-shadow: 0 10px 36px rgba(0,95,115,0.18); }
-    .toggle, .forgot {
-      margin-top: 8px;
-      font-size: 0.98em;
-      color: var(--muted);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-    }
-    .toggle a, .forgot a {
-      color: var(--accent-2);
-      text-decoration: underline;
       cursor: pointer;
-      font-weight: 600;
-      transition: color 160ms ease, transform 160ms ease;
+      box-shadow: 0 12px 30px rgba(234,88,12,0.26);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
-    .toggle a:hover, .forgot a:hover { color: #0077cc; transform: translateY(-2px); }
-    .error {
-      color: #b71c1c;
-      font-size: 0.96em;
-      margin-top: 12px;
-      min-height: 22px;
-      font-weight: 600;
-      display:block;
-      opacity: 0.98;
+    .btn-primary:active { transform: translateY(0); }
+    .btn-secondary {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px 0;
+      border-radius: 12px;
+      border: 1px solid rgba(249,115,22,0.4);
+      background: rgba(255,255,255,0.92);
+      color: var(--accent-2);
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
     }
-    .success {
-      color: #28a745;
-      font-size: 0.96em;
-      margin-top: 12px;
-      font-weight: 600;
-      display:block;
-      opacity: 0.98;
-    }
-    .spinner {
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 10px; color: var(--muted); font-weight: 600; }
+    .link { color: var(--accent-2); font-weight: 800; cursor: pointer; }
+    .error { margin-top: 12px; min-height: 22px; color: #b91c1c; font-weight: 700; }
+    .success { margin-top: 12px; min-height: 22px; color: #15803d; font-weight: 700; }
+    .inline-spinner {
       display: none;
-      margin: 12px auto;
-      border: 4px solid rgba(243,243,243,0.95);
-      border-top: 4px solid var(--accent-2);
+      margin: 12px auto 4px auto;
+      border: 4px solid rgba(255,255,255,0.92);
+      border-top: 4px solid var(--accent);
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 900ms linear infinite;
-      box-shadow: 0 6px 18px rgba(0,95,115,0.08);
+      width: 32px;
+      height: 32px;
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 8px 18px rgba(234,88,12,0.12);
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(255,247,237,0.85);
+      backdrop-filter: blur(6px);
+      z-index: 20;
+      color: var(--text);
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      transition: opacity 0.18s ease;
     }
-    @media (max-width: 480px) {
-      .background { filter: blur(2px) brightness(0.78); animation: none; }
-      .box { padding: 22px 16px; max-width: 96vw; margin: 6vh 0 0 0; border-radius: 14px; }
-      .logo { width: 76px; height:76px; border-radius:12px; padding:8px; }
-      h2#form-title { font-size: 1.12rem; margin-bottom:10px; }
-      input, button { font-size: 1.06em; padding: 16px 12px; border-radius: 12px; }
-      label { font-size: 0.94em; }
-      .toggle, .forgot { font-size: 0.95em; }
-      .spinner { width: 36px; height: 36px; border-width: 4px; }
+    .page-loader.hidden { opacity: 0; pointer-events: none; }
+    .page-loader .spinner {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.82);
+      border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.14);
     }
-    @media (max-width:360px) {
-      .box { padding: 18px 12px; }
-      .logo { width:68px; height:68px; }
-    }
-    /* Dark mode for login page */
-    body.dark-mode {
-      background: #181a20 !important;
-    }
-    body.dark-mode .box {
-      background: #23262f !important;
-      color: #f4f6f9 !important;
-      border-color: #0077b6 !important;
-    }
-    body.dark-mode input,
-    body.dark-mode button {
-      background: #181a20 !important;
-      color: #f4f6f9 !important;
-      border: 1px solid #444 !important;
-    }
-    body.dark-mode label {
-      color: #00aaff !important;
-    }
-    body.dark-mode h2#form-title {
-      color: #f4f6f9 !important;
-      text-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 2px 4px rgba(0,0,0,0.28);
-    }
-    body.dark-mode .error {
-      color: #ff5252 !important;
-    }
-    body.dark-mode .success {
-      color: #00eaff !important;
-    }
-    body.dark-mode .logo {
-      background: #23262f !important;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.22);
-    }
-    /* Make text visible according to theme mode */
-    body.dark-mode,
-    body.dark-mode .box,
-    body.dark-mode label,
-    body.dark-mode .toggle,
-    body.dark-mode .forgot,
-    body.dark-mode input,
-    body.dark-mode button {
-      color: #f4f6f9 !important;
-    }
-
-    body.dark-mode input::placeholder {
-      color: #b0bec5 !important;
-    }
-
-    body.dark-mode h2#form-title {
-      color: #f4f6f9 !important;
-      text-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 2px 4px rgba(0,0,0,0.28);
-    }
-
-    body.dark-mode .error {
-      color: #ff5252 !important;
-    }
-
-    body.dark-mode .success {
-      color: #00eaff !important;
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 520px) {
+      body { padding: 12px; }
+      .card { padding: 22px 18px; border-radius: 16px; }
+      .tabs { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
 <body>
-  <div class="background"></div>
-  <div class="box" id="loginBox">
-    <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRael_4f3Iv0L-t9WvqLQ8XBoMMa6m-L82gjg&s" alt="University of Nottingham Logo">
-    <h2 id="form-title">Student Login</h2>
-    <div id="loginForm">
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="Enter your email" />
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Enter your password" />
-      <button id="loginBtn">Login</button>
-      <div class="spinner" id="loading-spinner"></div>
-      <div class="forgot">Forgot password? <a id="showForgot">Reset here</a></div>
-      <div class="toggle">First time? <a id="showRegister">Register</a></div>
-      <div class="error" id="error-message"></div>
-    </div>
-    <div id="registerForm" style="display:none;">
-      <label for="reg-email">Any Email Address</label>
-      <input type="email" id="reg-email" placeholder="Enter any email address" />
-      <label for="reg-password">Create Password</label>
-      <input type="password" id="reg-password" placeholder="Create password" />
-      <button id="registerBtn">Register</button>
-      <div class="spinner" id="register-spinner"></div>
-      <div class="toggle">Already have an account? <a id="showLogin">Login</a></div>
-      <div class="error" id="register-error"></div>
-    </div>
-    <div id="forgotForm" style="display:none;">
-      <label for="forgot-email">Email</label>
-      <input type="email" id="forgot-email" placeholder="Enter your email" />
-      <button id="forgotBtn">Send Reset Link</button>
-      <div class="spinner" id="forgot-spinner"></div>
-      <div class="toggle"><a id="backToLogin">Back to Login</a></div>
-      <div class="error" id="forgot-error"></div>
-      <div class="success" id="forgot-success"></div>
+  <div class="page-loader" id="pageLoader" aria-live="polite" aria-label="Checking session">
+    <div class="spinner"></div>
+    <span id="loaderText">Checking session…</span>
+  </div>
+
+  <div class="wrap">
+    <div class="card" id="loginCard">
+      <header>
+        <div class="badge" aria-hidden="true">UNM</div>
+        <div>
+          <h1>Student Access</h1>
+          <p class="subtitle">Fast, secure sign-in for UNM Cafeteria.</p>
+        </div>
+      </header>
+
+      <div class="tabs">
+        <button class="tab-btn active" id="tabLogin">Login</button>
+        <button class="tab-btn" id="tabRegister">Register</button>
+        <button class="tab-btn" id="tabReset">Reset</button>
+      </div>
+
+      <div id="loginForm">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="name@example.com" autocomplete="email" />
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" />
+        <button class="btn-primary" id="loginBtn">Login</button>
+        <div class="inline-spinner" id="loginSpinner"></div>
+        <div class="row">
+          <span>Need help?</span><span class="link" id="switchToReset">Reset password</span>
+        </div>
+        <div class="error" id="loginError"></div>
+      </div>
+
+      <div id="registerForm" style="display:none;">
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" placeholder="name@example.com" autocomplete="email" />
+        <label for="reg-password">Create password</label>
+        <input type="password" id="reg-password" placeholder="Create a strong password" autocomplete="new-password" />
+        <button class="btn-primary" id="registerBtn">Create account</button>
+        <div class="inline-spinner" id="registerSpinner"></div>
+        <div class="row">
+          <span>Have an account?</span><span class="link" id="switchToLogin">Back to login</span>
+        </div>
+        <div class="error" id="registerError"></div>
+      </div>
+
+      <div id="resetForm" style="display:none;">
+        <label for="reset-email">Email</label>
+        <input type="email" id="reset-email" placeholder="name@example.com" autocomplete="email" />
+        <button class="btn-primary" id="resetBtn">Send reset link</button>
+        <div class="inline-spinner" id="resetSpinner"></div>
+        <div class="row">
+          <span>Remembered password?</span><span class="link" id="switchBackLogin">Back to login</span>
+        </div>
+        <div class="error" id="resetError"></div>
+        <div class="success" id="resetSuccess"></div>
+      </div>
+
+      <button class="btn-secondary" id="signOutBtn" style="display:none;">Sign out</button>
     </div>
   </div>
+
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
       signInWithEmailAndPassword,
-      sendPasswordResetEmail
+      sendPasswordResetEmail,
+      onAuthStateChanged,
+      signOut
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { 
-      getFirestore, 
-      doc, 
-      setDoc 
+    import {
+      getFirestore,
+      doc,
+      setDoc
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
       authDomain: "unm-caf-orders.firebaseapp.com",
       projectId: "unm-caf-orders",
-      storageBucket: "unm-caf-orders.firebasestorage.app",
+      storageBucket: "unm-caf-orders.appspot.com",
       messagingSenderId: "562096834985",
       appId: "1:562096834985:web:f4fbe451e5482521e49cb8",
       measurementId: "G-J12PBDK7N1"
@@ -326,152 +292,133 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Elements
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-    const forgotForm = document.getElementById("forgotForm");
-    const errorMsg = document.getElementById("error-message");
-    const registerError = document.getElementById("register-error");
-    const forgotError = document.getElementById("forgot-error");
-    const forgotSuccess = document.getElementById("forgot-success");
-    const spinner = document.getElementById("loading-spinner");
-    const registerSpinner = document.getElementById("register-spinner");
-    const forgotSpinner = document.getElementById("forgot-spinner");
+    const pageLoader = document.getElementById('pageLoader');
+    const loaderText = document.getElementById('loaderText');
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
+    const tabReset = document.getElementById('tabReset');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const resetForm = document.getElementById('resetForm');
+    const loginSpinner = document.getElementById('loginSpinner');
+    const registerSpinner = document.getElementById('registerSpinner');
+    const resetSpinner = document.getElementById('resetSpinner');
+    const loginError = document.getElementById('loginError');
+    const registerError = document.getElementById('registerError');
+    const resetError = document.getElementById('resetError');
+    const resetSuccess = document.getElementById('resetSuccess');
+    const signOutBtn = document.getElementById('signOutBtn');
 
-    // Show Register
-    document.getElementById("showRegister").onclick = () => {
-      loginForm.style.display = "none";
-      registerForm.style.display = "block";
-      forgotForm.style.display = "none";
-      errorMsg.innerText = "";
-      registerError.innerText = "";
-    };
-    // Show Login
-    document.getElementById("showLogin").onclick = () => {
-      loginForm.style.display = "block";
-      registerForm.style.display = "none";
-      forgotForm.style.display = "none";
-      errorMsg.innerText = "";
-      registerError.innerText = "";
-    };
-    // Show Forgot
-    document.getElementById("showForgot").onclick = () => {
-      loginForm.style.display = "none";
-      registerForm.style.display = "none";
-      forgotForm.style.display = "block";
-      forgotError.innerText = "";
-      forgotSuccess.innerText = "";
-    };
-    // Back to Login from Forgot
-    document.getElementById("backToLogin").onclick = () => {
-      loginForm.style.display = "block";
-      registerForm.style.display = "none";
-      forgotForm.style.display = "none";
-      errorMsg.innerText = "";
-      forgotError.innerText = "";
-      forgotSuccess.innerText = "";
+    const setPageLoading = (on, text = 'Checking session…') => {
+      if (pageLoader) pageLoader.classList.toggle('hidden', !on);
+      if (loaderText) loaderText.textContent = text;
     };
 
-    // Login
-    document.getElementById("loginBtn").onclick = async () => {
-      errorMsg.innerText = "";
-      spinner.style.display = "block";
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+    const clearErrors = () => {
+      loginError.textContent = '';
+      registerError.textContent = '';
+      resetError.textContent = '';
+      resetSuccess.textContent = '';
+    };
+
+    const showTab = (target) => {
+      clearErrors();
+      tabLogin.classList.toggle('active', target === 'login');
+      tabRegister.classList.toggle('active', target === 'register');
+      tabReset.classList.toggle('active', target === 'reset');
+      loginForm.style.display = target === 'login' ? 'block' : 'none';
+      registerForm.style.display = target === 'register' ? 'block' : 'none';
+      resetForm.style.display = target === 'reset' ? 'block' : 'none';
+    };
+
+    tabLogin.onclick = () => showTab('login');
+    tabRegister.onclick = () => showTab('register');
+    tabReset.onclick = () => showTab('reset');
+    document.getElementById('switchToReset').onclick = () => showTab('reset');
+    document.getElementById('switchToLogin').onclick = () => showTab('login');
+    document.getElementById('switchBackLogin').onclick = () => showTab('login');
+
+    const toggleInlineSpinner = (el, on) => { el.style.display = on ? 'block' : 'none'; };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        localStorage.setItem('studentEmail', user.email || '');
+        signOutBtn.style.display = 'block';
+        setPageLoading(true, 'Signing you in…');
+        window.location.href = 'shop-list.html';
+        return;
+      }
+      signOutBtn.style.display = 'none';
+      setPageLoading(false);
+    });
+
+    signOutBtn.onclick = async () => {
+      try { await signOut(auth); } catch (e) { /* ignore */ }
+      setPageLoading(false);
+      signOutBtn.style.display = 'none';
+      showTab('login');
+    };
+
+    document.getElementById('loginBtn').onclick = async () => {
+      clearErrors();
+      toggleInlineSpinner(loginSpinner, true);
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        localStorage.setItem("studentEmail", userCredential.user.email);
-        window.location.href = "shop-list.html";
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        localStorage.setItem('studentEmail', cred.user.email || '');
+        setPageLoading(true, 'Signing you in…');
+        window.location.href = 'shop-list.html';
       } catch (err) {
-        errorMsg.innerText = "Login failed. Please check your credentials or register first.";
+        loginError.textContent = 'Login failed. Please check your details or register.';
       } finally {
-        spinner.style.display = "none";
+        toggleInlineSpinner(loginSpinner, false);
       }
     };
 
-    // Register
-    document.getElementById("registerBtn").onclick = async () => {
-      registerError.innerText = "";
-      registerSpinner.style.display = "block";
-      const email = document.getElementById("reg-email").value.trim();
-      const password = document.getElementById("reg-password").value.trim();
+    document.getElementById('registerBtn').onclick = async () => {
+      clearErrors();
+      toggleInlineSpinner(registerSpinner, true);
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value.trim();
       if (!email || !password) {
-        registerError.innerText = "Please enter email and create password.";
-        registerSpinner.style.display = "none";
+        registerError.textContent = 'Please enter email and password.';
+        toggleInlineSpinner(registerSpinner, false);
         return;
       }
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await setDoc(doc(db, "students", userCredential.user.uid), {
-          email: email,
-          points: 0
-        });
-        localStorage.setItem("studentEmail", userCredential.user.email);
-        window.location.href = "shop-list.html";
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, 'students', cred.user.uid), { email, points: 0 });
+        localStorage.setItem('studentEmail', cred.user.email || '');
+        setPageLoading(true, 'Creating your account…');
+        window.location.href = 'shop-list.html';
       } catch (err) {
-        if (err.code === 'auth/email-already-in-use') {
-          registerError.innerText = "😊 You already have an account — please login.";
-        } else {
-          registerError.innerText = err.message;
-        }
+        registerError.textContent = err.code === 'auth/email-already-in-use'
+          ? 'You already have an account — please login.'
+          : 'Registration failed. Please try again.';
       } finally {
-        registerSpinner.style.display = "none";
+        toggleInlineSpinner(registerSpinner, false);
       }
     };
 
-    // Forgot Password
-    document.getElementById("forgotBtn").onclick = async () => {
-      forgotError.innerText = "";
-      forgotSuccess.innerText = "";
-      forgotSpinner.style.display = "block";
-      const email = document.getElementById("forgot-email").value.trim();
+    document.getElementById('resetBtn').onclick = async () => {
+      clearErrors();
+      toggleInlineSpinner(resetSpinner, true);
+      const email = document.getElementById('reset-email').value.trim();
       if (!email) {
-        forgotError.innerText = "Please enter your email address.";
-        forgotSpinner.style.display = "none";
+        resetError.textContent = 'Please enter your email address.';
+        toggleInlineSpinner(resetSpinner, false);
         return;
       }
       try {
         await sendPasswordResetEmail(auth, email);
-        forgotSuccess.innerText = "Reset link sent! Check your email.";
+        resetSuccess.textContent = 'Reset link sent. Check your inbox.';
       } catch (err) {
-        forgotError.innerText = "Failed to send reset link. Please check your email.";
+        resetError.textContent = 'Failed to send reset link. Please check your email.';
       } finally {
-        forgotSpinner.style.display = "none";
+        toggleInlineSpinner(resetSpinner, false);
       }
     };
-
-    // Apply saved theme and dark mode settings from localStorage
-    function applyTitleTheme() {
-      const theme = localStorage.getItem('titleTheme') || 'default';
-      const title = document.querySelector('.caf-title, .menu-title, #form-title');
-      if (!title) return;
-      if (theme === 'blue') {
-        title.style.background = 'linear-gradient(90deg, #0077b6 40%, #0097a7 100%)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
-      } else if (theme === 'yellow') {
-        title.style.background = 'linear-gradient(90deg, #ffe066 60%, #ffb347 100%)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
-      } else {
-        title.style.background = 'linear-gradient(90deg, black, #005f73)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
-      }
-    }
-    applyTitleTheme();
-
-    function applyDarkMode() {
-      if (localStorage.getItem('darkMode') === 'on') {
-        document.body.classList.add('dark-mode');
-      } else {
-        document.body.classList.remove('dark-mode');
-      }
-    }
-    applyDarkMode();
   </script>
 </body>
 </html>
