@@ -31,7 +31,14 @@
       padding: 2.2rem 1.5rem 2rem 1.5rem;
       position: relative;
       backdrop-filter: blur(2px);
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
     }
+        #summary-container.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
     #summary-container h1 {
       text-align: center;
       font-size: 2rem;
@@ -102,8 +109,8 @@
       transition: background-color 0.2s, border-color 0.2s;
     }
     .delivery-options input[type="radio"]:checked ~ .checkmark {
-      background-color: #005f73;
-      border-color: #005f73;
+      background-color: #ff9800;
+      border-color: #ff9800;
     }
     .checkmark:after {
       content: "";
@@ -162,12 +169,12 @@
       transition: background 0.2s, transform 0.2s;
     }
     .confirm {
-      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
+      background: linear-gradient(90deg, #ff9800 60%, #ffb347 100%);
       color: white;
       margin-left: 8px;
     }
     .confirm:active {
-      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
+      background: linear-gradient(90deg, #ffb347 60%, #ff9800 100%);
       transform: scale(0.98);
     }
     .cancel {
@@ -226,8 +233,8 @@
       border-color: #0077b6 !important;
     }
     body.dark-mode .delivery-options input[type="radio"]:checked ~ .checkmark {
-      background-color: #0077b6 !important;
-      border-color: #00eaff !important;
+      background-color: #ff9800 !important;
+      border-color: #ffb347 !important;
     }
     body.dark-mode .option-icon {
       color: #00eaff !important;
@@ -238,7 +245,7 @@
       border: 1px solid #444 !important;
     }
     body.dark-mode .actions button.confirm {
-      background: #0077b6 !important;
+      background: linear-gradient(90deg, #ff9800 60%, #ffb347 100%) !important;
       color: #fff !important;
     }
     body.dark-mode .actions button.cancel {
@@ -322,6 +329,12 @@
   </div>
 
   <script type="module">
+        // Animate summary container on load
+        window.addEventListener('DOMContentLoaded', () => {
+          setTimeout(() => {
+            document.getElementById('summary-container').classList.add('visible');
+          }, 60);
+        });
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
     import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
@@ -340,9 +353,38 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    const vendorId = localStorage.getItem('vendorId');
-    const cartKey = vendorId ? `cart_${vendorId}` : 'cart';
-    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+    const params = new URLSearchParams(window.location.search);
+    const serviceParam = params.get('service');
+    const vendorParam = params.get('vendor');
+
+    let pendingCheckout = null;
+    try {
+      const raw = sessionStorage.getItem('pendingCheckout');
+      pendingCheckout = raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      pendingCheckout = null;
+      console.error('Failed to read pending checkout payload', err);
+    }
+
+    const vendorId = vendorParam || pendingCheckout?.vendor || localStorage.getItem('activeVendorId') || '';
+    if (vendorId) {
+      localStorage.setItem('activeVendorId', vendorId);
+    }
+    const cartKey = `cart_vendor_${vendorId || 'unknown'}`;
+    const serviceKey = `service_choice_${vendorId || 'unknown'}`;
+
+    let cart = [];
+    if (pendingCheckout?.items && Array.isArray(pendingCheckout.items) && pendingCheckout.items.length) {
+      cart = pendingCheckout.items;
+    } else {
+      try {
+        cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+      } catch (err) {
+        cart = [];
+        console.error('Failed to read cart for summary', err);
+      }
+    }
+    if (!Array.isArray(cart)) cart = [];
     const orderItemsContainer = document.getElementById("order-items");
     const totalPriceContainer = document.getElementById("total-price");
     const mamakNoteDiv = document.getElementById("mamak-note");
@@ -354,6 +396,11 @@
       noteInput.value = savedNote;
       localStorage.removeItem("orderNote");
     }
+
+    const presetService = serviceParam || pendingCheckout?.service || localStorage.getItem(serviceKey) || 'dine-in';
+    document.querySelectorAll('input[name="delivery"]').forEach((radio) => {
+      radio.checked = radio.value === presetService;
+    });
 
     // Show notes only for MAMAK shop (by vendor name)
     async function showMamakNoteIfNeeded() {
@@ -423,6 +470,11 @@
     // Initial total update
     updateTotal();
 
+    if (!cart.length) {
+      orderItemsContainer.innerHTML = '<div class="item" style="justify-content:center; border-bottom:none;">Your cart is empty.</div>';
+      totalPriceContainer.textContent = 'Total: RM 0.00';
+    }
+
     // Add event listener for delivery options
     document.querySelectorAll('input[name="delivery"]').forEach(radio => {
       radio.addEventListener('change', updateTotal);
@@ -452,6 +504,11 @@
         });
 
         // Get vendor's next order number
+        if (!vendorId) {
+          alert("Missing vendor information. Please reopen the menu and try again.");
+          return;
+        }
+
         const vendorRef = doc(db, "vendors", vendorId);
         const vendorSnap = await getDoc(vendorRef);
         const nextOrderNumber = vendorSnap.data().nextOrderNumber || 1;
@@ -503,8 +560,9 @@
           localStorage.setItem("lastOrderId", docRef.id);
 
           // Cleanup
-          localStorage.removeItem('cart');
-          localStorage.removeItem('vendorId');
+          localStorage.removeItem(cartKey);
+          sessionStorage.removeItem('pendingCheckout');
+          localStorage.removeItem(serviceKey);
 
           // Increment vendor's order number counter
           await updateDoc(vendorRef, { nextOrderNumber: nextOrderNumber + 1 });
