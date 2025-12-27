@@ -47,13 +47,11 @@
 			display: grid;
 			grid-template-columns: 1fr auto;
 			gap: 8px;
-			align-items: flex-start;
+			align-items: center;
 			background: #ffffff;
 			border: 1px solid var(--border);
 			border-radius: 10px;
 			padding: 8px 10px;
-			padding-right: 72px;
-			position: relative;
 			box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 		}
 		.hero-main { display: grid; gap: 4px; align-content: center; }
@@ -77,9 +75,8 @@
 			gap: 8px;
 			align-items: center;
 			justify-content: flex-end;
-			position: absolute;
-			top: 8px;
-			right: 10px;
+			align-self: flex-start;
+			justify-self: end;
 		}
 		.profile {
 			display: flex;
@@ -119,6 +116,17 @@
 			border-radius: 10px;
 			border: 1px solid var(--border);
 			box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+		}
+		.filters.is-stuck {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			margin: 0 auto;
+			width: min(1180px, calc(100% - 24px));
+			border-radius: 0 0 10px 10px;
+			box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+			z-index: 40;
 		}
 		.filter-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 		.filter-box {
@@ -264,7 +272,7 @@
 		body.dark-mode .page-loader { background: rgba(5,10,18,0.75); color: #e2e8f0; }
 		body.dark-mode .page-loader .spinner { border-color: rgba(255,255,255,0.25); border-top-color: #f97316; box-shadow: 0 8px 20px rgba(0,0,0,0.35); }
 		body.dark-mode .dot-loader span { background: #f97316; }
-		@media (max-width: 880px) { .hero { grid-template-columns: 1fr; align-items: start; } .actions { width: auto; } }
+		@media (max-width: 880px) { .hero { grid-template-columns: 1fr auto; align-items: center; } .actions { width: auto; } }
 		@media (max-width: 620px) {
 			.grid { grid-template-columns: 1fr; }
 				.card { grid-template-rows: auto 1fr; }
@@ -325,6 +333,7 @@
 					</div>
 				</div>
 			</div>
+			<div id="filtersSpacer" aria-hidden="true"></div>
 		</div>
 
 		<div class="loader-wrap" id="dotLoader" aria-live="polite" aria-label="Loading shops" style="display:none;">
@@ -374,6 +383,8 @@
 		const searchInput = document.getElementById('shopSearch');
 		const sortSelect = document.getElementById('shopSort');
 		const filterSelect = document.getElementById('shopFilter');
+		const filters = document.querySelector('.filters');
+		const filtersSpacer = document.getElementById('filtersSpacer');
 		const quoteChip = document.getElementById('quoteChip');
 		const profileBadge = document.getElementById('profileBadge');
 		const profileCard = document.getElementById('profileCard');
@@ -416,6 +427,21 @@
 			let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
 		};
 
+		const updateStickyFilters = () => {
+			if (!filters) return;
+			const topbar = document.querySelector('.topbar');
+			if (!topbar) return;
+			const trigger = topbar.offsetHeight;
+			const shouldStick = window.scrollY > trigger;
+			if (shouldStick) {
+				filters.classList.add('is-stuck');
+				if (filtersSpacer) filtersSpacer.style.height = `${filters.offsetHeight}px`;
+			} else {
+				filters.classList.remove('is-stuck');
+				if (filtersSpacer) filtersSpacer.style.height = '';
+			}
+		};
+
 		onAuthStateChanged(auth, user => {
 			if (!user) {
 				alert('Please log in first.');
@@ -438,6 +464,8 @@
 		searchInput.addEventListener('input', debounce(render));
 		sortSelect.addEventListener('change', render);
 		filterSelect.addEventListener('change', render);
+		window.addEventListener('scroll', updateStickyFilters, { passive: true });
+		window.addEventListener('resize', debounce(updateStickyFilters, 120));
 		document.getElementById('settingsClose').addEventListener('click', () => closeSettings());
 		settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettings(); });
 		darkModeSwitch.addEventListener('change', () => {
@@ -605,6 +633,7 @@
 		}
 
 		applyTheme();
+		updateStickyFilters();
 	</script>
 </body>
 </html>
