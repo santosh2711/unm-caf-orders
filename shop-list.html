@@ -563,7 +563,9 @@
 			const idx = favouriteShops.indexOf(id);
 			if (idx === -1) favouriteShops.push(id); else favouriteShops.splice(idx, 1);
 			localStorage.setItem('favouriteShops', JSON.stringify(favouriteShops));
+			const currentY = window.scrollY;
 			render();
+			requestAnimationFrame(() => window.scrollTo(0, currentY));
 		}
 
 		function renderSkeletons(count = 6) {
