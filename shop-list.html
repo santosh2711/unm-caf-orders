@@ -46,7 +46,7 @@
 		.hero {
 			display: grid;
 			grid-template-columns: 1fr auto;
-			gap: 8px;
+			gap: 12px;
 			align-items: center;
 			background: #ffffff;
 			border: 1px solid var(--border);
@@ -75,8 +75,9 @@
 			gap: 8px;
 			align-items: center;
 			justify-content: flex-end;
-			align-self: flex-start;
+			align-self: center;
 			justify-self: end;
+			margin-left: auto;
 		}
 		.profile {
 			display: flex;
@@ -106,9 +107,6 @@
 			box-shadow: 0 8px 18px rgba(0,0,0,0.12);
 		}
 		.filters {
-			position: sticky;
-			top: 0;
-			z-index: 24;
 			display: grid;
 			gap: 6px;
 			background: #ffffff;
@@ -116,17 +114,6 @@
 			border-radius: 10px;
 			border: 1px solid var(--border);
 			box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-		}
-		.filters.is-stuck {
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			margin: 0 auto;
-			width: min(1180px, calc(100% - 24px));
-			border-radius: 0 0 10px 10px;
-			box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-			z-index: 40;
 		}
 		.filter-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 		.filter-box {
@@ -241,6 +228,29 @@
 		@keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 		.empty { grid-column: 1 / -1; text-align: center; padding: 24px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; color: #475569; }
 
+		.floating-search {
+			position: fixed;
+			top: 10px;
+			left: 50%;
+			transform: translate(-50%, -18px) scale(0.98);
+			width: min(760px, 94vw);
+			padding: 8px 10px;
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: 14px;
+			box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+			opacity: 0;
+			pointer-events: none;
+			transition: transform 0.3s ease, opacity 0.28s ease;
+			z-index: 60;
+		}
+		.floating-search.visible {
+			opacity: 1;
+			transform: translate(-50%, 0) scale(1);
+			pointer-events: auto;
+		}
+		.floating-search .input { box-shadow: 0 8px 22px rgba(0,0,0,0.08); }
+
 		/* Dark mode overrides */
 		body.dark-mode { background: #0b1220; color: #e2e8f0; }
 		body.dark-mode .topbar,
@@ -272,6 +282,7 @@
 		body.dark-mode .page-loader { background: rgba(5,10,18,0.75); color: #e2e8f0; }
 		body.dark-mode .page-loader .spinner { border-color: rgba(255,255,255,0.25); border-top-color: #f97316; box-shadow: 0 8px 20px rgba(0,0,0,0.35); }
 		body.dark-mode .dot-loader span { background: #f97316; }
+		body.dark-mode .floating-search { background: #0f172a; border-color: #1f2937; box-shadow: 0 14px 32px rgba(0,0,0,0.45); }
 		@media (max-width: 880px) { .hero { grid-template-columns: 1fr auto; align-items: center; } .actions { width: auto; } }
 		@media (max-width: 620px) {
 			.grid { grid-template-columns: 1fr; }
@@ -333,7 +344,9 @@
 					</div>
 				</div>
 			</div>
-			<div id="filtersSpacer" aria-hidden="true"></div>
+			<div class="floating-search" id="floatingSearch" aria-hidden="true">
+				<input class="input" id="floatingSearchInput" placeholder="Search shops" aria-label="Search shops when scrolling" />
+			</div>
 		</div>
 
 		<div class="loader-wrap" id="dotLoader" aria-live="polite" aria-label="Loading shops" style="display:none;">
@@ -384,7 +397,6 @@
 		const sortSelect = document.getElementById('shopSort');
 		const filterSelect = document.getElementById('shopFilter');
 		const filters = document.querySelector('.filters');
-		const filtersSpacer = document.getElementById('filtersSpacer');
 		const quoteChip = document.getElementById('quoteChip');
 		const profileBadge = document.getElementById('profileBadge');
 		const profileCard = document.getElementById('profileCard');
@@ -396,6 +408,8 @@
 		const homeLink = document.getElementById('homeLink');
 		const settingsEntry = document.getElementById('settingsEntry');
 		const signOutBtn = document.getElementById('signOutBtn');
+		const floatingSearch = document.getElementById('floatingSearch');
+		const floatingSearchInput = document.getElementById('floatingSearchInput');
 		const vendorsRef = collection(db, 'vendors');
 		const MIN_LOAD = 450;
 
@@ -427,19 +441,12 @@
 			let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
 		};
 
-		const updateStickyFilters = () => {
-			if (!filters) return;
-			const topbar = document.querySelector('.topbar');
-			if (!topbar) return;
-			const trigger = topbar.offsetHeight;
-			const shouldStick = window.scrollY > trigger;
-			if (shouldStick) {
-				filters.classList.add('is-stuck');
-				if (filtersSpacer) filtersSpacer.style.height = `${filters.offsetHeight}px`;
-			} else {
-				filters.classList.remove('is-stuck');
-				if (filtersSpacer) filtersSpacer.style.height = '';
-			}
+		const updateFloatingSearch = () => {
+			if (!floatingSearch || !filters) return;
+			const trigger = filters.offsetTop + filters.offsetHeight;
+			const shouldShow = window.scrollY > trigger - 16;
+			floatingSearch.classList.toggle('visible', shouldShow);
+			floatingSearch.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
 		};
 
 		onAuthStateChanged(auth, user => {
@@ -461,11 +468,20 @@
 		profileCard.addEventListener('click', () => openSettings());
 	}
 
-		searchInput.addEventListener('input', debounce(render));
+		searchInput.addEventListener('input', debounce(() => {
+			if (floatingSearchInput) floatingSearchInput.value = searchInput.value;
+			render();
+		}));
 		sortSelect.addEventListener('change', render);
 		filterSelect.addEventListener('change', render);
-		window.addEventListener('scroll', updateStickyFilters, { passive: true });
-		window.addEventListener('resize', debounce(updateStickyFilters, 120));
+		if (floatingSearchInput) {
+			floatingSearchInput.addEventListener('input', debounce(() => {
+				searchInput.value = floatingSearchInput.value;
+				render();
+			}));
+		}
+		window.addEventListener('scroll', updateFloatingSearch, { passive: true });
+		window.addEventListener('resize', debounce(updateFloatingSearch, 120));
 		document.getElementById('settingsClose').addEventListener('click', () => closeSettings());
 		settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettings(); });
 		darkModeSwitch.addEventListener('change', () => {
@@ -633,7 +649,7 @@
 		}
 
 		applyTheme();
-		updateStickyFilters();
+		updateFloatingSearch();
 	</script>
 </body>
 </html>
