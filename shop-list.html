@@ -41,6 +41,8 @@
 			border-bottom: 1px solid var(--border);
 			box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 			border-radius: 0 0 8px 8px;
+			display: grid;
+			gap: 10px;
 		}
 		.hero {
 			display: grid;
@@ -100,7 +102,7 @@
 		.filters {
 			position: sticky;
 			top: 0;
-			z-index: 7;
+			z-index: 24;
 			display: grid;
 			gap: 6px;
 			background: #ffffff;
@@ -166,6 +168,7 @@
 			object-fit: cover;
 			display: block;
 			background: #f8fafc;
+			margin-top: 8px;
 		}
 		.card-body { padding: 14px; display: grid; gap: 10px; }
 		.card-head { display: flex; gap: 10px; align-items: center; }
@@ -253,7 +256,7 @@
 		body.dark-mode .page-loader { background: rgba(5,10,18,0.75); color: #e2e8f0; }
 		body.dark-mode .page-loader .spinner { border-color: rgba(255,255,255,0.25); border-top-color: #f97316; box-shadow: 0 8px 20px rgba(0,0,0,0.35); }
 		body.dark-mode .dot-loader span { background: #f97316; }
-		@media (max-width: 880px) { .hero { grid-template-columns: 1fr; align-items: start; } .actions { width: auto; } .filters { position: static; } }
+		@media (max-width: 880px) { .hero { grid-template-columns: 1fr; align-items: start; } .actions { width: auto; } }
 		@media (max-width: 620px) {
 			.grid { grid-template-columns: 1fr; }
 				.card { grid-template-rows: auto 1fr; }
@@ -261,11 +264,12 @@
 			.filter-box { width: 100%; }
 		}
 		@media (max-width: 720px) {
-			.page { padding: 10px 10px 24px 10px; }
-			.topbar { margin: 0 -6px; padding: 6px 8px; box-shadow: none; border-bottom: none; }
-			.hero { padding: 8px 10px; border-radius: 10px; box-shadow: none; border: none; }
-			.filters { top: 0; }
-			.grid { gap: 12px; }
+				.page { padding: 10px 10px 24px 10px; }
+				.topbar { margin: 0 -6px; padding: 6px 8px; box-shadow: none; border-bottom: none; }
+				.filters { order: 1; top: 0; }
+				.hero { order: 2; padding: 8px 10px; border-radius: 10px; box-shadow: none; border: none; position: relative; padding-right: 70px; }
+				.actions { position: absolute; top: 6px; right: 8px; }
+				.grid { gap: 12px; }
 		}
 		@media (max-width: 540px) {
 			.topbar { padding: 6px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.05); }
