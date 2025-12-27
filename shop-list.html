@@ -15,6 +15,10 @@
 			--gray: #f8fafc;
 			--border: #e2e8f0;
 			--panel: #ffffff;
+			--panel-strong: #f8fafc;
+			--stroke: #e2e8f0;
+			--text: #0f172a;
+			--subtle: #475569;
 			--shadow: 0 8px 18px rgba(0,0,0,0.06);
 		}
 		* { box-sizing: border-box; }
@@ -108,12 +112,12 @@
 		}
 		.filters {
 			display: grid;
-			gap: 6px;
-			background: #ffffff;
-			padding: 8px 10px;
-			border-radius: 10px;
+			gap: 10px;
+			background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+			padding: 12px;
+			border-radius: 14px;
 			border: 1px solid var(--border);
-			box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+			box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 		}
 		.filter-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 		.filter-box {
@@ -138,6 +142,16 @@
 			outline: none;
 			box-shadow: var(--shadow);
 			transition: border 0.15s, box-shadow 0.2s, transform 0.1s ease;
+		}
+		.search-input {
+			padding: 14px 16px 14px 46px;
+			border-radius: 16px;
+			border: 1px solid transparent;
+			background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cline x1='14' y1='14' x2='19' y2='19'/%3E%3C/svg%3E") no-repeat 16px center;
+			background-size: 18px;
+			box-shadow: 0 14px 32px rgba(0,0,0,0.08);
+			font-weight: 700;
+			letter-spacing: 0.2px;
 		}
 		.input::placeholder { color: #94a3b8; font-weight: 600; }
 		select option { color: var(--black); background: #ffffff; }
@@ -253,6 +267,13 @@
 
 		/* Dark mode overrides */
 		body.dark-mode { background: #0b1220; color: #e2e8f0; }
+		body.dark-mode {
+			--panel: #0f172a;
+			--panel-strong: #0b1325;
+			--stroke: #1f2937;
+			--text: #e2e8f0;
+			--subtle: #cbd5e1;
+		}
 		body.dark-mode .topbar,
 		body.dark-mode .hero,
 		body.dark-mode .filters,
@@ -283,6 +304,8 @@
 		body.dark-mode .page-loader .spinner { border-color: rgba(255,255,255,0.25); border-top-color: #f97316; box-shadow: 0 8px 20px rgba(0,0,0,0.35); }
 		body.dark-mode .dot-loader span { background: #f97316; }
 		body.dark-mode .floating-search { background: #0f172a; border-color: #1f2937; box-shadow: 0 14px 32px rgba(0,0,0,0.45); }
+		body.dark-mode #settingsModal > div { background: var(--panel); border-color: var(--stroke); color: var(--text); }
+		#settingsModal > div { background: var(--panel); border-color: var(--stroke); color: var(--text); }
 		@media (max-width: 880px) { .hero { grid-template-columns: 1fr auto; align-items: center; } .actions { width: auto; } }
 		@media (max-width: 620px) {
 			.grid { grid-template-columns: 1fr; }
@@ -327,7 +350,7 @@
 				</div>
 			</div>
 			<div class="filters">
-				<input class="input" id="shopSearch" placeholder="Search shops" aria-label="Search shops" />
+				<input class="input search-input" id="shopSearch" placeholder="Search shops" aria-label="Search shops" />
 				<div class="filter-row">
 					<div style="flex:1; min-width: 140px; color:var(--subtle); font-weight:700;">Quick filters</div>
 					<div class="filter-box" aria-label="Sort and filter">
@@ -345,7 +368,7 @@
 				</div>
 			</div>
 			<div class="floating-search" id="floatingSearch" aria-hidden="true">
-				<input class="input" id="floatingSearchInput" placeholder="Search shops" aria-label="Search shops when scrolling" />
+				<input class="input search-input" id="floatingSearchInput" placeholder="Search shops" aria-label="Search shops when scrolling" />
 			</div>
 		</div>
 
@@ -437,6 +460,13 @@
 		let favouriteShops = JSON.parse(localStorage.getItem('favouriteShops') || '[]');
 		let isLoading = true;
 
+		const syncFavouriteData = () => {
+			const favData = shopsData
+				.filter(shop => favouriteShops.includes(shop.id))
+				.map(shop => ({ id: shop.id, name: shop.name || 'Shop', imageURL: shop.imageURL || '' }));
+			localStorage.setItem('favouriteShopsData', JSON.stringify(favData));
+		};
+
 		const debounce = (fn, wait = 160) => {
 			let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
 		};
@@ -515,6 +545,8 @@
 				shopList.innerHTML = '<div class="empty">Loading shops…</div>';
 				return;
 			}
+
+			syncFavouriteData();
 
 			const term = searchInput.value.trim().toLowerCase();
 			const sort = sortSelect.value;
@@ -607,6 +639,7 @@
 			const idx = favouriteShops.indexOf(id);
 			if (idx === -1) favouriteShops.push(id); else favouriteShops.splice(idx, 1);
 			localStorage.setItem('favouriteShops', JSON.stringify(favouriteShops));
+			syncFavouriteData();
 			const currentY = window.scrollY;
 			render();
 			requestAnimationFrame(() => window.scrollTo(0, currentY));
