@@ -424,6 +424,12 @@
 			color: #475569;
 		}
 
+		.cart-note {
+			font-size: 12px;
+			color: #94a3b8;
+			margin-top: 2px;
+		}
+
 		.qty-controls {
 			display: inline-flex;
 			align-items: center;
@@ -1001,6 +1007,9 @@
 		const cartKey = `cart_vendor_${vendorId || "unknown"}`;
 		const availablePrefKey = `available_only_filter_${vendorId || "unknown"}`;
 
+		const normalizeNote = (note) => (note || "").trim();
+		const findCartIndex = (cart, id, notes) => cart.findIndex((c) => c.id === id && normalizeNote(c.notes) === normalizeNote(notes));
+
 		const setBrandDetails = (name = brandNameFallback, imageUrl = forkAndSpoonIcon) => {
 			vendorName = name || brandNameFallback;
 			if (brandNameEl) brandNameEl.textContent = vendorName;
@@ -1163,6 +1172,13 @@
 				meta.textContent = formatPrice(item.price || 0);
 				left.appendChild(title);
 				left.appendChild(meta);
+				const noteText = normalizeNote(item.notes);
+				if (noteText) {
+					const noteLine = document.createElement("div");
+					noteLine.className = "cart-note";
+					noteLine.textContent = `Note: ${noteText}`;
+					left.appendChild(noteLine);
+				}
 
 				const controls = document.createElement("div");
 				controls.className = "qty-controls";
@@ -1171,7 +1187,7 @@
 				minus.className = "qty-btn";
 				minus.type = "button";
 				minus.textContent = "-";
-				minus.addEventListener("click", () => changeQty(item.id, -1));
+				minus.addEventListener("click", () => changeQty(item.id, noteText, -1));
 
 				const qty = document.createElement("span");
 				qty.textContent = item.qty || 0;
@@ -1180,7 +1196,7 @@
 				plus.className = "qty-btn";
 				plus.type = "button";
 				plus.textContent = "+";
-				plus.addEventListener("click", () => changeQty(item.id, 1));
+				plus.addEventListener("click", () => changeQty(item.id, noteText, 1));
 
 				controls.appendChild(minus);
 				controls.appendChild(qty);
@@ -1201,24 +1217,24 @@
 
 		const addToCart = (item) => {
 			const cart = getCart();
-			const existing = cart.find((c) => c.id === item.id);
-			if (existing) {
-				existing.qty += 1;
+			const incomingNotes = normalizeNote(item.notes);
+			const idx = findCartIndex(cart, item.id, incomingNotes);
+			if (idx >= 0) {
+				cart[idx].qty += 1;
 			} else {
-				cart.push({ ...item, qty: 1 });
+				cart.push({ ...item, qty: 1, notes: incomingNotes });
 			}
 			saveCart(cart);
 			renderCartDrawer(cart);
 		};
 
-		const changeQty = (id, delta) => {
+		const changeQty = (id, notes, delta) => {
 			const cart = getCart();
-			const item = cart.find((c) => c.id === id);
-			if (!item) return;
-			item.qty += delta;
-			if (item.qty <= 0) {
-				const idx = cart.findIndex((c) => c.id === id);
-				if (idx >= 0) cart.splice(idx, 1);
+			const idx = findCartIndex(cart, id, notes);
+			if (idx < 0) return;
+			cart[idx].qty += delta;
+			if (cart[idx].qty <= 0) {
+				cart.splice(idx, 1);
 			}
 			saveCart(cart);
 			renderCartDrawer(cart);
@@ -1459,6 +1475,7 @@
 							price: Number(item.price) || 0,
 							image: imageSrc,
 							category: item.category || "",
+							notes: "",
 						});
 					});
 
