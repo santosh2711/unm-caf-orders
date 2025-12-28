@@ -4,116 +4,376 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Your Order Status</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Nunito:wght@800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #0f172a;
+      --panel-light: #ffffff;
+      --border: #1e293b;
+      --border-light: #e2e8f0;
+      --text: #0f172a;
+      --text-light: #e2e8f0;
+      --orange: #f97316;
+      --orange-dark: #ea580c;
+      --aqua: #0ea5e9;
+      --muted: #64748b;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: 'Roboto', Arial, sans-serif;
-      background: #f4f6f9;
-      color: #222;
-      padding: 20px;
-      transition: background 0.2s, color 0.2s;
+      min-height: 100vh;
+      font-family: 'Inter', 'Nunito', sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 20% 20%, rgba(249,115,22,0.12), transparent 30%),
+                  radial-gradient(circle at 80% 10%, rgba(14,165,233,0.12), transparent 28%),
+                  #f8fafc;
+      padding: 20px 14px 28px;
     }
-    h1 {
+
+    .page-shell {
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: 10px 0 0;
+      min-height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      animation: page-fade 0.65s ease-out both;
+    }
+
+    .glow-frame {
+      position: fixed;
+      inset: 12px;
+      border-radius: 28px;
+      pointer-events: none;
+      border: 2px solid rgba(249,115,22,0.4);
+      box-shadow: 0 0 24px rgba(249,115,22,0.35), 0 0 48px rgba(234,88,12,0.18);
+      opacity: 0.85;
+      z-index: 0;
+    }
+
+    header.page-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
       text-align: center;
-      color: #005f73;
+      width: 100%;
+      position: relative;
     }
-    .order-box {
-      max-width: 600px;
-      margin: 20px auto;
+    .back-btn {
+      position: absolute;
+      left: 0;
+      top: 0;
+      border: 1px solid var(--border-light);
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 20px;
-      transition: background 0.2s, color 0.2s;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      color: var(--orange-dark);
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+      transition: transform 0.12s ease, box-shadow 0.18s ease, border-color 0.12s ease;
     }
-    .order-number {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #d32f2f;
+    .back-btn:hover { transform: translateY(-2px); border-color: rgba(249,115,22,0.65); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: var(--orange-dark);
+      text-shadow: 0 1px 0 rgba(255,255,255,0.9);
       text-align: center;
-      margin-bottom: 20px;
-      background: #ffebee;
-      padding: 10px;
+    }
+    .subhead {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .card {
+      position: relative;
+      background: var(--panel-light);
+      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      box-shadow: 0 0 0 2px rgba(249,115,22,0.14), 0 20px 48px rgba(0,0,0,0.08);
+      padding: 18px 18px 22px;
+      overflow: hidden;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+      animation: card-pop 0.7s ease-out 0.08s both;
+    }
+
+    .cooking-scene {
+      position: relative;
+      height: 220px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      background: radial-gradient(circle at 50% 120%, rgba(234,88,12,0.18), transparent 45%);
+    }
+    .stove {
+      width: 220px;
+      height: 14px;
+      background: linear-gradient(90deg, rgba(15,23,42,0.9), rgba(15,23,42,0.8));
+      border-radius: 10px;
+      position: absolute;
+      bottom: 34px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+    .pot {
+      position: relative;
+      width: 180px;
+      height: 80px;
+      background: linear-gradient(180deg, #1f2937 0%, #0f172a 100%);
+      border-radius: 0 0 28px 28px;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 8px rgba(255,255,255,0.08), 0 14px 24px rgba(0,0,0,0.2);
+      animation: pot-bounce 2.8s ease-in-out infinite;
+    }
+    .pot::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 12px;
+      right: 12px;
+      height: 16px;
+      background: linear-gradient(180deg, #334155, #1f2937);
+      border-radius: 12px 12px 4px 4px;
+      border: 2px solid rgba(255,255,255,0.08);
+    }
+    .pot::after {
+      content: '';
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 10px;
       border-radius: 8px;
-      transition: background 0.2s, color 0.2s;
+      background: linear-gradient(90deg, #f97316, #ea580c);
+      box-shadow: 0 0 14px rgba(249,115,22,0.6);
+    }
+
+    .steam {
+      position: absolute;
+      top: -32px;
+      left: 50%;
+      display: flex;
+      gap: 10px;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+    }
+    .steam span {
+      width: 12px;
+      height: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0));
+      border-radius: 999px;
+      opacity: 0.65;
+      filter: blur(0.3px);
+      animation: steam-rise 3s ease-in-out infinite;
+    }
+    .steam span:nth-child(2) { animation: steam-rise-left 3.2s ease-in-out infinite; height: 34px; }
+    .steam span:nth-child(3) { animation: steam-rise 2.8s ease-in-out infinite; height: 30px; }
+    .steam span:nth-child(4) { animation: steam-rise-left 3.4s ease-in-out infinite; height: 32px; }
+    .steam span:nth-child(5) { animation: steam-rise 3.1s ease-in-out infinite; height: 36px; }
+
+    .flame {
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 82px;
+      height: 28px;
+      background: radial-gradient(circle at 50% 30%, rgba(249,115,22,0.95), rgba(234,88,12,0.75), transparent 70%);
+      filter: blur(7px);
+      animation: flame-flicker 1.25s ease-in-out infinite;
+    }
+    .flame::after {
+      content: '';
+      position: absolute;
+      inset: 6px 18px;
+      background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.6), rgba(249,115,22,0.3), transparent 80%);
+      filter: blur(10px);
+      opacity: 0.8;
+      animation: flame-flicker 1.4s ease-in-out infinite;
+    }
+
+    .headline {
+      text-align: center;
+      margin: 4px 0 10px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .headline strong { color: var(--orange-dark); }
+
+    .order-box { margin-top: 12px; }
+    .order-number {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--orange-dark);
+      text-align: center;
+      margin-bottom: 14px;
+      background: linear-gradient(90deg, rgba(249,115,22,0.12), rgba(14,165,233,0.08));
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(249,115,22,0.3);
     }
     .order-datetime {
       text-align: center;
-      margin-bottom: 12px;
-      font-size: 1.1em;
-      color: #005f73;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: var(--muted);
     }
+    .items-wrap { border: 1px solid var(--border-light); border-radius: 12px; padding: 12px; background: #f8fafc; }
     .item {
       display: flex;
       justify-content: space-between;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px dashed var(--border-light);
       padding: 8px 0;
+      font-weight: 600;
+      color: var(--text);
     }
+    .item:last-child { border-bottom: none; }
+
     .status {
-      margin-top: 20px;
-      font-weight: bold;
+      margin-top: 16px;
+      font-weight: 800;
       text-align: center;
-      font-size: 1.2rem;
-      color: #00796b;
+      font-size: 1.05rem;
+      color: var(--orange-dark);
     }
+    .meta-note { color: var(--muted); font-weight: 600; margin: 10px 0 0; }
+
     .back {
-      margin-top: 25px;
-      text-align: center;
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .back button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
-      color: white;
-      font-weight: bold;
+      padding: 12px 18px;
+      border: 1px solid rgba(249,115,22,0.6);
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ffedd5, #fff7ed);
+      color: var(--orange-dark);
+      font-weight: 800;
       cursor: pointer;
-      transition: background 0.2s;
+      box-shadow: 0 10px 24px rgba(249,115,22,0.2);
+      transition: transform 0.12s ease, box-shadow 0.18s ease, border-color 0.12s ease;
     }
-    /* --- DARK MODE --- */
-    body.dark-mode {
-      background: #181a20 !important;
-      color: #f4f6f9 !important;
+    .back button:hover { transform: translateY(-2px); border-color: var(--orange-dark); box-shadow: 0 14px 30px rgba(249,115,22,0.24); }
+    .back button.primary {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 14px 32px rgba(249,115,22,0.28), 0 0 12px rgba(234,88,12,0.22);
     }
-    body.dark-mode h1 {
-      color: #00eaff !important;
+    .back button.primary:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(249,115,22,0.32), 0 0 14px rgba(234,88,12,0.26); }
+
+    @keyframes page-fade {
+      0% { opacity: 0; transform: translateY(14px) scale(0.995); }
+      60% { opacity: 1; transform: translateY(0) scale(1.002); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
-    body.dark-mode .order-box {
-      background: #23262f !important;
-      color: #f4f6f9 !important;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.32);
+    @keyframes card-pop {
+      0% { opacity: 0; transform: translateY(16px) scale(0.97); }
+      70% { opacity: 1; transform: translateY(-2px) scale(1.01); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
-    body.dark-mode .order-number {
-      background: #2d2f3a !important;
-      color: #ff5252 !important;
+    @keyframes steam-rise {
+      0% { transform: translateY(12px) translateX(0) scale(0.85); opacity: 0; }
+      40% { opacity: 0.8; }
+      100% { transform: translateY(-60px) translateX(6px) scale(1.1); opacity: 0; }
     }
-    body.dark-mode .order-datetime {
-      color: #00eaff !important;
+    @keyframes steam-rise-left {
+      0% { transform: translateY(12px) translateX(0) scale(0.85); opacity: 0; }
+      40% { opacity: 0.8; }
+      100% { transform: translateY(-60px) translateX(-6px) scale(1.1); opacity: 0; }
     }
-    body.dark-mode .item {
-      border-bottom: 1px solid #333 !important;
-      color: #f4f6f9 !important;
+    @keyframes pot-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
     }
-    body.dark-mode .status {
-      color: #66bb6a !important;
+    @keyframes flame-flicker {
+      0%, 100% { opacity: 0.9; transform: translate(-50%, 0) scale(1); }
+      50% { opacity: 0.65; transform: translate(-50%, 2px) scale(1.08); }
     }
-    body.dark-mode .back button {
-      background: linear-gradient(90deg, #23262f 60%, #00aaff 100%) !important;
-      color: #fff !important;
-    }
-    body.dark-mode .back button:hover {
-      background: linear-gradient(90deg, #00aaff 60%, #23262f 100%) !important;
-    }
+
+    /* Dark mode */
+    body.dark-mode { background: #0b1220; color: var(--text-light); }
+    body.dark-mode .glow-frame { border-color: rgba(249,115,22,0.5); box-shadow: 0 0 28px rgba(249,115,22,0.45), 0 0 54px rgba(234,88,12,0.25); }
+    body.dark-mode .back-btn { background: #0f172a; border-color: #1e293b; color: #fbbf24; box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
+    body.dark-mode h1 { color: #fbbf24; text-shadow: none; }
+    body.dark-mode .subhead { color: #cbd5e1; }
+    body.dark-mode .card { background: #0f172a; border-color: #1e293b; box-shadow: 0 0 0 2px rgba(249,115,22,0.12), 0 20px 48px rgba(0,0,0,0.35); }
+    body.dark-mode .order-number { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.4); color: #fbbf24; }
+    body.dark-mode .order-datetime { color: #cbd5e1; }
+    body.dark-mode .items-wrap { background: #111827; border-color: #1e293b; }
+    body.dark-mode .item { color: #e2e8f0; border-color: #1e293b; }
+    body.dark-mode .status { color: #fbbf24; }
+    body.dark-mode .meta-note { color: #cbd5e1; }
+    body.dark-mode .back button { background: #111827; color: #fbbf24; border-color: #f97316; box-shadow: 0 12px 26px rgba(0,0,0,0.35); }
+    body.dark-mode .back button.primary { background: linear-gradient(135deg, #f59e0b, #f97316); color: #0f172a; border-color: transparent; box-shadow: 0 16px 34px rgba(249,115,22,0.35); }
   </style>
 </head>
 <body>
-  <!-- Add this at the very top inside <body> -->
-  <div style="position: absolute; left: 18px; top: 18px; z-index: 10;">
-    <button onclick="window.history.back()" style="background:none;border:none;font-size:2rem;cursor:pointer;color:#005f73;">
-      &#8592;
-    </button>
+  <div class="glow-frame"></div>
+  <div class="page-shell">
+    <header class="page-header">
+      <button class="back-btn" onclick="window.history.back()">&#8592;</button>
+      <div>
+        <h1>Order Placed ✅</h1>
+        <div class="subhead">Your food is being prepared. Please sit tight while we cook it fresh.</div>
+      </div>
+    </header>
+    <div class="card">
+      <div class="cooking-scene">
+        <div class="steam"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="pot"></div>
+        <div class="flame"></div>
+        <div class="stove"></div>
+      </div>
+      <div class="headline">We're on it! <strong>Your meal is cooking now.</strong></div>
+      <div class="order-box">
+        <div class="order-number">
+          <strong>Order:</strong> <span id="order-number">--</span>
+        </div>
+        <div class="order-datetime">
+          <strong>Date/Time:</strong> <span id="order-datetime">--</span>
+        </div>
+        <h3 style="margin:12px 0 8px; color: var(--orange-dark);">Your Items</h3>
+        <div id="order-items" class="items-wrap"></div>
+        <div id="order-total" style="font-size:1.05rem; font-weight:800; color: var(--orange-dark); text-align:right; margin:14px 0 6px 0;">
+          Total: RM <span id="order-total-value">0.00</span>
+        </div>
+        <p class="meta-note"><strong>Note:</strong> <span id="order-note">No note provided.</span></p>
+        <p class="status">Status: <span id="order-status">Pending</span></p>
+      </div>
+    </div>
+    <div class="back">
+      <button onclick="window.location.href='student-home.html'">Home</button>
+      <button class="primary" onclick="window.location.href='shop-list.html'">
+        🛒 Shop List
+      </button>
+    </div>
+    <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
   </div>
   <script>
     // Dark mode support based on localStorage setting
@@ -126,36 +386,10 @@
     }
     applyDarkMode();
   </script>
-  <!-- Add Firebase SDKs at the top of body -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
-  <h1>Order Placed ✅</h1>
-  <div class="order-box">
-    <div class="order-number">
-      <strong>Your Order Number:</strong> <span id="order-number">--</span>
-    </div>
-    <div class="order-datetime">
-      <strong>Date/Time:</strong> <span id="order-datetime">--</span>
-    </div>
-    <h3>Your Items:</h3>
-    <div id="order-items"></div>
-    <!-- Add this inside .order-box, after the items and before the note -->
-    <div id="order-total" style="font-size:1.15em; font-weight:700; color:#005f73; text-align:right; margin:18px 0 8px 0;">
-      Total: RM <span id="order-total-value">0.00</span>
-    </div>
-    <p><strong>Note:</strong> <span id="order-note">No note provided.</span></p>
-    <p class="status">Status: <span id="order-status">Pending</span></p>
-  </div>
-  <div class="back">
-    <button onclick="window.location.href='student-home.html'">Home</button>
-    <button style="margin-left:10px; background:linear-gradient(90deg,#00aaff 60%,#005f73 100%);" onclick="window.location.href='shop-list.html'">
-      🛒 Shop List
-    </button>
-  </div>
-  <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
 
   <script>
     // Initialize Firebase and Firestore using compat SDK
