@@ -32,6 +32,7 @@
                   radial-gradient(circle at 80% 10%, rgba(14,165,233,0.12), transparent 28%),
                   #f8fafc;
       padding: 20px 14px 28px;
+      padding-top: 70px;
     }
 
     .page-shell {
@@ -41,7 +42,7 @@
       position: relative;
       z-index: 1;
       padding: 10px 0 0;
-      min-height: calc(100vh - 40px);
+      min-height: calc(100vh - 80px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -70,11 +71,12 @@
       text-align: center;
       width: 100%;
       position: relative;
+      padding-top: 8px;
     }
     .back-btn {
       position: absolute;
       left: 0;
-      top: 0;
+      top: -54px;
       border: 1px solid var(--border-light);
       background: #fff;
       width: 44px;
@@ -121,7 +123,7 @@
 
     .cooking-scene {
       position: relative;
-      height: 220px;
+      height: 240px;
       display: grid;
       place-items: center;
       margin-bottom: 16px;
@@ -138,13 +140,13 @@
     }
     .pot {
       position: relative;
-      width: 180px;
-      height: 80px;
+      width: 188px;
+      height: 86px;
       background: linear-gradient(180deg, #1f2937 0%, #0f172a 100%);
-      border-radius: 0 0 28px 28px;
-      border: 2px solid rgba(255,255,255,0.1);
-      box-shadow: inset 0 1px 8px rgba(255,255,255,0.08), 0 14px 24px rgba(0,0,0,0.2);
-      animation: pot-bounce 2.8s ease-in-out infinite;
+      border-radius: 0 0 30px 30px;
+      border: 2px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 2px 10px rgba(255,255,255,0.1), 0 14px 24px rgba(0,0,0,0.2);
+      animation: pot-bounce 3s ease-in-out infinite;
     }
     .pot::before {
       content: '';
@@ -154,8 +156,9 @@
       right: 12px;
       height: 16px;
       background: linear-gradient(180deg, #334155, #1f2937);
-      border-radius: 12px 12px 4px 4px;
-      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 14px 14px 6px 6px;
+      border: 2px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 1px 6px rgba(255,255,255,0.08);
     }
     .pot::after {
       content: '';
@@ -163,11 +166,11 @@
       top: -30px;
       left: 50%;
       transform: translateX(-50%);
-      width: 36px;
-      height: 10px;
-      border-radius: 8px;
+      width: 42px;
+      height: 12px;
+      border-radius: 10px;
       background: linear-gradient(90deg, #f97316, #ea580c);
-      box-shadow: 0 0 14px rgba(249,115,22,0.6);
+      box-shadow: 0 0 16px rgba(249,115,22,0.65), 0 0 28px rgba(234,88,12,0.28);
     }
 
     .steam {
@@ -192,6 +195,8 @@
     .steam span:nth-child(3) { animation: steam-rise 2.8s ease-in-out infinite; height: 30px; }
     .steam span:nth-child(4) { animation: steam-rise-left 3.4s ease-in-out infinite; height: 32px; }
     .steam span:nth-child(5) { animation: steam-rise 3.1s ease-in-out infinite; height: 36px; }
+    .steam span:nth-child(odd) { animation-timing-function: ease-in; }
+    .steam span:nth-child(even) { animation-timing-function: ease-out; }
 
     .flame {
       position: absolute;
@@ -250,6 +255,13 @@
       color: var(--text);
     }
     .item:last-child { border-bottom: none; }
+    .item-note {
+      margin: 2px 0 8px;
+      padding-left: 4px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-align: left;
+    }
 
     .status {
       margin-top: 16px;
@@ -298,22 +310,24 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
     @keyframes steam-rise {
-      0% { transform: translateY(12px) translateX(0) scale(0.85); opacity: 0; }
-      40% { opacity: 0.8; }
-      100% { transform: translateY(-60px) translateX(6px) scale(1.1); opacity: 0; }
+      0% { transform: translateY(14px) translateX(0) scale(0.85); opacity: 0; }
+      40% { opacity: 0.85; }
+      100% { transform: translateY(-70px) translateX(7px) scale(1.12); opacity: 0; }
     }
     @keyframes steam-rise-left {
-      0% { transform: translateY(12px) translateX(0) scale(0.85); opacity: 0; }
-      40% { opacity: 0.8; }
-      100% { transform: translateY(-60px) translateX(-6px) scale(1.1); opacity: 0; }
+      0% { transform: translateY(14px) translateX(0) scale(0.85); opacity: 0; }
+      40% { opacity: 0.85; }
+      100% { transform: translateY(-70px) translateX(-7px) scale(1.12); opacity: 0; }
     }
     @keyframes pot-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-4px) rotate(-0.4deg); }
+      50% { transform: translateY(-6px) rotate(0.5deg); }
+      75% { transform: translateY(-3px) rotate(-0.3deg); }
     }
     @keyframes flame-flicker {
       0%, 100% { opacity: 0.9; transform: translate(-50%, 0) scale(1); }
-      50% { opacity: 0.65; transform: translate(-50%, 2px) scale(1.08); }
+      50% { opacity: 0.7; transform: translate(-50%, 3px) scale(1.12); }
     }
 
     /* Dark mode */
@@ -327,6 +341,7 @@
     body.dark-mode .order-datetime { color: #cbd5e1; }
     body.dark-mode .items-wrap { background: #111827; border-color: #1e293b; }
     body.dark-mode .item { color: #e2e8f0; border-color: #1e293b; }
+    body.dark-mode .item-note { color: #cbd5e1; }
     body.dark-mode .status { color: #fbbf24; }
     body.dark-mode .meta-note { color: #cbd5e1; }
     body.dark-mode .back button { background: #111827; color: #fbbf24; border-color: #f97316; box-shadow: 0 12px 26px rgba(0,0,0,0.35); }
@@ -443,8 +458,10 @@
         let total = 0;
         itemsContainer.innerHTML = "";
         (data.items || []).forEach(i => {
-          itemsContainer.innerHTML += `<div class="item"><span>${i.name} × ${i.qty}</span><span>RM ${(i.qty * i.price).toFixed(2)}</span></div>`;
-          total += i.qty * i.price;
+          const lineTotal = i.qty * i.price;
+          const noteLine = i.notes ? `<div class="item-note">Note: ${i.notes}</div>` : "";
+          itemsContainer.innerHTML += `<div class="item"><span>${i.name} × ${i.qty}</span><span>RM ${lineTotal.toFixed(2)}</span></div>${noteLine}`;
+          total += lineTotal;
         });
         document.getElementById("order-total-value").textContent = total.toFixed(2);
 
