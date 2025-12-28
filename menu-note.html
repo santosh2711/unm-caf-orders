@@ -197,6 +197,8 @@
     const returnUrl = params.get("returnUrl") || "menu.html";
     const vendorId = params.get("vendor") || "";
     const cartKey = vendorId ? `cart_vendor_${vendorId}` : "cart_vendor_unknown";
+    const normalizeNote = (note) => (note || "").trim();
+    const findCartIndex = (cart, itemId, notes) => cart.findIndex((entry) => entry.id === itemId && normalizeNote(entry.notes) === normalizeNote(notes));
     // Populate UI
     document.getElementById("item-name").textContent = name;
     document.getElementById("item-category").textContent = category;
@@ -209,18 +211,24 @@
     document.getElementById("qty-plus").onclick = () => { qty++; qtyValue.textContent = qty; };
 
     document.getElementById("add-cart-btn").onclick = () => {
-      const note = document.getElementById("note-input").value.trim();
+      const noteRaw = document.getElementById("note-input").value;
+      const note = normalizeNote(noteRaw);
       const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
-      cart.push({
-        id,
-        name,
-        price: Number(price),
-        category,
-        notes: note,
-        qty,
-        image: img,
-        imageURL: img
-      });
+      const idx = findCartIndex(cart, id, note);
+      if (idx >= 0) {
+        cart[idx].qty += qty;
+      } else {
+        cart.push({
+          id,
+          name,
+          price: Number(price),
+          category,
+          notes: note,
+          qty,
+          image: img,
+          imageURL: img
+        });
+      }
       localStorage.setItem(cartKey, JSON.stringify(cart));
       window.location.href = returnUrl;
     };
