@@ -4,423 +4,301 @@
   <meta charset="UTF-8">
   <title>User Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google Fonts for modern look -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: 'Roboto', Arial, sans-serif;
-      min-height: 100vh;
-      box-sizing: border-box;
-      background: transparent;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
+    :root {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --gray: #f8fafc;
+      --border: #e2e8f0;
+      --shadow: 0 14px 36px rgba(0,0,0,0.08);
+      --orange: #f97316;
+      --orange-dark: #ea580c;
+      --black: #0f172a;
+      --subtle: #64748b;
     }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', 'Nunito', sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(249,115,22,0.12), transparent 32%),
+                  radial-gradient(circle at 80% 10%, rgba(249,115,22,0.08), transparent 28%),
+                  var(--bg);
+      color: var(--black);
+      padding: 14px;
+    }
+
     .background {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: white;
-      z-index: -1;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 0%, rgba(249,115,22,0.12), transparent 30%);
+      opacity: 0.7;
+      z-index: 0;
     }
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      background: transparent;
-    }
+
     .container {
-      background: rgba(255,255,255,0.97);
-      border-radius: 22px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-      padding: 32px 24px 24px 24px;
-      max-width: 410px;
-      width: 100%;
-      margin: 32px 0 32px 0;
       position: relative;
       z-index: 1;
-      border: 2px solid #40E0D0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .profile-bar {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-bottom: 12px;
-      position: relative;
-    }
-    .profile-btn {
-      background: none;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding: 0;
-      margin-left: auto;
-      margin-right: 0;
-      position: relative;
-      z-index: 10;
-    }
-    .profile-btn img {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      border: 2px solid #40E0D0;
-      background: #073a47;
-      object-fit: cover;
-      transition: box-shadow 0.2s;
-    }
-    .profile-menu {
-      display: none;
-      position: absolute;
-      top: 62px;
-      right: 0;
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-      min-width: 160px;
-      z-index: 100;
-      padding: 0;
-      overflow: hidden;
-      border: 1.5px solid #00aaff;
-      animation: fadeIn 0.18s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-    .profile-menu button {
-      width: 100%;
-      background: none;
-      border: none;
-      padding: 14px 18px;
-      font-size: 1.1rem;
-      color: #000000;
-      text-align: left;
-      cursor: pointer;
-      transition: background 0.15s;
-      border-bottom: 1px solid #e0f7fa;
-    }
-    .profile-menu button:last-child {
-      border-bottom: none;
-    }
-    .profile-menu button:hover, .profile-menu button:focus {
-      background: #e0f7fa;
-      color: #172b90;
-    }
-    .avatar {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #005f73, #00aaff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 10px auto;
-      font-size: 2.2rem;
-      color: white;
-      font-weight: bold;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-      letter-spacing: 1px;
-    }
-    h1 {
-      margin: 0 0 10px 0;
-      font-size: 1.6rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, black, #005f73);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: 0.5px;
-      text-shadow: none;
-      text-align: center;
-    }
-    .info {
-      margin: 10px 0 18px 0;
-      font-size: 1rem;
-      color: #444;
-      text-align: center;
-    }
-    .points {
-      background: linear-gradient(90deg, #388e3c, #66bb6a);
-      color: white;
-      display: inline-block;
-      padding: 7px 16px;
+      max-width: 620px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: 20px;
-      font-weight: 700;
-      margin-bottom: 18px;
-      font-size: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .quick-links {
-      width: 100%;
+      padding: 22px 18px 26px;
+      box-shadow: 0 0 0 2px rgba(249,115,22,0.25), 0 0 34px rgba(249,115,22,0.18), var(--shadow);
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin: 18px 0 24px 0;
+      gap: 14px;
     }
-    .quick-link-box {
-      background: linear-gradient(120deg, #e0f7fa 60%, #f4f6f9 100%);
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-      padding: 22px 10px 18px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      transition: box-shadow 0.18s, transform 0.18s, background 0.18s;
-      border: 1.5px solid #00aaff;
-      min-height: 90px;
-      position: relative;
-    }
-    .quick-link-box:hover {
-      box-shadow: 0 8px 32px rgba(0,119,182,0.13);
-      background: linear-gradient(120deg, #b2ebf2 60%, #e0f7fa 100%);
-      transform: translateY(-2px) scale(1.03);
-    }
-    .quick-link-icon {
-      font-size: 2.1rem;
-      margin-bottom: 8px;
-      color: #00aaff;
-      filter: drop-shadow(0 2px 8px #00aaff22);
-      transition: color 0.18s;
-    }
-    .quick-link-label {
-      font-size: 1.08rem;
-      font-weight: 700;
-      color: #005f73;
-      text-align: center;
-      letter-spacing: 0.2px;
-    }
-    .fav-list, .food-list {
-      margin-top: 10px;
-      width: 100%;
-      text-align: left;
-      font-size: 0.98rem;
-      color: #333;
-      padding-left: 8px;
-    }
-    .fav-list li, .food-list li {
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .fav-list li .fav-icon, .food-list li .fav-icon {
-      color: #e53935;
-      font-size: 1.1em;
-    }
-    .fav-list li .shop-img, .food-list li .shop-img {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
-      object-fit: cover;
-      margin-right: 4px;
-      border: 1px solid #eee;
-      background: #fff;
-    }
-    .logout-btn {
-      width: 100%;
-      margin-top: 30px;
-      padding: 14px 0;
-      border-radius: 12px;
-      border: none;
-      font-size: 1.08em;
-      background: linear-gradient(90deg, #dc3545 60%, #ff6f6f 100%);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(220,53,69,0.12);
-      letter-spacing: 0.4px;
-      transition: background 0.18s, transform 0.18s;
-      display: block;
-    }
-    .logout-btn:hover {
-      background: linear-gradient(90deg, #b71c1c 60%, #dc3545 100%);
-      transform: translateY(-2px) scale(1.03);
-    }
-    @media (max-width: 500px) {
-      .container {
-        padding: 12px 2vw;
-        max-width: 98vw;
-      }
-      .quick-links {
-        gap: 10px;
-      }
-      .quick-link-box {
-        padding: 16px 2px 12px 2px;
-        min-height: 70px;
-      }
-      .quick-link-icon {
-        font-size: 1.5rem;
-      }
-      .quick-link-label {
-        font-size: 0.98rem;
-      }
-    }
-    /* Dark mode styles */
-    body.dark-mode {
-      background: #181a20 !important;
-      color: #f4f6f9 !important;
-    }
-    body.dark-mode .background {
-      background: #181a20 !important;
-    }
-    body.dark-mode .container {
-      background: #23262f !important;
-      color: #f4f6f9 !important;
-      border-color: #0077b6 !important;
-    }
-    body.dark-mode .avatar {
-      background: linear-gradient(135deg, #23262f, #0077b6) !important;
-      color: #f4f6f9 !important;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.32);
-    }
-    body.dark-mode h1 {
-      color: #f4f6f9 !important;
-      text-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 2px 4px rgba(0,0,0,0.28);
-      background: none !important;
-      -webkit-background-clip: initial;
-      background-clip: initial;
-    }
-    body.dark-mode .info {
-      color: #b0bec5 !important;
-    }
-    body.dark-mode .points {
-      background: linear-gradient(90deg, #388e3c, #66bb6a) !important;
-      color: #fff !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.22);
-    }
-    body.dark-mode .quick-link-box {
-      background: linear-gradient(120deg, #23262f 60%, #181a20 100%) !important;
-      color: #f4f6f9 !important;
-      border: 1.5px solid #00aaff !important;
-    }
-    body.dark-mode .quick-link-label {
-      color: #00eaff !important;
-    }
-    body.dark-mode .quick-link-icon {
-      color: #00eaff !important;
-    }
-    body.dark-mode .fav-list, body.dark-mode .food-list {
-      color: #f4f6f9 !important;
-    }
-    body.dark-mode .logout-btn {
-      background: linear-gradient(90deg, #23262f 60%, #ff5252 100%) !important;
-      color: #ff5252 !important;
-    }
-    body.dark-mode .logout-btn:hover {
-      background: linear-gradient(90deg, #b71c1c 60%, #dc3545 100%) !important;
-      color: #fff !important;
-    }
-    body.dark-mode .profile-menu {
-      background: #23262f !important;
-      color: #f4f6f9 !important;
-      border: 1.5px solid #00aaff !important;
-    }
-    body.dark-mode .profile-menu button {
-      color: #f4f6f9 !important;
-      border-bottom: 1px solid #23262f !important;
-    }
-    body.dark-mode .profile-menu button:hover,
-    body.dark-mode .profile-menu button:focus {
-      background: #181a20 !important;
-      color: #00eaff !important;
-    }
-    .fav-popup-modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.32);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: fadeIn 0.18s;
-    }
-    .fav-popup-content {
-      background: linear-gradient(120deg, #f4f6f9 60%, #e0f7fa 100%);
-      border-radius: 18px;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.22);
-      padding: 32px 18px 24px 18px;
-      min-width: 270px;
-      max-width: 90vw;
-      animation: modalPop 0.4s cubic-bezier(.4,1.6,.4,1);
-    }
-    .fav-popup-content h2 {
-      margin-top: 0;
-      font-size: 1.18rem;
-      color: #0077b6;
-      text-align: center;
-      margin-bottom: 18px;
-      font-weight: 900;
-    }
-    .fav-popup-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 18px 0;
-    }
-    .fav-popup-list li {
-      display: flex;
+
+    .brand-chip {
+      display: inline-flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: var(--gray);
+      border: 1px solid var(--border);
+      font-weight: 800;
+      color: var(--orange-dark);
+      letter-spacing: 0.4px;
+    }
+    .brand-chip img { width: 26px; height: 26px; border-radius: 8px; }
+
+    .profile-bar { display: flex; justify-content: flex-end; position: relative; }
+    .profile-btn {
+      border: 1px solid var(--border);
+      background: var(--gray);
+      border-radius: 14px;
+      padding: 6px;
+      border-bottom: 1px solid var(--border);
       cursor: pointer;
-      border-radius: 10px;
-      padding: 8px 8px;
-      transition: background 0.15s;
-      font-size: 1.05rem;
+      transition: background 0.14s ease, box-shadow 0.18s ease;
     }
-    .fav-popup-list li:hover {
-      background: #e0f7fa;
+    .profile-btn:hover { background: #fff7ed; box-shadow: 0 8px 18px rgba(0,0,0,0.08); }
+
+    .profile-menu {
+      position: absolute;
+      right: 0;
+      top: 48px;
+      min-width: 200px;
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 8px 0;
     }
-    .fav-popup-list .shop-img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid #eee;
-      background: #fff;
-    }
-    .fav-popup-close {
-      display: block;
-      margin: 0 auto;
-      padding: 10px 0;
-      width: 90%;
-      border-radius: 10px;
+    .profile-menu header { padding: 10px 14px 6px; font-weight: 800; color: var(--orange-dark); font-family: 'Nunito', 'Inter', sans-serif; }
+    .profile-menu .email-row { padding: 0 14px 10px; color: var(--subtle); font-weight: 600; font-size: 0.95rem; }
+    .profile-menu button {
+      width: 100%;
+      padding: 12px 14px;
+      background: transparent;
       border: none;
-      background: linear-gradient(90deg, #0077b6 40%, #00aaff 100%);
-      color: #fff;
+      border-top: 1px solid var(--border);
+      text-align: left;
       font-weight: 700;
-      font-size: 1.05rem;
+      color: var(--black);
       cursor: pointer;
-      transition: background 0.18s, transform 0.18s;
+      transition: background 0.14s ease, color 0.14s ease;
     }
-    .fav-popup-close:hover {
-      background: linear-gradient(90deg, #00aaff 40%, #0077b6 100%);
-      transform: translateY(-2px) scale(1.03);
+    .profile-menu button:first-of-type { border-top: none; }
+    .profile-menu button:last-child { border-bottom: none; }
+    .profile-menu button:hover { background: #fff7ed; color: var(--orange-dark); }
+
+    .hero-stack { display: grid; gap: 6px; text-align: center; }
+
+    .avatar {
+      width: 82px;
+      height: 82px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #f97316, #f59e0b);
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+      font-size: 2.2rem;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      box-shadow: 0 12px 26px rgba(249,115,22,0.25);
     }
-    body.dark-mode .fav-popup-content {
-      background: linear-gradient(120deg, #23262f 60%, #181a20 100%);
-      color: #f4f6f9;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.48);
+
+    h1 {
+      margin: 6px 0 4px;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--orange-dark);
+      letter-spacing: 0.4px;
+      font-family: 'Nunito', 'Inter', sans-serif;
     }
-    body.dark-mode .fav-popup-list li:hover {
-      background: #23262f;
+
+    .info { color: var(--subtle); font-weight: 600; font-size: 0.98rem; margin-bottom: 6px; }
+
+    .points {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff7ed;
+      color: var(--orange-dark);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(249,115,22,0.18);
     }
-    body.dark-mode .fav-popup-close {
-      background: linear-gradient(90deg, #23262f 40%, #00aaff 100%);
-      color: #f4f6f9;
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
     }
-    body.dark-mode .fav-popup-close:hover {
-      background: linear-gradient(90deg, #00aaff 40%, #23262f 100%);
+
+    .quick-link-box {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 16px 10px 14px;
+      display: grid;
+      place-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.18s ease, border-color 0.12s ease;
     }
+    .quick-link-box.primary {
+      background: linear-gradient(135deg, #ffedd5, #fff7ed);
+      border-color: rgba(234,88,12,0.6);
+      box-shadow: 0 12px 28px rgba(249,115,22,0.22), 0 0 12px rgba(234,88,12,0.18);
+    }
+    .quick-link-box:hover { transform: translateY(-2px); border-color: var(--orange); box-shadow: 0 10px 24px rgba(0,0,0,0.1); }
+    .quick-link-box.primary:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(249,115,22,0.26), 0 0 14px rgba(234,88,12,0.26); }
+
+    .quick-link-icon { font-size: 1.6rem; color: var(--orange-dark); }
+    .quick-link-box.primary .quick-link-icon { color: #c2410c; }
+    .quick-link-label { font-weight: 800; color: var(--black); letter-spacing: 0.2px; }
+
+    h3.section-title {
+      margin: 10px 0 6px;
+      color: var(--orange-dark);
+      font-size: 1.05rem;
+      letter-spacing: 0.2px;
+    }
+
+    .fav-list, .food-list {
+      margin: 0;
+      padding: 0 0 0 4px;
+      list-style: none;
+      display: grid;
+      gap: 6px;
+      color: var(--black);
+      font-weight: 600;
+      font-size: 0.96rem;
+    }
+
+    .fav-list li, .food-list li { display: flex; align-items: center; gap: 8px; }
+    .fav-icon { color: #ef4444; }
+    .shop-img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); background: var(--gray); }
+
+    .logout-btn {
+      width: 100%;
+      padding: 13px 0;
+      border: none;
+      border-radius: 12px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(249,115,22,0.22);
+      transition: background 0.16s ease, transform 0.12s ease;
+    }
+
+    .logout-btn:hover { background: var(--orange-dark); }
+    .logout-btn:active { transform: translateY(1px); }
+
+    .fav-popup-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      animation: fadeIn 0.18s ease;
+    }
+
+    .fav-popup-content {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 24px 18px 16px;
+      width: min(420px, 92vw);
+      display: grid;
+      gap: 12px;
+    }
+
+    .fav-popup-content h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--orange-dark);
+      text-align: center;
+      letter-spacing: 0.25px;
+    }
+
+    .fav-popup-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .fav-popup-list li { display: flex; align-items: center; gap: 10px; padding: 8px 8px; border-radius: 10px; border: 1px solid var(--border); cursor: pointer; transition: border-color 0.12s ease, background 0.12s ease; }
+    .fav-popup-list li:hover { background: #fff7ed; border-color: var(--orange); }
+
+    .fav-popup-close {
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(249,115,22,0.24);
+      transition: background 0.14s ease, transform 0.12s ease;
+    }
+    .fav-popup-close:hover { background: var(--orange-dark); }
+    .fav-popup-close:active { transform: translateY(1px); }
+
+    @media (max-width: 540px) {
+      body { padding: 10px; }
+      .container { padding: 18px 14px; border-radius: 16px; }
+      .hero-stack h1 { font-size: 1.4rem; }
+      .quick-links { gap: 8px; }
+      .quick-link-box { padding: 14px 8px; }
+    }
+
+    /* Dark mode */
+    body.dark-mode { background: #0b1220; color: #e2e8f0; }
+    body.dark-mode .container,
+    body.dark-mode .profile-menu,
+    body.dark-mode .fav-popup-content { background: #0f172a; border-color: #1e293b; color: #e2e8f0; box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
+    body.dark-mode .profile-btn { background: #111827; border-color: #1e293b; }
+    body.dark-mode .profile-menu button { color: #e2e8f0; border-color: #1e293b; }
+    body.dark-mode .profile-menu button:hover { background: #1f2937; color: #fbbf24; }
+    body.dark-mode .avatar { background: linear-gradient(135deg, #f59e0b, #f97316); box-shadow: 0 12px 26px rgba(249,115,22,0.35); }
+    body.dark-mode .brand-chip,
+    body.dark-mode .points,
+    body.dark-mode .quick-link-box,
+    body.dark-mode .fav-popup-list li { background: #111827; border-color: #1e293b; color: #e2e8f0; box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+    body.dark-mode .quick-link-box.primary { border-color: rgba(249,115,22,0.6); box-shadow: 0 14px 30px rgba(249,115,22,0.26), 0 0 14px rgba(234,88,12,0.22); }
+    body.dark-mode .quick-link-box:hover,
+    body.dark-mode .fav-popup-list li:hover { border-color: #f97316; }
+    body.dark-mode .logout-btn,
+    body.dark-mode .fav-popup-close { background: #f59e0b; box-shadow: 0 12px 26px rgba(249,115,22,0.35); color: #0f172a; }
+    body.dark-mode .profile-menu header { color: #fbbf24; }
+    body.dark-mode .info { color: #cbd5e1; }
+    body.dark-mode h3.section-title { color: #fbbf24; }
   </style>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -500,6 +378,13 @@
         window.location.href = "student-login.html";
       });
     }
+
+    // Populate email in the profile dropdown
+    document.addEventListener('DOMContentLoaded', () => {
+      const email = localStorage.getItem("email") || "";
+      const emailSpan = document.getElementById("profileMenuEmail");
+      if (emailSpan) emailSpan.textContent = email;
+    });
 
     // Load favourite shops and foods from localStorage
     function renderFavourites() {
@@ -618,10 +503,8 @@
         <img id="profilePic" src="https://ui-avatars.com/api/?name=U&background=00aaff&color=fff&rounded=true" alt="Profile">
       </button>
       <div class="profile-menu" id="profileMenu">
-        <div style="padding:16px 18px; font-size:1.05rem; color:#0077b6; border-bottom:1px solid #e0f7fa;">
-          <strong>Email:</strong>
-          <span id="profileMenuEmail" style="word-break:break-all;"></span>
-        </div>
+        <header>Email</header>
+        <div class="email-row"><span id="profileMenuEmail"></span></div>
         <button onclick="goToShopList()">🛒 Shop List</button>
       </div>
     </div>
@@ -634,7 +517,7 @@
       Points: <span id="points">Loading...</span>
     </div>
     <div class="quick-links">
-      <div class="quick-link-box" onclick="goToShopList()">
+      <div class="quick-link-box primary" onclick="goToShopList()">
         <span class="quick-link-icon">🛒</span>
         <span class="quick-link-label">Shop List</span>
       </div>
@@ -652,69 +535,16 @@
       </div>
     </div>
     <div id="favShopsSection" style="width:100%;">
-      <h3 style="margin:18px 0 8px 0; color:#0077b6; font-size:1.13rem;">Favourite Shops</h3>
+      <h3 class="section-title">Favourite Shops</h3>
       <ul class="fav-list" id="favShopsList"></ul>
     </div>
     <div id="favFoodsSection" style="width:100%;">
-      <h3 style="margin:18px 0 8px 0; color:#0077b6; font-size:1.13rem;">Favourite Foods</h3>
+      <h3 class="section-title">Favourite Foods</h3>
       <ul class="food-list" id="favFoodsList"></ul>
     </div>
     <button class="logout-btn" onclick="logout()">Logout</button>
     <div id="favShopsPopup" style="display:none;"></div>
   </div>
-  <script type="module">
-    // ...existing code...
-    // Show favourite shops as popup modal
-    window.showFavShopsPopup = function() {
-      const favShops = JSON.parse(localStorage.getItem('favouriteShopsData') || '[]');
-      const popup = document.getElementById('favShopsPopup');
-      if (!popup) return;
-      if (favShops.length === 0) {
-        popup.innerHTML = `
-          <div class="fav-popup-modal">
-            <div class="fav-popup-content">
-              <h2>Favourite Shops</h2>
-              <div style="color:#888;text-align:center;margin-bottom:18px;">No favourite shops yet.</div>
-              <button class="fav-popup-close" onclick="closeFavShopsPopup()">Close</button>
-            </div>
-          </div>
-        `;
-      } else {
-        popup.innerHTML = `
-          <div class="fav-popup-modal">
-            <div class="fav-popup-content">
-              <h2>Favourite Shops</h2>
-              <ul class="fav-popup-list">
-                ${favShops.map(shop => `
-                  <li onclick="goToShopMenu('${shop.id}')">
-                    <img class="shop-img" src="${shop.imageURL || 'https://via.placeholder.com/40'}" alt="">
-                    <span>${shop.name}</span>
-                  </li>
-                `).join('')}
-              </ul>
-              <button class="fav-popup-close" onclick="closeFavShopsPopup()">Close</button>
-            </div>
-          </div>
-        `;
-      }
-      popup.style.display = "flex";
-      setTimeout(() => {
-        document.addEventListener('keydown', escFavPopup, { once: true });
-      }, 0);
-    };
-    window.closeFavShopsPopup = function() {
-      const popup = document.getElementById('favShopsPopup');
-      if (popup) popup.style.display = "none";
-      document.removeEventListener('keydown', escFavPopup);
-    };
-    function escFavPopup(e) {
-      if (e.key === "Escape") closeFavShopsPopup();
-    }
-    window.goToShopMenu = function(shopId) {
-      window.location.href = `menu.html?vendor=${shopId}`;
-    };
-    // Show email in profile menu
-    document.addEventListener('DOMContentLoaded', function() {
-      const email = localStorage.getItem("email") || "";
-      const emailSpan = document.getElementById("profileMenuEmail");
-      if
+  
+</body>
+</html>
