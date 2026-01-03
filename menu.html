@@ -1007,20 +1007,20 @@
 			const hot = pickVariantPrice(item, ["hotPrice", "priceHot", "hot_price", "price_hot", "hot"], fallback);
 			const regular = pickVariantPrice(item, ["regularPrice", "priceRegular", "regular_price", "price_regular", "regular"], fallback);
 			const large = pickVariantPrice(item, ["largePrice", "priceLarge", "large_price", "price_large", "large"], fallback);
-			return [
+			return [{ label: "Size", required: true, options: [
 				{ label: "Hot", value: "Hot", price: hot },
 				{ label: "Regular", value: "Regular", price: regular },
 				{ label: "Large", value: "Large", price: large },
-			];
+			]}];
 		};
 		const buildLetsCafeMatchaChoices = (item) => {
 			const fallback = Number(item?.price) || 0;
 			const regular = pickVariantPrice(item, ["regularPrice", "priceRegular", "regular_price", "price_regular", "regular"], fallback);
 			const large = pickVariantPrice(item, ["largePrice", "priceLarge", "large_price", "price_large", "large"], fallback);
-			return [
+			return [{ label: "Size", required: true, options: [
 				{ label: "Regular", value: "Regular", price: regular },
 				{ label: "Large", value: "Large", price: large },
-			];
+			]}];
 		};
 		const LETS_CAFE_BREAKFAST_CHOICES = [
 			{ label: "Drink", required: true, options: ["Black Coffee", "Milk Coffee", "Tea"] },
