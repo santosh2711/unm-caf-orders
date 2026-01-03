@@ -268,10 +268,10 @@
     const normalizeOption = (opt) => {
       if (opt && typeof opt === "object") {
         const label = opt.label || opt.name || opt.title || opt.option || "Option";
-        return { label, value: opt.value || label, price: parsePrice(opt.price, 0) };
+        return { label, value: opt.value || label, price: parsePrice(opt.price, NaN) };
       }
       const label = String(opt);
-      return { label, value: label, price: 0 };
+      return { label, value: label, price: NaN };
     };
 
     const renderChoices = (choices) => {
@@ -302,9 +302,10 @@
           input.name = `choice-${idx}`;
           input.value = value;
           input.dataset.label = optLabel;
+          if (Number.isFinite(price)) input.dataset.price = String(price);
           input.required = required;
           const text = document.createElement("span");
-          text.textContent = price ? `${optLabel} (+RM ${price.toFixed(2)})` : optLabel;
+          text.textContent = Number.isFinite(price) ? `${optLabel} (RM ${price.toFixed(2)})` : optLabel;
           optionRow.appendChild(input);
           optionRow.appendChild(text);
           optionsWrap.appendChild(optionRow);
@@ -341,7 +342,8 @@
         const label = group.dataset.choiceLabel || `Choice ${idx + 1}`;
         const picked = group.querySelector("input[type='radio']:checked");
         if (picked) {
-          selections.push({ label, value: picked.dataset.label || picked.value });
+          const pickedPrice = parsePrice(picked.dataset.price, NaN);
+          selections.push({ label, value: picked.dataset.label || picked.value, price: pickedPrice });
         } else if (required) {
           missing.push(label);
         }
@@ -356,8 +358,10 @@
         return;
       }
       const userNote = normalizeNote(noteInput.value);
-      const selectionNote = selections.length ? `Selections: ${selections.map((s) => `${s.label}: ${s.value}`).join("; ")}` : "";
-      const combinedNote = [selectionNote, userNote].filter(Boolean).join(" | ");
+      const bracketNote = selections.length ? selections.map((s) => `[${s.label}: ${s.value}]`).join(" ") : "";
+      const combinedNote = [bracketNote, userNote].filter(Boolean).join(" | ");
+      const selectionPrice = selections.find((s) => Number.isFinite(s.price))?.price;
+      const unitPrice = Number.isFinite(selectionPrice) ? selectionPrice : item.price;
       const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
       const idx = findCartIndex(cart, item.id, combinedNote);
       if (idx >= 0) {
@@ -366,7 +370,7 @@
         cart.push({
           id: item.id,
           name: item.name,
-          price: Number(item.price),
+          price: Number(unitPrice),
           category: item.category,
           notes: combinedNote,
           rawNote: userNote,
