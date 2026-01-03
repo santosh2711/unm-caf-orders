@@ -986,6 +986,35 @@
 		const brandNameFallback = "Menu";
 		const forkAndSpoonIcon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f97316'/%3E%3Cpath fill='%23ffffff' d='M22 10c-1.66 0-3 1.34-3 3v15c0 3.38 1.77 6.31 4.48 7.75V54c0 1.66 1.34 3 3 3h2c1.66 0 3-1.34 3-3V10h-3v13h-2V10zm18 0c-1.66 0-3 1.34-3 3v9c0 3.87 3.13 7 7 7h1v25c0 1.66 1.34 3 3 3h2c1.66 0 3-1.34 3-3V10z'/%3E%3C/svg%3E";
 		const normalizeVendorName = (name = "") => (name || "").trim().toLowerCase();
+		const pickVariantPrice = (item, keys, fallback) => {
+			for (const key of keys) {
+				const raw = item?.[key];
+				if (raw === undefined || raw === null || raw === "") continue;
+				const num = Number(raw);
+				if (Number.isFinite(num)) return num;
+			}
+			return fallback;
+		};
+		const buildLetsCafeSizeChoices = (item) => {
+			const fallback = Number(item?.price) || 0;
+			const hot = pickVariantPrice(item, ["hotPrice", "priceHot", "hot_price", "price_hot", "hot"], fallback);
+			const regular = pickVariantPrice(item, ["regularPrice", "priceRegular", "regular_price", "price_regular", "regular"], fallback);
+			const large = pickVariantPrice(item, ["largePrice", "priceLarge", "large_price", "price_large", "large"], fallback);
+			return [
+				{ label: "Hot", value: "Hot", price: hot },
+				{ label: "Regular", value: "Regular", price: regular },
+				{ label: "Large", value: "Large", price: large },
+			];
+		};
+		const buildLetsCafeMatchaChoices = (item) => {
+			const fallback = Number(item?.price) || 0;
+			const regular = pickVariantPrice(item, ["regularPrice", "priceRegular", "regular_price", "price_regular", "regular"], fallback);
+			const large = pickVariantPrice(item, ["largePrice", "priceLarge", "large_price", "price_large", "large"], fallback);
+			return [
+				{ label: "Regular", value: "Regular", price: regular },
+				{ label: "Large", value: "Large", price: large },
+			];
+		};
 		const LETS_CAFE_BREAKFAST_CHOICES = [
 			{ label: "Drink", required: true, options: ["Black Coffee", "Milk Coffee", "Tea"] },
 			{ label: "Egg Style", required: true, options: ["Scrambled", "Sunny side up"] },
@@ -1425,13 +1454,25 @@ img.className = "item-image";
 const imageSrc = item.image || item.imageURL || "https://via.placeholder.com/120x120?text=No+Image";
 const baseNeedsCustomization = Boolean(item.choices) || (Array.isArray(item.includes) && item.includes.length) || Boolean(item.time_window);
 const isLetsCafeBreakfast = isLetsCafeVendor && /breakfast set/i.test(item.name || "");
+const isLetsCafeCoffeeTea = isLetsCafeVendor && /coffee\/tea series/i.test(item.category || "");
+const isLetsCafeMatcha = isLetsCafeVendor && /matcha series/i.test(item.category || "");
 const itemForNote = isLetsCafeBreakfast
 	? {
 		...item,
 		choices: Array.isArray(item.choices) && item.choices.length ? item.choices : LETS_CAFE_BREAKFAST_CHOICES,
 	}
-	: item;
-const needsCustomization = baseNeedsCustomization || isLetsCafeBreakfast;
+	: isLetsCafeCoffeeTea
+		? {
+			...item,
+			choices: Array.isArray(item.choices) && item.choices.length ? item.choices : buildLetsCafeSizeChoices(item),
+		}
+		: isLetsCafeMatcha
+			? {
+				...item,
+				choices: Array.isArray(item.choices) && item.choices.length ? item.choices : buildLetsCafeMatchaChoices(item),
+			}
+			: item;
+const needsCustomization = baseNeedsCustomization || isLetsCafeBreakfast || isLetsCafeCoffeeTea || isLetsCafeMatcha;
 img.src = imageSrc;
 img.alt = item.name || "Menu item";
 img.loading = "lazy";
