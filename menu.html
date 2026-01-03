@@ -1,237 +1,258 @@
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="theme-color" content="#f97316" />
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
-	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
-	<title>Menu</title>
-	<style>
-		:root {
-			--orange: #f97316;
-			--orange-dark: #ea580c;
-			--black: #0f172a;
-			--gray: #f8fafc;
-			--border: #e2e8f0;
-		}
-
-		* {
-			box-sizing: border-box;
-		}
-
-		body {
-			margin: 0;
-			font-family: "Segoe UI", Tahoma, sans-serif;
-			background: #ffffff;
-			color: var(--black);
-			padding-top: 76px;
-		}
-
-		body.modal-open {
-			overflow: hidden;
-		}
-
 		header {
 			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 76px;
-			background: #ffffff;
-			border-bottom: 1px solid var(--border);
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			padding: 0 16px;
-			z-index: 100;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-		}
-
-		.header-left {
-			display: inline-flex;
-			align-items: center;
-			gap: 10px;
-			flex: 1;
 			min-width: 0;
-		}
-
-		.brand {
-			display: inline-flex;
-			align-items: center;
-			gap: 10px;
-			font-size: 20px;
-			font-weight: 700;
-			letter-spacing: 0.5px;
-			color: var(--orange-dark);
-			white-space: normal;
-			flex: 1;
-			min-width: 0;
-			overflow: hidden;
-		}
-
-		#brand-name {
-			overflow-wrap: anywhere;
-			line-height: 1.2;
-		}
-
-		.brand-logo {
-			width: 38px;
 			height: 38px;
 			border-radius: 12px;
-			object-fit: cover;
-			border: 1px solid var(--border);
 			background: var(--gray);
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-			flex-shrink: 0;
-		}
-
-		.header-right {
-			display: flex;
-			align-items: center;
-			gap: 14px;
-			font-size: 14px;
-			color: var(--black);
-			flex-shrink: 0;
-		}
-
-		.pill {
-			background: var(--gray);
-			border: 1px solid var(--border);
-			border-radius: 999px;
-			padding: 6px 12px;
-			display: inline-flex;
-			align-items: center;
-			gap: 8px;
-			font-weight: 600;
-		}
-
-		.profile-btn {
-			cursor: pointer;
-		}
-
-		.back-btn {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			gap: 6px;
 			padding: 8px 12px;
 			border-radius: 12px;
-			border: 1px solid var(--border);
-			background: var(--gray);
-			color: var(--black);
-			font-weight: 800;
-			cursor: pointer;
-			transition: background 0.18s ease, transform 0.18s ease;
 		}
+		const renderMenu = (items) => {
+manualNavClick = false;
+menuContainer.innerHTML = "";
+if (categoryNav) categoryNav.style.display = "none";
+if (subNav) subNav.style.display = "none";
+if (viewCategoriesBtn) viewCategoriesBtn.style.display = "none";
+if (categoryNavInner) categoryNavInner.innerHTML = "";
+if (subNavInner) subNavInner.innerHTML = "";
 
-		.back-btn:hover { background: #fff7ed; }
-		.back-btn:active { transform: translateY(1px); }
+if (!items.length) {
+menuContainer.innerHTML = '<div class="empty">No menu items available right now.</div>';
+currentSections = [];
+sectionPositions = [];
+return;
+}
 
-		.profile-circle {
-			width: 28px;
-			height: 28px;
-			border-radius: 50%;
-			background: var(--orange);
-			color: #fff;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			font-weight: 800;
-			font-size: 13px;
-		}
+const isLetsCafeVendor = ["let's cafe", "lets cafe"].includes((vendorName || "").trim().toLowerCase());
 
-		.profile-name {
-			display: none;
-		}
+const grouped = {};
+items.forEach((item) => {
+const catLabel = (item.category || "Others").trim() || "Others";
+if (!grouped[catLabel]) grouped[catLabel] = [];
+grouped[catLabel].push(item);
+});
 
-		.profile-dropdown {
-			position: absolute;
-			top: 70px;
-			right: 16px;
-			background: #ffffff;
-			border: 1px solid var(--border);
-			border-radius: 12px;
-			box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-			padding: 10px 12px;
-			min-width: 200px;
-			display: none;
-			z-index: 220;
-		}
+const categories = Object.keys(grouped).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+const sectionFrag = document.createDocumentFragment();
+const sectionsInfo = [];
 
-		.profile-dropdown.active { display: block; }
+categories.forEach((catLabel) => {
+const itemsInCat = grouped[catLabel].slice().sort((a, b) => (a.name || "").localeCompare(b.name || "", "en", { sensitivity: "base" }));
+const sectionId = `cat-${(catLabel || "others").toLowerCase().replace(/[^a-z0-9]+/g, "-") || "others"}`;
 
-		.profile-email { color: #475569; font-size: 13px; margin: 4px 0 10px; }
+const section = document.createElement("section");
+section.className = "category";
+section.id = sectionId;
+section.style.scrollMarginTop = "140px";
 
-		.dropdown-link {
-			width: 100%;
-			border: 1px solid var(--border);
-			border-radius: 10px;
-			padding: 10px 12px;
-			background: #ffffff;
-			color: var(--black);
-			font-weight: 700;
-			cursor: pointer;
-			margin-bottom: 8px;
-			text-align: left;
-		}
+const title = document.createElement("h2");
+title.className = "category-title";
+title.textContent = catLabel;
+section.appendChild(title);
 
-		.logout-btn {
-			width: 100%;
-			border: 1px solid var(--border);
-			border-radius: 10px;
-			padding: 10px 12px;
-			background: #fff7ed;
-			color: var(--orange-dark);
-			font-weight: 800;
-			cursor: pointer;
-		}
+itemsInCat.forEach((item) => {
+const card = document.createElement("div");
+card.className = "item-card";
 
-		main {
-			max-width: 960px;
-			margin: 0 auto;
-			padding: 16px;
-		}
+const img = document.createElement("img");
+img.className = "item-image";
+const imageSrc = item.image || item.imageURL || "https://via.placeholder.com/120x120?text=No+Image";
+const isBreakfastSet = isLetsCafeVendor && (item.name || "").toLowerCase().includes("breakfast set");
+const mergedChoices = isBreakfastSet && (!Array.isArray(item.choices) || !item.choices.length)
+  ? letsCafeBreakfastChoices
+  : item.choices;
+const hasChoices = Array.isArray(mergedChoices) && mergedChoices.length > 0;
+const needsCustomization = isBreakfastSet || hasChoices || (Array.isArray(item.includes) && item.includes.length) || Boolean(item.time_window);
+img.src = imageSrc;
+img.alt = item.name || "Menu item";
+img.loading = "lazy";
+img.decoding = "async";
 
-		.category-nav {
-			position: sticky;
-			top: 128px;
-			z-index: 120;
-			background: #ffffff;
-			padding: 8px 0 6px;
-			margin: 0 -16px 8px;
-		.item-card.unavailable {
-			opacity: 0.35;
-			filter: blur(2.5px);
-		}
-		.item-card.unavailable .add-btn {
-			background: #e2e8f0;
-			color: #94a3b8;
-			cursor: not-allowed;
-		}
-		.unavailable-badge {
-			display: inline-flex;
-			align-items: center;
-			gap: 6px;
-			padding: 6px 10px;
-			border-radius: 10px;
-			background: #fee2e2;
-			color: #991b1b;
-			font-weight: 800;
-			font-size: 12px;
-		}
-			overflow-x: auto;
-			border-bottom: 1px solid var(--border);
-		}
+const info = document.createElement("div");
+info.className = "item-info";
 
-		.category-nav-inner {
-			display: inline-flex;
-			gap: 8px;
+const topRow = document.createElement("div");
+topRow.className = "item-top";
+
+const nameEl = document.createElement("h3");
+nameEl.className = "item-name";
+nameEl.textContent = item.name || "Unnamed Item";
+
+const isVeg = Boolean(item.veg);
+if (isVeg) {
+const vegBadge = document.createElement("span");
+vegBadge.className = "veg-dot veg";
+vegBadge.title = "Veg";
+topRow.appendChild(vegBadge);
+}
+
+topRow.appendChild(nameEl);
+
+if (Boolean(item.bestseller)) {
+const best = document.createElement("span");
+best.className = "badge";
+best.textContent = "Most ordered ";
+topRow.appendChild(best);
+}
+
+		const renderMenu = (items) => {
+manualNavClick = false;
+menuContainer.innerHTML = "";
+if (categoryNav) categoryNav.style.display = "none";
+if (subNav) subNav.style.display = "none";
+if (viewCategoriesBtn) viewCategoriesBtn.style.display = "none";
+if (categoryNavInner) categoryNavInner.innerHTML = "";
+if (subNavInner) subNavInner.innerHTML = "";
+
+if (!items.length) {
+menuContainer.innerHTML = '<div class="empty">No menu items available right now.</div>';
+currentSections = [];
+sectionPositions = [];
+return;
+}
+
+const isLetsCafeVendor = ["let's cafe", "lets cafe"].includes((vendorName || "").trim().toLowerCase());
+
+const grouped = {};
+items.forEach((item) => {
+const catLabel = (item.category || "Others").trim() || "Others";
+if (!grouped[catLabel]) grouped[catLabel] = [];
+grouped[catLabel].push(item);
+});
+
+const categories = Object.keys(grouped).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+const sectionFrag = document.createDocumentFragment();
+const sectionsInfo = [];
+
+categories.forEach((catLabel) => {
+const itemsInCat = grouped[catLabel].slice().sort((a, b) => (a.name || "").localeCompare(b.name || "", "en", { sensitivity: "base" }));
+const sectionId = `cat-${(catLabel || "others").toLowerCase().replace(/[^a-z0-9]+/g, "-") || "others"}`;
+
+const section = document.createElement("section");
+section.className = "category";
+section.id = sectionId;
+section.style.scrollMarginTop = "140px";
+
+const title = document.createElement("h2");
+title.className = "category-title";
+title.textContent = catLabel;
+section.appendChild(title);
+
+itemsInCat.forEach((item) => {
+const card = document.createElement("div");
+card.className = "item-card";
+
+const img = document.createElement("img");
+img.className = "item-image";
+const imageSrc = item.image || item.imageURL || "https://via.placeholder.com/120x120?text=No+Image";
+const isBreakfastSet = isLetsCafeVendor && (item.name || "").toLowerCase().includes("breakfast set");
+const mergedChoices = isBreakfastSet && (!Array.isArray(item.choices) || !item.choices.length)
+  ? letsCafeBreakfastChoices
+  : item.choices;
+const hasChoices = Array.isArray(mergedChoices) && mergedChoices.length > 0;
+const needsCustomization = isBreakfastSet || hasChoices || (Array.isArray(item.includes) && item.includes.length) || Boolean(item.time_window);
+img.src = imageSrc;
+img.alt = item.name || "Menu item";
+img.loading = "lazy";
+img.decoding = "async";
+
+const info = document.createElement("div");
+info.className = "item-info";
+
+const topRow = document.createElement("div");
+topRow.className = "item-top";
+
+const nameEl = document.createElement("h3");
+nameEl.className = "item-name";
+nameEl.textContent = item.name || "Unnamed Item";
+
+const isVeg = Boolean(item.veg);
+if (isVeg) {
+const vegBadge = document.createElement("span");
+vegBadge.className = "veg-dot veg";
+vegBadge.title = "Veg";
+topRow.appendChild(vegBadge);
+}
+
+topRow.appendChild(nameEl);
+
+if (Boolean(item.bestseller)) {
+const best = document.createElement("span");
+best.className = "badge";
+best.textContent = "Most ordered ";
+topRow.appendChild(best);
+}
+
+const desc = document.createElement("p");
+desc.className = "item-desc";
+desc.textContent = item.description || "Delicious item from our kitchen.";
+
+const bottomRow = document.createElement("div");
 			padding: 0 16px;
+
+const price = document.createElement("div");
+price.className = "price";
+price.textContent = item.price !== undefined ? `RM ${Number(item.price).toFixed(2)}` : "Price on request";
+
+const unavailable = item.available === false;
+if (availableOnly && unavailable) return;
+if (unavailable) card.classList.add("unavailable");
+
+const addBtn = document.createElement("button");
+addBtn.className = "add-btn";
+addBtn.type = "button";
+addBtn.textContent = unavailable ? "Not available" : needsCustomization ? "Customize" : "Add";
+addBtn.disabled = unavailable;
+addBtn.addEventListener("click", (event) => {
+event.stopPropagation();
+if (unavailable) return;
+if (needsCustomization) {
+stashCustomizeItem({ ...item, choices: mergedChoices, image: imageSrc, imageURL: imageSrc, vendorId });
+goToNote(item, imageSrc);
+return;
+}
+animateToCart(img);
+addToCart({
+id: item.id,
+name: item.name,
+price: Number(item.price) || 0,
+image: imageSrc,
+category: item.category || "",
+notes: "",
+});
+});
+
+bottomRow.appendChild(price);
+bottomRow.appendChild(addBtn);
+
+info.appendChild(topRow);
+info.appendChild(desc);
+info.appendChild(bottomRow);
+
+card.style.cursor = unavailable ? "not-allowed" : "pointer";
+card.addEventListener("click", () => {
+if (unavailable) return;
+if (needsCustomization) {
+stashCustomizeItem({ ...item, choices: mergedChoices, image: imageSrc, imageURL: imageSrc, vendorId });
+}
+goToNote(item, imageSrc);
+});
+
+card.appendChild(img);
+card.appendChild(info);
+section.appendChild(card);
+});
+
+if (section.querySelector(".item-card")) {
+sectionFrag.appendChild(section);
+sectionsInfo.push({ id: sectionId, label: catLabel });
+}
+});
+
+menuContainer.appendChild(sectionFrag);
+buildCategoryNav(sectionsInfo);
+};
 			white-space: nowrap;
 		}
 
@@ -985,6 +1006,12 @@
 		const genericErrorHtml = '<div class="empty">Unable to load menu. Please check your internet connection or permissions and try again.</div>';
 		const brandNameFallback = "Menu";
 		const forkAndSpoonIcon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f97316'/%3E%3Cpath fill='%23ffffff' d='M22 10c-1.66 0-3 1.34-3 3v15c0 3.38 1.77 6.31 4.48 7.75V54c0 1.66 1.34 3 3 3h2c1.66 0 3-1.34 3-3V10h-3v13h-2V10zm18 0c-1.66 0-3 1.34-3 3v9c0 3.87 3.13 7 7 7h1v25c0 1.66 1.34 3 3 3h2c1.66 0 3-1.34 3-3V10z'/%3E%3C/svg%3E";
+		const letsCafeBreakfastChoices = [
+			{ label: "Drink", required: true, type: "single", options: ["Coffee", "Tea", "Milo"] },
+			{ label: "Egg style", required: true, type: "single", options: ["Scrambled", "Sunny-side", "Omelette"] },
+			{ label: "Bread", required: false, type: "single", options: ["Toast", "None"] },
+			{ label: "Extras", required: false, type: "multi", options: ["Hashbrown", "Sausage", "Baked beans"] },
+		];
 		let allItems = [];
         const stashCustomizeItem = (item) => { try { sessionStorage.setItem("customizeItem", JSON.stringify(item)); } catch (err) { console.error("Failed to stash customize item", err); } };
         const goToNote = (item, imageSrc) => { const params = new URLSearchParams({ id: item.id, name: item.name || "", price: item.price !== undefined ? item.price : 0, img: imageSrc, category: item.category || "", vendor: vendorId || "", returnUrl: vendorId ? `menu.html?vendor=${vendorId}` : "menu.html" }); window.location.href = `menu-note.html?${params.toString()}`; };
@@ -1663,7 +1690,6 @@ buildCategoryNav(sectionsInfo);
 	</script>
 </body>
 </html>
-
 
 
 
