@@ -1368,107 +1368,107 @@
 		};
 
 		const renderMenu = (items) => {
-			manualNavClick = false;
-			menuContainer.innerHTML = "";
-			if (categoryNav) categoryNav.style.display = "none";
-			if (subNav) subNav.style.display = "none";
-			if (viewCategoriesBtn) viewCategoriesBtn.style.display = "none";
-			if (categoryNavInner) categoryNavInner.innerHTML = "";
-			if (subNavInner) subNavInner.innerHTML = "";
+manualNavClick = false;
+menuContainer.innerHTML = "";
+if (categoryNav) categoryNav.style.display = "none";
+if (subNav) subNav.style.display = "none";
+if (viewCategoriesBtn) viewCategoriesBtn.style.display = "none";
+if (categoryNavInner) categoryNavInner.innerHTML = "";
+if (subNavInner) subNavInner.innerHTML = "";
 
-			if (!items.length) {
-				menuContainer.innerHTML = '<div class="empty">No menu items available right now.</div>';
-				currentSections = [];
-				sectionPositions = [];
-				return;
-			}
+if (!items.length) {
+menuContainer.innerHTML = '<div class="empty">No menu items available right now.</div>';
+currentSections = [];
+sectionPositions = [];
+return;
+}
 
-			const grouped = {};
-			items.forEach((item) => {
-				const catLabel = (item.category || "Others").trim() || "Others";
-				if (!grouped[catLabel]) grouped[catLabel] = [];
-				grouped[catLabel].push(item);
-			});
+const grouped = {};
+items.forEach((item) => {
+const catLabel = (item.category || "Others").trim() || "Others";
+if (!grouped[catLabel]) grouped[catLabel] = [];
+grouped[catLabel].push(item);
+});
 
-			const categories = Object.keys(grouped).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
-			const sectionFrag = document.createDocumentFragment();
-			const sectionsInfo = [];
+const categories = Object.keys(grouped).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+const sectionFrag = document.createDocumentFragment();
+const sectionsInfo = [];
 
-			categories.forEach((catLabel) => {
-				const itemsInCat = grouped[catLabel].slice().sort((a, b) => (a.name || "").localeCompare(b.name || "", "en", { sensitivity: "base" }));
-				const sectionId = `cat-${(catLabel || "others").toLowerCase().replace(/[^a-z0-9]+/g, "-") || "others"}`;
+categories.forEach((catLabel) => {
+const itemsInCat = grouped[catLabel].slice().sort((a, b) => (a.name || "").localeCompare(b.name || "", "en", { sensitivity: "base" }));
+const sectionId = `cat-${(catLabel || "others").toLowerCase().replace(/[^a-z0-9]+/g, "-") || "others"}`;
 
-				const section = document.createElement("section");
-				section.className = "category";
-				section.id = sectionId;
-				section.style.scrollMarginTop = "140px";
+const section = document.createElement("section");
+section.className = "category";
+section.id = sectionId;
+section.style.scrollMarginTop = "140px";
 
-				const title = document.createElement("h2");
-				title.className = "category-title";
-				title.textContent = catLabel;
-				section.appendChild(title);
+const title = document.createElement("h2");
+title.className = "category-title";
+title.textContent = catLabel;
+section.appendChild(title);
 
-				itemsInCat.forEach((item) => {
-					const card = document.createElement("div");
-					card.className = "item-card";
+itemsInCat.forEach((item) => {
+const card = document.createElement("div");
+card.className = "item-card";
 
-					const img = document.createElement("img");
-					img.className = "item-image";
-					const imageSrc = item.image || item.imageURL || "https://via.placeholder.com/120x120?text=No+Image";
+const img = document.createElement("img");
+img.className = "item-image";
+const imageSrc = item.image || item.imageURL || "https://via.placeholder.com/120x120?text=No+Image";
 const needsCustomization = Boolean(item.choices) || (Array.isArray(item.includes) && item.includes.length) || Boolean(item.time_window);
-					img.src = imageSrc;
-					img.alt = item.name || "Menu item";
-					img.loading = "lazy";
-					img.decoding = "async";
+img.src = imageSrc;
+img.alt = item.name || "Menu item";
+img.loading = "lazy";
+img.decoding = "async";
 
-					const info = document.createElement("div");
-					info.className = "item-info";
+const info = document.createElement("div");
+info.className = "item-info";
 
-					const topRow = document.createElement("div");
-					topRow.className = "item-top";
+const topRow = document.createElement("div");
+topRow.className = "item-top";
 
-					const nameEl = document.createElement("h3");
-					nameEl.className = "item-name";
-					nameEl.textContent = item.name || "Unnamed Item";
+const nameEl = document.createElement("h3");
+nameEl.className = "item-name";
+nameEl.textContent = item.name || "Unnamed Item";
 
-					const isVeg = Boolean(item.veg);
-					if (isVeg) {
-						const vegBadge = document.createElement("span");
-						vegBadge.className = "veg-dot veg";
-						vegBadge.title = "Veg";
-						topRow.appendChild(vegBadge);
-					}
+const isVeg = Boolean(item.veg);
+if (isVeg) {
+const vegBadge = document.createElement("span");
+vegBadge.className = "veg-dot veg";
+vegBadge.title = "Veg";
+topRow.appendChild(vegBadge);
+}
 
-					topRow.appendChild(nameEl);
+topRow.appendChild(nameEl);
 
-					if (Boolean(item.bestseller)) {
-						const best = document.createElement("span");
-						best.className = "badge";
-						best.textContent = "Most ordered ★";
-						topRow.appendChild(best);
-					}
+if (Boolean(item.bestseller)) {
+const best = document.createElement("span");
+best.className = "badge";
+best.textContent = "Most ordered ";
+topRow.appendChild(best);
+}
 
-					const desc = document.createElement("p");
-					desc.className = "item-desc";
-					desc.textContent = item.description || "Delicious item from our kitchen.";
+const desc = document.createElement("p");
+desc.className = "item-desc";
+desc.textContent = item.description || "Delicious item from our kitchen.";
 
-					const bottomRow = document.createElement("div");
-					bottomRow.className = "item-bottom";
+const bottomRow = document.createElement("div");
+bottomRow.className = "item-bottom";
 
-					const price = document.createElement("div");
-					price.className = "price";
-					price.textContent = item.price !== undefined ? `RM ${Number(item.price).toFixed(2)}` : "Price on request";
+const price = document.createElement("div");
+price.className = "price";
+price.textContent = item.price !== undefined ? `RM ${Number(item.price).toFixed(2)}` : "Price on request";
 
-					const unavailable = item.available === false;
-					if (availableOnly && unavailable) return;
-					if (unavailable) card.classList.add("unavailable");
+const unavailable = item.available === false;
+if (availableOnly && unavailable) return;
+if (unavailable) card.classList.add("unavailable");
 
-					const addBtn = document.createElement("button");
-					addBtn.className = "add-btn";
-					addBtn.type = "button";
-					addBtn.textContent = unavailable ? "Not available" : needsCustomization ? "Customize" : "Add";
-					addBtn.disabled = unavailable;
-					addBtn.addEventListener("click", (event) => {
+const addBtn = document.createElement("button");
+addBtn.className = "add-btn";
+addBtn.type = "button";
+addBtn.textContent = unavailable ? "Not available" : needsCustomization ? "Customize" : "Add";
+addBtn.disabled = unavailable;
+addBtn.addEventListener("click", (event) => {
 event.stopPropagation();
 if (unavailable) return;
 if (needsCustomization) {
@@ -1487,8 +1487,15 @@ notes: "",
 });
 });
 
-					card.style.cursor = unavailable ? "not-allowed" : "pointer";
-					card.addEventListener("click", () => {
+bottomRow.appendChild(price);
+bottomRow.appendChild(addBtn);
+
+info.appendChild(topRow);
+info.appendChild(desc);
+info.appendChild(bottomRow);
+
+card.style.cursor = unavailable ? "not-allowed" : "pointer";
+card.addEventListener("click", () => {
 if (unavailable) return;
 if (needsCustomization) {
 stashCustomizeItem({ ...item, image: imageSrc, imageURL: imageSrc });
@@ -1496,15 +1503,20 @@ stashCustomizeItem({ ...item, image: imageSrc, imageURL: imageSrc });
 goToNote(item, imageSrc);
 });
 
-				if (section.querySelector(".item-card")) {
-					sectionFrag.appendChild(section);
-					sectionsInfo.push({ id: sectionId, label: catLabel });
-				}
-			});
+card.appendChild(img);
+card.appendChild(info);
+section.appendChild(card);
+});
 
-			menuContainer.appendChild(sectionFrag);
-			buildCategoryNav(sectionsInfo);
-		};
+if (section.querySelector(".item-card")) {
+sectionFrag.appendChild(section);
+sectionsInfo.push({ id: sectionId, label: catLabel });
+}
+});
+
+menuContainer.appendChild(sectionFrag);
+buildCategoryNav(sectionsInfo);
+};
 
 		const setSwitchState = (btn, on, onLabel, offLabel) => {
 			if (!btn) return;
@@ -1651,6 +1663,7 @@ goToNote(item, imageSrc);
 	</script>
 </body>
 </html>
+
 
 
 
