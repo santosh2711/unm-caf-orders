@@ -283,8 +283,10 @@
         group.className = "choice-group";
         const label = choice?.label || choice?.name || `Choice ${idx + 1}`;
         const required = choice?.required !== false;
+        const type = choice?.type === "multi" ? "multi" : "single";
         group.dataset.required = String(required);
         group.dataset.choiceLabel = label;
+        group.dataset.choiceType = type;
 
         const title = document.createElement("p");
         title.className = "choice-label";
@@ -298,11 +300,11 @@
           const optionRow = document.createElement("label");
           optionRow.className = "choice-option";
           const input = document.createElement("input");
-          input.type = "radio";
-          input.name = `choice-${idx}`;
+          input.type = type === "multi" ? "checkbox" : "radio";
+          input.name = type === "multi" ? `choice-${idx}-${optIdx}` : `choice-${idx}`;
           input.value = value;
           input.dataset.label = optLabel;
-          input.required = required;
+          input.required = type === "single" && required;
           const text = document.createElement("span");
           text.textContent = price ? `${optLabel} (+RM ${price.toFixed(2)})` : optLabel;
           optionRow.appendChild(input);
@@ -338,12 +340,22 @@
       const missing = [];
       groups.forEach((group, idx) => {
         const required = group.dataset.required === "true";
+        const type = group.dataset.choiceType || "single";
         const label = group.dataset.choiceLabel || `Choice ${idx + 1}`;
-        const picked = group.querySelector("input[type='radio']:checked");
-        if (picked) {
-          selections.push({ label, value: picked.dataset.label || picked.value });
-        } else if (required) {
-          missing.push(label);
+        if (type === "multi") {
+          const picked = Array.from(group.querySelectorAll("input[type='checkbox']:checked"));
+          if (picked.length) {
+            selections.push({ label, value: picked.map((p) => p.dataset.label || p.value).join(", ") });
+          } else if (required) {
+            missing.push(label);
+          }
+        } else {
+          const picked = group.querySelector("input[type='radio']:checked");
+          if (picked) {
+            selections.push({ label, value: picked.dataset.label || picked.value });
+          } else if (required) {
+            missing.push(label);
+          }
         }
       });
       return { selections, missing };
