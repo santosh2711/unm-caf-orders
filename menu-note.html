@@ -71,6 +71,14 @@
     .note-section { margin-top: 14px; }
     .section-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-weight:800; font-size: 0.96rem; color: var(--black); }
     .chip { background: var(--gray); color: var(--muted); border-radius:14px; padding:4px 10px; font-size: 0.85rem; border: 1px solid var(--border); }
+    .includes-list { margin: 0; padding-left: 18px; color: var(--black); }
+    .includes-list li { margin: 4px 0; }
+    .choice-group { margin-bottom: 12px; }
+    .choice-label { font-weight: 700; color: var(--black); margin: 0 0 6px; }
+    .choice-options { display: grid; gap: 6px; }
+    .choice-option { display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background: #fdfcfb; cursor: pointer; }
+    .choice-option input { accent-color: var(--orange); }
+    .time-window { color: var(--muted); font-weight: 700; background: #fff7ed; border:1px solid var(--border); border-radius: 12px; padding: 12px; margin: 12px 0 0; }
     textarea {
       width:100%; min-height:120px; border:1.5px solid var(--border); border-radius: 12px;
       padding:12px; font-size:0.95rem; resize: vertical; outline:none; background:#fff;
@@ -133,12 +141,15 @@
     body.dark-mode .item-header .price { color:#fbbf24; }
     body.dark-mode .item-header .category,
     body.dark-mode .section-title,
-    body.dark-mode #qty-value { color:#e2e8f0; }
+    body.dark-mode #qty-value,
+    body.dark-mode .choice-label { color:#e2e8f0; }
     body.dark-mode .chip {
       background:#111827;
       color:#cbd5e1;
       border-color:#1e293b;
     }
+    body.dark-mode .choice-option { background:#111827; border-color:#1e293b; }
+    body.dark-mode .time-window { background:#1f2937; border-color:#1e293b; color:#fbbf24; }
     body.dark-mode textarea {
       background:#0f172a;
       color:#e2e8f0;
@@ -153,7 +164,7 @@
 <body>
   <div class="hero">
     <img id="food-photo" src="https://via.placeholder.com/800x400?text=Food+image" alt="Food" />
-    <button class="back-btn" onclick="history.back()">←</button>
+    <button class="back-btn" onclick="history.back()">Back</button>
   </div>
 
   <main class="content">
@@ -166,6 +177,18 @@
         <div class="price" id="item-price">RM 0.00</div>
       </div>
 
+      <section id="includes-section" class="includes-section" style="display:none;">
+        <div class="section-title">
+          <span>Included in set</span>
+          <span class="chip">Auto</span>
+        </div>
+        <ul class="includes-list" id="includes-list"></ul>
+      </section>
+
+      <section id="choices-section" style="display:none;"></section>
+
+      <section id="time-window" class="time-window" style="display:none;"></section>
+
       <section class="note-section">
         <div class="section-title">
           <span>Note to restaurant</span>
@@ -175,7 +198,7 @@
       </section>
 
       <section class="qty-section">
-        <button class="qty-btn" id="qty-minus">−</button>
+        <button class="qty-btn" id="qty-minus">-</button>
         <span id="qty-value">1</span>
         <button class="qty-btn" id="qty-plus">+</button>
       </section>
@@ -187,50 +210,175 @@
   </div>
 
   <script>
-    // Fetch data from query parameters
     const params = new URLSearchParams(location.search);
-    const id = params.get("id") || `item_${Date.now()}`;
-    const name = params.get("name") || "Item";
-    const price = parseFloat(params.get("price") || "0");
-    const category = params.get("category") || "";
-    const img = params.get("img") || "https://via.placeholder.com/800x400?text=Food+image";
-    const returnUrl = params.get("returnUrl") || "menu.html";
-    const vendorId = params.get("vendor") || "";
-    const cartKey = vendorId ? `cart_vendor_${vendorId}` : "cart_vendor_unknown";
     const normalizeNote = (note) => (note || "").trim();
     const findCartIndex = (cart, itemId, notes) => cart.findIndex((entry) => entry.id === itemId && normalizeNote(entry.notes) === normalizeNote(notes));
-    // Populate UI
-    document.getElementById("item-name").textContent = name;
-    document.getElementById("item-category").textContent = category;
-    document.getElementById("item-price").textContent = "RM " + price.toFixed(2);
-    document.getElementById("food-photo").src = img;
+    const parsePrice = (val, fallback = 0) => {
+      const num = Number(val);
+      return Number.isFinite(num) ? num : fallback;
+    };
+    const safeParse = (raw) => {
+      try { return JSON.parse(raw); } catch (_err) { return null; }
+    };
+    const stored = safeParse(sessionStorage.getItem("customizeItem")) || {};
+    const vendorId = params.get("vendor") || stored.vendorId || "";
+    const basePrice = params.has("price") ? parsePrice(params.get("price"), stored.price || 0) : parsePrice(stored.price, 0);
+    const item = {
+      id: params.get("id") || stored.id || `item_${Date.now()}`,
+      name: params.get("name") || stored.name || "Item",
+      price: basePrice,
+      category: params.get("category") || stored.category || "",
+      image: stored.image || stored.imageURL || params.get("img") || "https://via.placeholder.com/800x400?text=Food+image",
+      includes: Array.isArray(stored.includes) ? stored.includes : [],
+      choices: Array.isArray(stored.choices) ? stored.choices : [],
+      time_window: stored.time_window || null,
+      returnUrl: params.get("returnUrl") || (vendorId ? `menu.html?vendor=${vendorId}` : "menu.html"),
+    };
+    const cartKey = vendorId ? `cart_vendor_${vendorId}` : "cart_vendor_unknown";
+
+    const qtyValue = document.getElementById("qty-value");
+    const includesSection = document.getElementById("includes-section");
+    const includesList = document.getElementById("includes-list");
+    const choicesSection = document.getElementById("choices-section");
+    const timeWindowEl = document.getElementById("time-window");
+    const noteInput = document.getElementById("note-input");
+
+    document.getElementById("item-name").textContent = item.name;
+    document.getElementById("item-category").textContent = item.category;
+    document.getElementById("item-price").textContent = "RM " + item.price.toFixed(2);
+    document.getElementById("food-photo").src = item.image;
+
+    const renderIncludes = (includes) => {
+      if (!Array.isArray(includes) || !includes.length) return;
+      includesSection.style.display = "block";
+      includesList.innerHTML = "";
+      includes.forEach((inc) => {
+        const li = document.createElement("li");
+        if (typeof inc === "string") {
+          li.textContent = inc;
+        } else if (inc && typeof inc === "object") {
+          li.textContent = inc.label || inc.name || inc.title || JSON.stringify(inc);
+        } else {
+          li.textContent = String(inc);
+        }
+        includesList.appendChild(li);
+      });
+    };
+
+    const normalizeOption = (opt) => {
+      if (opt && typeof opt === "object") {
+        const label = opt.label || opt.name || opt.title || opt.option || "Option";
+        return { label, value: opt.value || label, price: parsePrice(opt.price, 0) };
+      }
+      const label = String(opt);
+      return { label, value: label, price: 0 };
+    };
+
+    const renderChoices = (choices) => {
+      if (!Array.isArray(choices) || !choices.length) return;
+      choicesSection.style.display = "block";
+      choicesSection.innerHTML = "";
+      choices.forEach((choice, idx) => {
+        const group = document.createElement("div");
+        group.className = "choice-group";
+        const label = choice?.label || choice?.name || `Choice ${idx + 1}`;
+        const required = choice?.required !== false;
+        group.dataset.required = String(required);
+        group.dataset.choiceLabel = label;
+
+        const title = document.createElement("p");
+        title.className = "choice-label";
+        title.textContent = required ? `${label} *` : label;
+
+        const optionsWrap = document.createElement("div");
+        optionsWrap.className = "choice-options";
+        const options = Array.isArray(choice?.options) ? choice.options : [];
+        options.forEach((opt, optIdx) => {
+          const { label: optLabel, value, price } = normalizeOption(opt);
+          const optionRow = document.createElement("label");
+          optionRow.className = "choice-option";
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = `choice-${idx}`;
+          input.value = value;
+          input.dataset.label = optLabel;
+          input.required = required;
+          const text = document.createElement("span");
+          text.textContent = price ? `${optLabel} (+RM ${price.toFixed(2)})` : optLabel;
+          optionRow.appendChild(input);
+          optionRow.appendChild(text);
+          optionsWrap.appendChild(optionRow);
+        });
+
+        group.appendChild(title);
+        group.appendChild(optionsWrap);
+        choicesSection.appendChild(group);
+      });
+    };
+
+    const renderTimeWindow = (tw) => {
+      if (!tw) return;
+      const label = typeof tw === "string" ? tw : [tw.start, tw.end].filter(Boolean).join(" - ");
+      if (!label) return;
+      timeWindowEl.style.display = "block";
+      timeWindowEl.textContent = `Available: ${label}`;
+    };
+
+    renderIncludes(item.includes);
+    renderChoices(item.choices);
+    renderTimeWindow(item.time_window);
 
     let qty = 1;
-    const qtyValue = document.getElementById("qty-value");
     document.getElementById("qty-minus").onclick = () => { if (qty > 1) { qty--; qtyValue.textContent = qty; } };
     document.getElementById("qty-plus").onclick = () => { qty++; qtyValue.textContent = qty; };
 
+    const collectSelections = () => {
+      const groups = Array.from(choicesSection.querySelectorAll(".choice-group"));
+      const selections = [];
+      const missing = [];
+      groups.forEach((group, idx) => {
+        const required = group.dataset.required === "true";
+        const label = group.dataset.choiceLabel || `Choice ${idx + 1}`;
+        const picked = group.querySelector("input[type='radio']:checked");
+        if (picked) {
+          selections.push({ label, value: picked.dataset.label || picked.value });
+        } else if (required) {
+          missing.push(label);
+        }
+      });
+      return { selections, missing };
+    };
+
     document.getElementById("add-cart-btn").onclick = () => {
-      const noteRaw = document.getElementById("note-input").value;
-      const note = normalizeNote(noteRaw);
+      const { selections, missing } = collectSelections();
+      if (missing.length) {
+        alert(`Please choose: ${missing.join(", ")}`);
+        return;
+      }
+      const userNote = normalizeNote(noteInput.value);
+      const selectionNote = selections.length ? `Selections: ${selections.map((s) => `${s.label}: ${s.value}`).join("; ")}` : "";
+      const combinedNote = [selectionNote, userNote].filter(Boolean).join(" | ");
       const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
-      const idx = findCartIndex(cart, id, note);
+      const idx = findCartIndex(cart, item.id, combinedNote);
       if (idx >= 0) {
         cart[idx].qty += qty;
       } else {
         cart.push({
-          id,
-          name,
-          price: Number(price),
-          category,
-          notes: note,
+          id: item.id,
+          name: item.name,
+          price: Number(item.price),
+          category: item.category,
+          notes: combinedNote,
+          rawNote: userNote,
+          selections,
           qty,
-          image: img,
-          imageURL: img
+          image: item.image,
+          imageURL: item.image
         });
       }
       localStorage.setItem(cartKey, JSON.stringify(cart));
-      window.location.href = returnUrl;
+      sessionStorage.removeItem("customizeItem");
+      window.location.href = item.returnUrl;
     };
 
     function applyDarkMode() {
@@ -247,3 +395,10 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
