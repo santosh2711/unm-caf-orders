@@ -851,6 +851,12 @@
 		body.dark-mode .item-desc { color: #cbd5e1; }
 		body.dark-mode .badge { background: rgba(249,115,22,0.24); color: #ffd08a; border-color: rgba(249,115,22,0.4); }
 		body.dark-mode .available-toggle { color: #e2e8f0; }
+		body.dark-mode .category-pill-btn.active {
+			background: #f97316;
+			border-color: #fb923c;
+			color: #0b1220;
+			box-shadow: 0 6px 16px rgba(249, 115, 22, 0.35);
+		}
 		body.dark-mode .unavailable-badge { background: #2f1b2d; color: #f9a8d4; }
 		body.dark-mode .cart-empty,
 		body.dark-mode .empty { color: #cbd5e1; }
@@ -1027,6 +1033,21 @@
 			{ label: "Egg Style", required: true, options: ["Scrambled", "Sunny side up"] },
 			{ label: "Bread", required: false, options: ["White toast", "Wholemeal toast"] },
 		];
+		const CUSTOM_CATEGORY_ORDERS = {
+			"nasi kandar ibrahim shah (mamak)": [
+				"Rice and curry options",
+				"Vegetable",
+				"Roti Canai",
+				"Dosai Corner",
+				"Noodles",
+				"Fried Rice",
+				"Nasi Lemak",
+				"White Bread",
+				"Fresh Juice",
+				"Beverages",
+			],
+		};
+		const normalizeCategoryLabel = (label = "") => (label || "").trim().toLowerCase();
 		let allItems = [];
 		let isLetsCafeVendor = false;
         const stashCustomizeItem = (item) => { try { sessionStorage.setItem("customizeItem", JSON.stringify(item)); } catch (err) { console.error("Failed to stash customize item", err); } };
@@ -1304,11 +1325,19 @@
 			cartDrawer.classList.remove("active");
 		};
 
+		const scrollCategoryButtonIntoView = (targetId) => {
+			if (!categoryNavInner || !targetId) return;
+			const btn = categoryNavInner.querySelector(`.category-pill-btn[data-target="${targetId}"]`);
+			if (!btn) return;
+			btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+		};
+
 		const updateActiveCategoryButton = (activeId) => {
 			if (!categoryNavInner) return;
 			categoryNavInner.querySelectorAll(".category-pill-btn").forEach((btn) => {
 				btn.classList.toggle("active", btn.dataset.target === activeId);
 			});
+			scrollCategoryButtonIntoView(activeId);
 		};
 
 		const recalcSectionPositions = () => {
@@ -1434,7 +1463,19 @@ if (!grouped[catLabel]) grouped[catLabel] = [];
 grouped[catLabel].push(item);
 });
 
-const categories = Object.keys(grouped).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+const vendorKey = normalizeVendorName(vendorName);
+const customOrder = CUSTOM_CATEGORY_ORDERS[vendorKey];
+const orderMap = customOrder ? new Map(customOrder.map((label, index) => [normalizeCategoryLabel(label), index])) : null;
+const categories = Object.keys(grouped).sort((a, b) => {
+	const idxA = orderMap?.get(normalizeCategoryLabel(a));
+	const idxB = orderMap?.get(normalizeCategoryLabel(b));
+	const hasA = idxA !== undefined;
+	const hasB = idxB !== undefined;
+	if (hasA && hasB && idxA !== idxB) return idxA - idxB;
+	if (hasA && !hasB) return -1;
+	if (!hasA && hasB) return 1;
+	return a.localeCompare(b, "en", { sensitivity: "base" });
+});
 const sectionFrag = document.createDocumentFragment();
 const sectionsInfo = [];
 
