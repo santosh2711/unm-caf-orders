@@ -4,283 +4,196 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vendor Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --surface: #ffffff;
+      --surface-strong: #f8fafc;
+      --ink: #0f172a;
+      --muted: #475569;
+      --brand: #f97316;
+      --brand-strong: #ea580c;
+      --teal: #0ea5e9;
+      --border: #e2e8f0;
+      --shadow: 0 12px 32px rgba(0,0,0,0.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
     html, body {
-      height: 100%;
       margin: 0;
       padding: 0;
-      font-family: 'Roboto', Arial, sans-serif;
       min-height: 100vh;
-      box-sizing: border-box;
-      background: transparent;
+      font-family: 'Inter', 'Space Grotesk', 'Segoe UI', Arial, sans-serif;
+      color: var(--ink);
+      background: #0f172a;
     }
+
     .background {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background-image: url('https://www.nottingham.edu.my/events/images-multimedia/25th-anniversary/banner-homepage-25th-anniversary.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      filter: blur(6px) brightness(0.7);
-      z-index: -1;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 20% 20%, rgba(14,165,233,0.25), transparent 32%),
+                  radial-gradient(circle at 80% 10%, rgba(249,115,22,0.22), transparent 30%),
+                  radial-gradient(circle at 70% 70%, rgba(56,189,248,0.18), transparent 34%),
+                  #0b1220;
     }
-    body {
-      padding: 1rem;
-      background: transparent;
-      color: #000;
+
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 18px clamp(14px, 3vw, 24px) 32px;
     }
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-      background: rgba(255,255,255,0.8);
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-      backdrop-filter: blur(4px);
-      max-width: 600px;
-      margin: 0 auto 20px auto;
-    }
-    header img {
-      max-width: 100px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-      border: 3px solid #005f73;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      color: #005f73;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-    .stats {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.1rem;
-      color: #333;
+
+    .vendor-hero {
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 20px;
-      background: rgba(255,255,255,0.8);
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-      backdrop-filter: blur(4px);
-      max-width: 600px;
-      margin: 0 auto 20px auto;
-    }
-    .stats button {
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: background 0.2s, transform 0.2s;
-    }
-    .stats button:hover {
-      background: linear-gradient(90deg, #0099cc 60%, #005f73 100%);
-      transform: scale(1.02);
-    }
-    .stats button:active {
-      transform: scale(0.98);
-    }
-    #close-shop-btn {
-      background: linear-gradient(90deg, #d32f2f 60%, #ff6f6f 100%);
-      color: white;
-      margin-left: 10px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      padding: 0.6rem 1.2rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: background 0.2s, transform 0.2s;
-    }
-    #close-shop-btn.open {
-      background: linear-gradient(90deg, #28a745 60%, #4caf50 100%);
-      color: white;
-    }
-    #close-shop-btn:hover {
-      background: linear-gradient(90deg, #ff6f6f 60%, #d32f2f 100%);
-      transform: scale(1.02);
-    }
-    #close-shop-btn.open:hover {
-      background: linear-gradient(90deg, #4caf50 60%, #28a745 100%);
-    }
-    .order-card {
-      background: rgba(255,255,255,0.95);
-      padding: 1.2rem;
-      margin: 1rem auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-      max-width: 600px;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(0,95,115,0.2);
-      color: #000;
-      font-weight: bold;
-    }
-    .order-card ul {
-      padding-left: 20px;
-      margin: 0.5rem 0;
-    }
-    .order-card li {
-      margin: 0.3rem 0;
-      font-size: 1.1em;
-      color: #222;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
+      gap: 18px;
+      padding: 18px;
+      background: linear-gradient(140deg, rgba(249,115,22,0.12), rgba(14,165,233,0.12)), var(--surface);
+      border: 1px solid rgba(226,232,240,0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
-    .item-name {
-      font-size: 1.1em;
-      font-weight: bold;
-      color: #005f73;
-      margin-right: 10px;
+
+    .hero-left { display: flex; align-items: center; gap: 14px; }
+
+    #vendor-logo {
+      width: 82px;
+      height: 82px;
+      border-radius: 18px;
+      object-fit: cover;
+      border: 2px solid #cbd5e1;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+      background: var(--surface-strong);
     }
-    .item-qty {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #d32f2f;
-      background: #ffeaea;
-      border-radius: 6px;
-      padding: 2px 14px;
-      margin-left: 10px;
-      min-width: 38px;
-      text-align: center;
-      display: inline-block;
-      border: 2px solid #d32f2f;
+
+    .hero-meta { display: grid; gap: 6px; }
+
+    .eyebrow { margin: 0; color: var(--muted); font-weight: 700; letter-spacing: 0.3px; font-size: 0.9rem; }
+
+    .hero-title {
+      margin: 0;
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: var(--ink);
     }
-    .order-card p {
-      margin: 0.5rem 0;
-      color: #000;
-      font-weight: inherit;
+
+    .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-strong); font-weight: 700; color: var(--muted); font-size: 0.9rem; }
+    .chip.positive { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+    .chip.negative { background: #fee2e2; color: #b91c1c; border-color: #fecdd3; }
+
+    .toolbar {
+      margin: 16px 0 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
     }
-    .order-total {
-      font-size: 1.15em;
-      font-weight: bold;
-      color: #005f73;
-      margin: 0.7em 0;
-      text-align: right;
+
+    .stat-card {
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+      display: grid;
+      gap: 6px;
     }
-    .order-date {
-      font-size: 1.08em;
-      color: #000;
-      margin-bottom: 0.5em;
-      text-align: right;
-      font-weight: bold;
+    .stat-label { color: var(--muted); font-weight: 700; }
+    .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--brand-strong); }
+
+    .toolbar-actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+
+    .btn { border: 1px solid transparent; border-radius: 12px; padding: 10px 14px; font-weight: 800; letter-spacing: 0.2px; cursor: pointer; transition: transform 0.12s ease, box-shadow 0.16s ease, background 0.16s ease; }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: linear-gradient(120deg, var(--brand) 0%, var(--brand-strong) 100%); color: #fff; box-shadow: 0 12px 22px rgba(234,88,12,0.25); }
+    .btn.primary:hover { box-shadow: 0 16px 28px rgba(234,88,12,0.3); }
+    .btn.outline { background: var(--surface); color: var(--ink); border-color: var(--border); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    .btn.outline:hover { border-color: #cbd5e1; }
+    .btn.danger { background: linear-gradient(120deg, #ef4444, #f97316); color: #fff; box-shadow: 0 12px 24px rgba(239,68,68,0.2); }
+    .btn.danger.open { background: linear-gradient(120deg, #22c55e, #0ea5e9); box-shadow: 0 12px 24px rgba(34,197,94,0.2); }
+    .btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .orders-grid { display: grid; gap: 14px; }
+
+    .order-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+      display: grid;
+      gap: 12px;
     }
-    .emoji {
-      font-size: 1.5em;
-    }
+
+    .order-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .order-meta { display: grid; gap: 4px; }
+    .order-date { color: var(--muted); font-weight: 700; }
+    .pill-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 10px; font-weight: 800; letter-spacing: 0.2px; border: 1px solid var(--border); background: var(--surface-strong); color: var(--muted); }
+    .pill.status-ready { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+    .pill.status-pending { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+    .pill.delivery-dine-in { background: #e0f2fe; color: #075985; border-color: #bae6fd; }
+    .pill.delivery-take-away { background: #ffe4e6; color: #9f1239; border-color: #fecdd3; }
+
+    .item-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .item-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #f1f5f9; border-radius: 12px; background: #f8fafc; }
+    .item-name { font-weight: 800; color: var(--ink); }
+    .item-qty { font-weight: 800; color: #b91c1c; background: #fee2e2; border-radius: 10px; padding: 4px 12px; border: 1px solid #fecdd3; }
+    .item-meta { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .item-note { background: #fff7ed; color: #c2410c; border-radius: 10px; padding: 6px 10px; border: 1px solid #fed7aa; font-weight: 700; }
+
+    .order-total { text-align: right; font-weight: 800; color: var(--brand-strong); font-size: 1.1rem; }
+
+    .order-note-block { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; display: grid; gap: 4px; color: var(--ink); }
+    .order-note-block span { font-weight: 800; color: var(--muted); }
+
     .order-card button {
-      background: linear-gradient(90deg, #28a745 60%, #4caf50 100%);
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      margin-top: 1rem;
-      cursor: pointer;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 1rem;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: background 0.2s, transform 0.2s, opacity 0.2s;
+      justify-self: flex-end;
+      min-width: 180px;
     }
-    .order-card button:hover:not(:disabled) {
-      background: linear-gradient(90deg, #4caf50 60%, #28a745 100%);
-      transform: scale(1.02);
-    }
-    .order-card button:active:not(:disabled) {
-      transform: scale(0.98);
-    }
-    .order-card button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-      transform: none;
-      opacity: 0.6;
-    }
-    .order-note {
-      background: #fffbe6;
-      color: #d32f2f;
-      font-size: 1.15em;
-      font-weight: bold;
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin: 1em 0;
-      border: 2px solid #ffe0b2;
-      word-break: break-word;
-      text-align: left;
-      box-shadow: 0 2px 8px rgba(255, 215, 64, 0.10);
-    }
-    @media (max-width: 700px) {
-      header, .stats {
-        max-width: 95vw;
-        padding: 0.8rem;
-      }
-      header h1 {
-        font-size: 1.5rem;
-      }
-      .stats {
-        font-size: 1rem;
-        gap: 15px;
-      }
-      .stats button {
-        padding: 0.5rem 1rem;
-        font-size: 0.95rem;
-      }
-      .order-card {
-        max-width: 95vw;
-        padding: 1rem;
-      }
-    }
-    @media (max-width: 500px) {
-      header, .stats {
-        max-width: 98vw;
-        padding: 0.6rem;
-      }
-      header h1 {
-        font-size: 1.3rem;
-      }
-      .stats {
-        font-size: 0.95rem;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .stats button {
-        width: 100%;
-        padding: 0.6rem;
-      }
-      .order-card {
-        max-width: 98vw;
-        padding: 0.8rem;
-      }
-      .order-card button {
-        width: 100%;
-        padding: 0.7rem;
-      }
+
+    @media (max-width: 720px) {
+      .vendor-hero { flex-direction: column; align-items: flex-start; }
+      .toolbar-actions { justify-content: flex-start; }
+      .order-top { flex-direction: column; align-items: flex-start; }
+      .pill-row { justify-content: flex-start; }
+      .item-row { grid-template-columns: 1fr; }
+      .order-card button { width: 100%; justify-self: stretch; }
     }
   </style>
 </head>
 <body>
   <div class="background"></div>
-  <header>
-    <img id="vendor-logo" src="https://via.placeholder.com/100" alt="Vendor Logo">
-    <h1 id="vendor-name">Vendor Dashboard</h1>
-  </header>
-  <div class="stats">
-    Orders Processed: <span id="orderCount">0</span>
-    <button onclick="window.location.href='menu-management.html?vendor=' + window.vendorId">Manage Menu</button>
-    <button id="close-shop-btn">Close Shop</button>
-  </div>
-  <div id="orders-container"></div>
+  <main class="shell">
+    <header class="vendor-hero">
+      <div class="hero-left">
+        <img id="vendor-logo" src="https://via.placeholder.com/120" alt="Vendor Logo">
+        <div class="hero-meta">
+          <p class="eyebrow">Vendor dashboard</p>
+          <h1 id="vendor-name" class="hero-title">Vendor Dashboard</h1>
+          <div><span id="shop-status" class="chip">Loading status…</span></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="toolbar">
+      <div class="stat-card">
+        <div class="stat-label">Orders processed</div>
+        <div class="stat-value" id="orderCount">0</div>
+      </div>
+      <div class="toolbar-actions">
+        <button class="btn outline" onclick="window.location.href='menu-management.html?vendor=' + window.vendorId">Manage menu</button>
+        <button class="btn danger" id="close-shop-btn">Close shop</button>
+      </div>
+    </section>
+
+    <section id="orders-container" class="orders-grid"></section>
+  </main>
 
   <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
 
@@ -307,6 +220,7 @@
     const ordersContainer = document.getElementById("orders-container");
     const dingSound = document.getElementById("ding-sound");
     const closeShopBtn = document.getElementById("close-shop-btn");
+    const shopStatusChip = document.getElementById("shop-status");
     const vendorRef = doc(db, "vendors", vendorId);
 
     // Helper: is this a cold beverage?
@@ -359,44 +273,56 @@
       const data = docSnap.data();
       const div = document.createElement("div");
       div.className = "order-card";
-      div.style.color = "#000";
 
-      // Apply color coding based on delivery option
-      if (data.displayColor) {
-        div.style.backgroundColor = data.displayColor;
-      }
-
-      // Date/time
       const orderDate = formatDate(data.createdAt);
-
-      // Calculate total
       const orderTotal = calculateOrderTotal(data.items || [], data.deliveryOption);
-
-      // Items list
-      const items = (data.items || []).map(i => `
-        <li>
-          <span class="item-name">${i.name}</span>
-          <span class="item-qty">× ${i.qty}</span>
-        </li>
-      `).join("");
-
-      const isReady = data.status === "Ready";
       const deliveryOption = data.deliveryOption ? data.deliveryOption.charAt(0).toUpperCase() + data.deliveryOption.slice(1) : "--";
-      const emoji = data.deliveryOption === 'dine-in' ? '🍽️' : data.deliveryOption === 'take-away' ? '🛍️' : '';
+      const emoji = data.deliveryOption === "dine-in" ? "🍽️" : data.deliveryOption === "take-away" ? "🛍️" : "";
+      const isReady = data.status === "Ready";
+      const statusClass = isReady ? "status-ready" : "status-pending";
+
+      const itemsMarkup = (data.items || []).map((item) => {
+        const selections = (item.selections || []).map((sel) => `<span class="chip">${sel.label || "Choice"}: ${sel.value || sel.label || ""}</span>`).join("");
+        const noteLine = item.notes ? `<span class="item-note">📝 ${item.notes}</span>` : "";
+        const meta = selections || noteLine ? `<div class="item-meta">${selections}${noteLine}</div>` : "";
+        return `
+          <li class="item-row">
+            <div>
+              <div class="item-name">${item.name || "Item"}</div>
+              ${meta}
+            </div>
+            <div class="item-qty">× ${item.qty || 0}</div>
+          </li>
+        `;
+      }).join("");
+
+      const orderNoteBlock = data.note ? `
+        <div class="order-note-block">
+          <span>Order note</span>
+          <p>${data.note}</p>
+        </div>
+      ` : "";
 
       div.innerHTML = `
-        <div class="order-date"><strong>Date/Time:</strong> ${orderDate}</div>
-        <p><strong>Order Number:</strong> ${data.orderNumber || "--"}</p>
-        <ul>${items}</ul>
-        <div class="order-total"><strong>Total:</strong> RM ${orderTotal.toFixed(2)}</div>
-        <p><strong>Status:</strong> ${data.status}</p>
-        <p><strong>Delivery Option:</strong> <span class="emoji">${emoji}</span> ${deliveryOption}</p>
-        <div class="order-note"><strong>Note:</strong> ${data.note ? data.note : "No note provided."}</div>
+        <div class="order-top">
+          <div class="order-meta">
+            <div class="item-name">Order #${data.orderNumber || "--"}</div>
+            <div class="order-date">${orderDate}</div>
+          </div>
+          <div class="pill-row">
+            <span class="pill ${statusClass}">${isReady ? "Ready" : data.status || "Pending"}</span>
+            <span class="pill delivery-${data.deliveryOption || ""}">${emoji} ${deliveryOption}</span>
+          </div>
+        </div>
+        <ul class="item-list">${itemsMarkup}</ul>
+        <div class="order-total">Total: RM ${orderTotal.toFixed(2)}</div>
+        ${orderNoteBlock}
         <button 
+          class="btn primary"
           data-order="${docSnap.id}" 
           onclick="markReady('${docSnap.id}')"
           ${isReady ? "disabled" : ""}>
-          ${isReady ? "Marked as Ready ✅" : "Mark as Ready"}
+          ${isReady ? "Marked as ready" : "Mark as ready"}
         </button>
       `;
       ordersContainer.appendChild(div);
@@ -416,11 +342,20 @@
       }
     }
 
+    // Update badge showing shop open/closed
+    function setShopStatusChip(isOpen) {
+      if (!shopStatusChip) return;
+      shopStatusChip.textContent = isOpen ? "Open for orders" : "Closed";
+      shopStatusChip.classList.toggle("positive", isOpen);
+      shopStatusChip.classList.toggle("negative", !isOpen);
+    }
+
     // Update shop button UI and logic
     function updateShopButton(isOpen) {
+      setShopStatusChip(isOpen);
+      closeShopBtn.textContent = isOpen ? "Close shop" : "Open shop";
+      closeShopBtn.classList.toggle("open", !isOpen);
       if (isOpen) {
-        closeShopBtn.textContent = "Close Shop";
-        closeShopBtn.classList.remove("open");
         closeShopBtn.onclick = async function() {
           if (confirm("Are you sure you want to close the shop? Customers will not be able to order.")) {
             await updateDoc(vendorRef, { isOpen: false });
@@ -429,8 +364,6 @@
           }
         };
       } else {
-        closeShopBtn.textContent = "Open Shop";
-        closeShopBtn.classList.add("open");
         closeShopBtn.onclick = async function() {
           if (confirm("Are you sure you want to open the shop? Customers will be able to order.")) {
             await updateDoc(vendorRef, { isOpen: true });
@@ -452,6 +385,7 @@
         }
         document.getElementById("orderCount").textContent = data.orderCount || 0;
         updateShopButton(data.isOpen !== false);
+        setShopStatusChip(data.isOpen !== false);
       }
     }
 
