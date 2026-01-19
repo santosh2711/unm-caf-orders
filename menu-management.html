@@ -4,159 +4,179 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Menu Management</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --orange: #f97316;
+      --orange-dark: #ea580c;
+      --black: #0f172a;
+      --gray: #f8fafc;
+      --border: #e2e8f0;
+      --panel: #ffffff;
+      --panel-strong: #f8fafc;
+      --shadow: 0 12px 28px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: 'Roboto', Arial, sans-serif;
       margin: 0;
-      padding: 1rem;
-      background: #f4f4f4;
+      font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
+      background: #ffffff;
+      color: var(--black);
+      min-height: 100vh;
+      padding-bottom: 28px;
+      -webkit-font-smoothing: antialiased;
     }
-    header {
-      text-align: center;
-      margin-bottom: 20px;
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px clamp(12px, 3vw, 22px) 32px clamp(12px, 3vw, 22px);
+      display: grid;
+      gap: 14px;
     }
-    header img {
-      max-width: 100px;
-      border-radius: 50%;
-      margin-bottom: 10px;
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 12px 14px;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      color: #007bff;
-    }
-    .category-section {
-      margin: 32px auto 0 auto;
-      max-width: 700px;
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-      padding: 18px 18px 8px 18px;
-    }
-    .category-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #005f73;
-      margin: 0 0 18px 0;
-      background: linear-gradient(90deg, black, #005f73);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: 0.3px;
-    }
-    .menu-item {
-      background: #f7fafd;
-      padding: 1rem;
-      margin: 0 0 18px 0;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    .hero {
       display: flex;
       align-items: center;
-      gap: 18px;
-      transition: background 0.2s;
-      position: relative;
+      gap: 12px;
     }
-    .menu-item.unavailable {
-      opacity: 0.5;
-      background: #fbe9e7;
-    }
-    .menu-item img {
-      width: 80px;
-      height: 80px;
+    .logo {
+      width: 64px; height: 64px; border-radius: 14px;
       object-fit: cover;
-      border-radius: 10px;
-      background: #e3eafc;
-      box-shadow: 0 2px 8px rgba(31,38,135,0.08);
+      border: 1px solid var(--border);
+      background: var(--gray);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
       flex-shrink: 0;
-      aspect-ratio: 1 / 1;
-      margin: 0;
-      display: block;
     }
-    .menu-details {
-      flex: 1;
+    .hero h1 { margin: 0; font-size: 1.4rem; letter-spacing: 0.3px; color: var(--orange-dark); }
+    .hero p { margin: 0; color: #475569; font-weight: 700; }
+
+    .actions {
       display: flex;
-      flex-direction: column;
-      min-width: 0;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
     }
-    .menu-details h3 {
-      margin: 0 0 4px 0;
-      color: #005f73;
-      font-size: 1.1rem;
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--black);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+      transition: transform 0.12s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: #cbd5e1; }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: linear-gradient(120deg, var(--orange) 0%, var(--orange-dark) 100%); color: #fff; border: none; }
+
+    .controls {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+    .search-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .search-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 12px 14px 12px 44px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cline x1='14' y1='14' x2='19' y2='19'/%3E%3C/svg%3E") no-repeat 14px center;
+      background-size: 18px;
       font-weight: 700;
       letter-spacing: 0.2px;
-      white-space: normal;
-      word-break: break-word;
     }
-    .menu-details p {
-      margin: 0;
-      color: #333;
-      font-size: 1rem;
-    }
-    .menu-actions {
-      display: flex;
-      flex-direction: column;
+    .search-input:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 4px rgba(249,115,22,0.14); }
+
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { border: 1px solid var(--border); background: var(--panel-strong); color: var(--black); border-radius: 12px; padding: 8px 12px; font-weight: 800; cursor: pointer; }
+    .chip.active { background: #fff7ed; border-color: var(--orange); color: var(--orange-dark); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 12px;
       align-items: center;
-      gap: 8px;
-      min-width: 90px;
     }
-    .menu-actions label {
-      font-size: 0.95rem;
-      color: #005f73;
-      font-weight: 500;
-      margin-bottom: 2px;
+    .card.unavailable { opacity: 0.55; background: #fef2f2; }
+    .card img { width: 96px; height: 96px; object-fit: cover; border-radius: 12px; background: var(--gray); border: 1px solid var(--border); }
+    .card h3 { margin: 0; font-size: 1.05rem; color: var(--black); letter-spacing: 0.2px; }
+    .price { color: var(--orange-dark); font-weight: 800; }
+    .category-tag { display: inline-block; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel-strong); font-weight: 700; color: #475569; margin-top: 6px; }
+    .inline { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+    .switch {
+      position: relative; width: 46px; height: 26px; background: #e2e8f0; border-radius: 999px; cursor: pointer; transition: background 0.16s ease;
     }
-    .menu-actions input[type="checkbox"] {
-      transform: scale(1.3);
-      margin-bottom: 2px;
-      accent-color: #00aaff;
-    }
-    .back {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .back button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #005f73 60%, #00aaff 100%);
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    @media (max-width: 700px) {
-      .category-section {
-        max-width: 98vw;
-        padding: 10px 2vw 8px 2vw;
-      }
-      .menu-item img {
-        width: 60px;
-        height: 60px;
-      }
-    }
-    @media (max-width: 500px) {
-      .category-section {
-        max-width: 100vw;
-        padding: 6px 0 6px 0;
-      }
-      .menu-item img {
-        width: 48px;
-        height: 48px;
-      }
-      .menu-details h3 {
-        font-size: 1rem;
-      }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch .thumb { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.12); transition: transform 0.16s ease; }
+    .switch input:checked + .thumb { transform: translateX(20px); background: var(--orange); }
+    .switch input:checked ~ .track { background: #fed7aa; }
+    .sync { font-size: 0.9rem; color: #475569; font-weight: 700; }
+
+    .empty { text-align: center; padding: 18px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; color: #475569; box-shadow: var(--shadow); }
+
+    @media (max-width: 620px) {
+      .topbar { grid-template-columns: 1fr; }
+      .card { grid-template-columns: 1fr; }
+      .card img { width: 100%; height: auto; aspect-ratio: 4 / 3; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <img id="vendor-logo" src="https://via.placeholder.com/100" alt="Vendor Logo">
-    <h1 id="vendor-name">Menu Management</h1>
-  </header>
-  <div id="menu-container"></div>
-  <div class="back">
-    <button onclick="window.history.back()">Back to Dashboard</button>
+  <div class="page">
+    <div class="topbar">
+      <div class="hero">
+        <img id="vendor-logo" class="logo" src="https://via.placeholder.com/100" alt="Vendor Logo">
+        <div>
+          <p>Live menu control</p>
+          <h1 id="vendor-name">Menu Management</h1>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="window.location.href='vendor-dashboard.html?vendor=' + vendorId">Back to dashboard</button>
+        <button class="btn primary" onclick="window.location.reload()">Refresh</button>
+      </div>
+    </div>
+
+    <section class="controls">
+      <div class="search-row">
+        <input id="search" class="search-input" placeholder="Search items by name or description" aria-label="Search menu items" />
+      </div>
+      <div class="chips" id="category-chips"></div>
+    </section>
+
+    <section id="menu-container" class="grid"></section>
+
+    <div id="empty-state" class="empty" style="display:none;">No menu items match your filters.</div>
   </div>
 
   <script type="module">
@@ -184,6 +204,13 @@
     const urlParams = new URLSearchParams(window.location.search);
     const vendorId = urlParams.get("vendor");
     const menuContainer = document.getElementById("menu-container");
+    const emptyState = document.getElementById("empty-state");
+    const searchInput = document.getElementById("search");
+    const categoryChips = document.getElementById("category-chips");
+
+    let allItems = [];
+    let activeCategory = "all";
+    let lastGrouped = {};
 
     // Load vendor info
     async function loadVendorInfo() {
@@ -197,88 +224,120 @@
       }
     }
 
-    // Render menu items grouped by category (if category exists)
-    function renderMenuByCategory(menuDocs) {
+    // Build category chips
+    function renderCategoryChips(grouped) {
+      lastGrouped = grouped || lastGrouped;
+      categoryChips.innerHTML = "";
+      const frag = document.createDocumentFragment();
+      const addChip = (id, label, count) => {
+        const btn = document.createElement("button");
+        btn.className = "chip" + (activeCategory === id ? " active" : "");
+        btn.textContent = `${label} (${count})`;
+        btn.onclick = () => {
+          activeCategory = id;
+          renderFiltered();
+          renderCategoryChips(lastGrouped);
+        };
+        frag.appendChild(btn);
+      };
+      const totalCount = Object.values(grouped).reduce((sum, arr) => sum + arr.length, 0);
+      addChip("all", "All", totalCount);
+      Object.keys(grouped).sort((a, b) => a.localeCompare(b)).forEach(cat => addChip(cat, cat, grouped[cat].length));
+      categoryChips.appendChild(frag);
+    }
+
+    const normalize = (str = "") => (str || "").toLowerCase();
+
+    function renderFiltered() {
+      const term = normalize(searchInput.value);
+      const filtered = allItems.filter(({ data }) => {
+        const matchesTerm = !term || normalize(data.name).includes(term) || normalize(data.description || "").includes(term) || normalize(data.category || "").includes(term);
+        const matchesCategory = activeCategory === "all" || normalize(data.category || "other") === normalize(activeCategory);
+        return matchesTerm && matchesCategory;
+      });
+
       menuContainer.innerHTML = "";
-      // Group by category
-      const grouped = {};
-      menuDocs.forEach(docSnap => {
-        const data = docSnap.data();
-        const category = data.category || "Other";
-        if (!grouped[category]) grouped[category] = [];
-        grouped[category].push({ docSnap, data });
-      });
+      if (!filtered.length) {
+        emptyState.style.display = "block";
+        return;
+      }
+      emptyState.style.display = "none";
 
-      // Sort categories: Rice first, then alphabetical
-      const categories = Object.keys(grouped).sort((a, b) => {
-        const riceNames = ['rice', 'rice and curry options', 'rice options'];
-        const aIsRice = riceNames.some(r => a.toLowerCase().includes(r));
-        const bIsRice = riceNames.some(r => b.toLowerCase().includes(r));
-        if (aIsRice && !bIsRice) return -1;
-        if (!aIsRice && bIsRice) return 1;
-        return a.localeCompare(b);
-      });
+      filtered.sort((a, b) => (a.data.name || "").localeCompare(b.data.name || ""));
 
-      categories.forEach(category => {
-        const section = document.createElement("div");
-        section.className = "category-section";
-        section.innerHTML = `<div class="category-title">${category}</div>`;
-        // Sort items: for Rice, Nasi Putih first, then alphabetical
-        grouped[category].sort((a, b) => {
-          if (category.toLowerCase().includes('rice')) {
-            if (a.data.name && a.data.name.toLowerCase().includes('nasi putih')) return -1;
-            if (b.data.name && b.data.name.toLowerCase().includes('nasi putih')) return 1;
-          }
-          return (a.data.name || '').localeCompare(b.data.name || '');
-        });
-        grouped[category].forEach(({ docSnap, data }) => {
-          section.appendChild(renderMenuItem(docSnap, data));
-        });
-        menuContainer.appendChild(section);
+      filtered.forEach(({ docSnap, data }) => {
+        menuContainer.appendChild(renderMenuItem(docSnap, data));
       });
     }
 
     // Render a single menu item
     function renderMenuItem(docSnap, data) {
-      const div = document.createElement("div");
-      div.className = "menu-item" + (data.available === false ? " unavailable" : "");
+      const card = document.createElement("div");
+      card.className = "card" + (data.available === false ? " unavailable" : "");
 
       const img = document.createElement("img");
       img.src = data.imageURL || "https://via.placeholder.com/200x140";
-      img.alt = data.name;
+      img.alt = data.name || "Menu item";
 
-      const details = document.createElement("div");
-      details.className = "menu-details";
-      details.innerHTML = `
-        <h3>${data.name || "Unnamed Item"}</h3>
-        <p>RM ${parseFloat(data.price).toFixed(2)}</p>
-      `;
+      const body = document.createElement("div");
+      const name = document.createElement("h3");
+      name.textContent = data.name || "Unnamed Item";
+      const price = document.createElement("div");
+      price.className = "price";
+      price.textContent = `RM ${Number(data.price || 0).toFixed(2)}`;
+      const category = document.createElement("div");
+      category.className = "category-tag";
+      category.textContent = data.category || "Other";
 
-      const actions = document.createElement("div");
-      actions.className = "menu-actions";
-      const label = document.createElement("label");
+      const inline = document.createElement("div");
+      inline.className = "inline";
+      const label = document.createElement("span");
       label.textContent = "Available";
+
+      const switchWrap = document.createElement("label");
+      switchWrap.className = "switch";
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = data.available !== false;
+      const thumb = document.createElement("span");
+      thumb.className = "thumb";
+      switchWrap.appendChild(checkbox);
+      switchWrap.appendChild(thumb);
+
+      const syncState = document.createElement("span");
+      syncState.className = "sync";
+      syncState.textContent = "Synced";
+
       checkbox.addEventListener("change", async () => {
+        syncState.textContent = "Updating…";
+        checkbox.disabled = true;
         try {
           await updateDoc(docSnap.ref, { available: checkbox.checked });
+          syncState.textContent = "Synced"; // onSnapshot will also refresh
         } catch (error) {
+          syncState.textContent = "Failed";
           alert("Failed to update availability.");
+          checkbox.checked = !checkbox.checked; // revert UI
+        } finally {
+          checkbox.disabled = false;
         }
       });
-      actions.appendChild(label);
-      actions.appendChild(checkbox);
 
-      div.appendChild(img);
-      div.appendChild(details);
-      div.appendChild(actions);
+      inline.appendChild(label);
+      inline.appendChild(switchWrap);
+      inline.appendChild(syncState);
 
-      return div;
+      body.appendChild(name);
+      body.appendChild(price);
+      body.appendChild(category);
+      body.appendChild(inline);
+
+      card.appendChild(img);
+      card.appendChild(body);
+      return card;
     }
 
-    // Listen for menu items
+    // Listen for menu items (live sync)
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         alert("Please log in first.");
@@ -287,12 +346,22 @@
       }
       const q = query(collection(db, "vendors", vendorId, "menus"));
       onSnapshot(q, (snapshot) => {
-        const docs = [];
-        snapshot.forEach(doc => docs.push(doc));
-        renderMenuByCategory(docs);
+        const grouped = {};
+        allItems = [];
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const category = data.category || "Other";
+          if (!grouped[category]) grouped[category] = [];
+          grouped[category].push({ docSnap, data });
+          allItems.push({ docSnap, data });
+        });
+        renderCategoryChips(grouped);
+        renderFiltered();
       });
       loadVendorInfo();
     });
+
+    searchInput.addEventListener("input", renderFiltered);
   </script>
 </body>
 </html>
