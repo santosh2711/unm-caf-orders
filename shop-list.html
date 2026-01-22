@@ -446,6 +446,19 @@
 		let currentUser = null;
 		let userRatings = new Map();
 
+		const guestModeEnabled = () => localStorage.getItem('guestMode') === '1';
+		const ensureGuestIdentity = () => {
+			let guestId = localStorage.getItem('guestId');
+			if (!guestId) {
+				guestId = crypto.randomUUID ? `guest-${crypto.randomUUID()}` : `guest-${Date.now()}`;
+				localStorage.setItem('guestId', guestId);
+			}
+			const guestEmail = localStorage.getItem('guestEmail') || 'guest@unm.local';
+			localStorage.setItem('guestEmail', guestEmail);
+			return { guestId, guestEmail };
+		};
+		const getDisplayEmail = (user) => user?.email || localStorage.getItem('guestEmail') || 'guest@unm.local';
+
 		const setPageLoading = (on, text = 'Loading shops…') => {
 			if (pageLoader) pageLoader.style.display = on ? 'flex' : 'none';
 			if (loaderText) loaderText.textContent = text;
@@ -506,19 +519,28 @@
 		};
 
 		onAuthStateChanged(auth, async user => {
-			if (!user) {
+			const isGuest = !user && guestModeEnabled();
+			if (!user && !isGuest) {
 				alert('Please log in first.');
 				window.location.href = 'student-login.html';
 				return;
 			}
-			currentUser = user;
+
+			const identityEmail = getDisplayEmail(user);
+			const initial = (identityEmail[0] || 'G').toUpperCase();
 			if (profileBadge) {
-				const initial = (user.email && user.email[0]) ? user.email[0].toUpperCase() : 'U';
 				profileBadge.textContent = initial;
 				profileBadge.setAttribute('aria-label', `Profile badge ${initial}`);
 			}
+
+			currentUser = user || null;
 			setPageLoading(true, 'Loading shops…');
-			await loadUserRatings(user.uid);
+			if (user) {
+				await loadUserRatings(user.uid);
+			} else {
+				ensureGuestIdentity();
+				userRatings = new Map();
+			}
 			onSnapshot(vendorsRef, snap => handleSnapshot(snap));
 		});
 
@@ -550,7 +572,10 @@
 		settingsEntry.addEventListener('click', () => { alert('Settings coming soon.'); });
 		signOutBtn.addEventListener('click', async () => {
 			setPageLoading(true, 'Signing out…');
-			try { await signOut(auth); } catch (e) {}
+			localStorage.removeItem('guestMode');
+			try {
+				if (auth.currentUser) await signOut(auth);
+			} catch (e) {}
 			window.location.href = 'student-login.html';
 		});
 
@@ -694,6 +719,10 @@
 		});
 
 		function toggleFavourite(id) {
+			if (guestModeEnabled() && !currentUser) {
+				alert('Please sign in to add favourites.');
+				return;
+			}
 			const idx = favouriteShops.indexOf(id);
 			if (idx === -1) favouriteShops.push(id); else favouriteShops.splice(idx, 1);
 			localStorage.setItem('favouriteShops', JSON.stringify(favouriteShops));
@@ -705,7 +734,7 @@
 
 		async function submitRating(id, rating, button) {
 			if (!currentUser) {
-				alert('Please log in to rate shops.');
+				alert('Please sign in to rate shops.');
 				return;
 			}
 			button.disabled = true;
