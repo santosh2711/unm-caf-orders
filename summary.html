@@ -389,6 +389,27 @@
     const totalPriceContainer = document.getElementById("total-price");
     const mamakNoteDiv = document.getElementById("mamak-note");
     const noteInput = document.getElementById('order-note');
+    const guestEmailFallback = 'guest@unm.local';
+
+    const guestModeEnabled = () => localStorage.getItem('guestMode') === '1';
+    const ensureGuestIdentity = () => {
+      let guestId = localStorage.getItem('guestId');
+      if (!guestId) {
+        guestId = crypto.randomUUID ? `guest-${crypto.randomUUID()}` : `guest-${Date.now()}`;
+        localStorage.setItem('guestId', guestId);
+      }
+      const guestEmail = localStorage.getItem('guestEmail') || guestEmailFallback;
+      localStorage.setItem('guestEmail', guestEmail);
+      return { guestId, guestEmail };
+    };
+    const resolveIdentity = (user) => {
+      const isGuest = !user && guestModeEnabled();
+      if (isGuest) {
+        const { guestId, guestEmail } = ensureGuestIdentity();
+        return { uid: guestId, email: guestEmail, isGuest: true };
+      }
+      return { uid: user?.uid || null, email: user?.email || null, isGuest: false };
+    };
 
     // Pre-fill note if available from previous order
     const savedNote = localStorage.getItem("orderNote");
@@ -488,8 +509,9 @@
       }
 
       onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-          alert("You must be logged in to place an order.");
+        const identity = resolveIdentity(user);
+        if (!identity.uid) {
+          alert("You must sign in or continue as guest to place an order.");
           window.location.href = "student-login.html";
           return;
         }
@@ -515,20 +537,22 @@
 
         // Get FCM token for the user
         let fcmToken = null;
-        try {
-          const messagingModule = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js');
-          const messaging = messagingModule.getMessaging(app);
-          fcmToken = await messagingModule.getToken(messaging, { vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bD0hWJ6mEO7lLwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KD0lqwKds" });
-        } catch (err) {
-          console.warn("FCM token not available:", err);
+        if (!identity.isGuest) {
+          try {
+            const messagingModule = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js');
+            const messaging = messagingModule.getMessaging(app);
+            fcmToken = await messagingModule.getToken(messaging, { vapidKey: "BK8WocQC93HpCQb9ysqai2Hah6bD0hWJ6mEO7lLwpL1enk7QVfudQr5CTV7KU43md78i4gT7jjHEo7KD0lqwKds" });
+          } catch (err) {
+            console.warn("FCM token not available:", err);
+          }
         }
 
         // Save FCM token to student document
-        if (user && fcmToken) {
+        if (!identity.isGuest && fcmToken) {
           try {
-            const studentRef = doc(db, "students", user.uid);
+            const studentRef = doc(db, "students", identity.uid);
             await updateDoc(studentRef, { fcmToken: fcmToken });
-            console.log("🔥 FCM token saved for student:", user.uid);
+            console.log("🔥 FCM token saved for student:", identity.uid);
           } catch (err) {
             console.error("Error saving fcmToken to student:", err);
           }
@@ -541,8 +565,9 @@
             vendorId,
             createdAt: serverTimestamp(),
             status: "Pending",
-            studentId: user.uid,
-            email: user.email,
+            studentId: identity.isGuest ? null : identity.uid,
+            guestId: identity.isGuest ? identity.uid : null,
+            email: identity.email || guestEmailFallback,
             note: note || null,
             deliveryOption: deliveryOption,
             displayColor: displayColor,
@@ -551,10 +576,13 @@
           });
 
           // Award points
-          const studentRef = doc(db, "students", user.uid);
-          await updateDoc(studentRef, { points: increment(1) });
-
-          alert("✅ Order submitted! 1 point awarded.");
+          if (!identity.isGuest) {
+            const studentRef = doc(db, "students", identity.uid);
+            await updateDoc(studentRef, { points: increment(1) });
+            alert("✅ Order submitted! 1 point awarded.");
+          } else {
+            alert("✅ Order submitted as guest.");
+          }
 
           // Save orderId for order-status.html
           localStorage.setItem("lastOrderId", docRef.id);
