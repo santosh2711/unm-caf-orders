@@ -172,7 +172,7 @@
   <main class="shell">
     <header class="vendor-hero">
       <div class="hero-left">
-        <img id="vendor-logo" src="https://via.placeholder.com/120" alt="Vendor Logo">
+        <img id="vendor-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='18' fill='%23e2e8f0'/%3E%3Cpath d='M34 86L58 34h4l24 52h-9l-4.8-11H47.8L43 86h-9zM50.6 67.2h18.8L60 49.4z' fill='%2394a3b8'/%3E%3C/svg%3E" alt="Vendor Logo">
         <div class="hero-meta">
           <p class="eyebrow">Vendor dashboard</p>
           <h1 id="vendor-name" class="hero-title">Vendor Dashboard</h1>
@@ -195,7 +195,8 @@
     <section id="orders-container" class="orders-grid"></section>
   </main>
 
-  <audio id="ding-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
+  <!-- Legacy audio fallback (kept for compatibility, main alert uses Web Audio) -->
+  <audio id="ding-sound" preload="auto"></audio>
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -223,28 +224,70 @@
     const shopStatusChip = document.getElementById("shop-status");
     const orderCountEl = document.getElementById("orderCount");
     const vendorRef = doc(db, "vendors", vendorId);
+    const defaultLogo = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='18' fill='%23e2e8f0'/%3E%3Cpath d='M34 86L58 34h4l24 52h-9l-4.8-11H47.8L43 86h-9zM50.6 67.2h18.8L60 49.4z' fill='%2394a3b8'/%3E%3C/svg%3E";
 
-    // Track and control the 5s alarm loop for new orders
+    // Track and control the repeated alarm loop for new orders
     let alertTimeout = null;
+    let alertTimers = [];
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    let activeOsc = null;
+    let activeGain = null;
 
-    function playNewOrderAlert() {
-      if (!dingSound) return;
+    function stopTone() {
+      try { if (activeOsc) activeOsc.stop(); } catch (_) {}
+      activeOsc = null;
+      activeGain = null;
       if (alertTimeout) {
         clearTimeout(alertTimeout);
         alertTimeout = null;
       }
-      dingSound.currentTime = 0;
-      dingSound.loop = true;
-      const playPromise = dingSound.play();
-      if (playPromise && playPromise.catch) {
-        playPromise.catch((err) => console.error("Audio play blocked", err));
-      }
-      alertTimeout = setTimeout(() => {
-        dingSound.pause();
-        dingSound.currentTime = 0;
-        dingSound.loop = false;
-      }, 5000);
+      alertTimers.forEach(t => clearTimeout(t));
+      alertTimers = [];
     }
+
+    function playNewOrderAlert() {
+      if (!AudioCtx) return;
+      stopTone();
+      if (!audioCtx) audioCtx = new AudioCtx();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+
+      // Softer triad, repeated a few times for visibility
+      const playTriad = () => {
+        const notes = [587.33, 659.25, 783.99]; // D5, E5, G5
+        const now = audioCtx.currentTime;
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.0, now);
+          gain.gain.linearRampToValueAtTime(0.06, now + 0.01);
+          gain.gain.linearRampToValueAtTime(0.0, now + 0.6 + idx * 0.1);
+          osc.connect(gain).connect(audioCtx.destination);
+          osc.start(now + idx * 0.1);
+          osc.stop(now + 0.65 + idx * 0.1);
+          if (idx === 0) {
+            activeOsc = osc;
+            activeGain = gain;
+          }
+        });
+      };
+
+      const repeats = 4;
+      const spacingMs = 1300; // gap between repeats so each plays cleanly
+      playTriad();
+      for (let i = 1; i < repeats; i++) {
+        const timer = setTimeout(playTriad, i * spacingMs);
+        alertTimers.push(timer);
+      }
+
+      alertTimeout = setTimeout(() => {
+        stopTone();
+      }, repeats * spacingMs + 800);
+    }
+
+    // Audio now attempts to play automatically when new orders arrive.
 
     // Helper: is this a cold beverage?
     function isColdBeverage(item) {
@@ -399,9 +442,7 @@
       if (vendorSnap.exists()) {
         const data = vendorSnap.data();
         document.getElementById("vendor-name").textContent = data.name || "Vendor Dashboard";
-        if (data.imageURL) {
-          document.getElementById("vendor-logo").src = data.imageURL;
-        }
+        document.getElementById("vendor-logo").src = data.imageURL || defaultLogo;
         document.getElementById("orderCount").textContent = data.orderCount || 0;
         updateShopButton(data.isOpen !== false);
         setShopStatusChip(data.isOpen !== false);
