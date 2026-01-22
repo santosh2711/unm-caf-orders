@@ -194,7 +194,14 @@
 		.status.open { background: #dcfce7; color: #166534; border-color: #86efac; }
 		.status.closed { background: #fee2e2; color: #b91c1c; border-color: #fecdd3; }
 		.card p { margin: 0; color: #475569; line-height: 1.5; font-size: 0.95rem; }
-		.card-foot { display: flex; align-items: center; justify-content: space-between; }
+		.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+		.rating-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+		.rating-stars { display: inline-flex; gap: 4px; }
+		.rating-star { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel-strong); color: var(--subtle); font-weight: 800; cursor: pointer; display: grid; place-items: center; transition: transform 0.12s ease, box-shadow 0.16s ease, border 0.16s ease, color 0.16s ease, background 0.16s ease; }
+		.rating-star:hover { border-color: var(--orange); box-shadow: 0 6px 14px rgba(0,0,0,0.06); color: var(--orange); }
+		.rating-star:active { transform: translateY(1px); }
+		.rating-star.filled { background: #fef3c7; border-color: #fbbf24; color: #92400e; box-shadow: 0 8px 18px rgba(251,191,36,0.25); }
+		.rating-meta { color: var(--subtle); font-weight: 700; letter-spacing: 0.2px; }
 		.cta { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--orange); background: var(--orange); color: #ffffff; font-weight: 800; letter-spacing: 0.3px; }
 		.fav-btn { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: #ffffff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
 		.fav-btn svg { width: 22px; height: 22px; fill: none; stroke: #94a3b8; stroke-width: 2.1; transition: fill 0.18s, stroke 0.18s; }
@@ -399,7 +406,7 @@
 	<script type="module">
 		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 		import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-		import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+		import { getFirestore, collection, onSnapshot, doc, query, where, getDocs, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 		const firebaseConfig = {
 			apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
@@ -434,7 +441,10 @@
 		const floatingSearch = document.getElementById('floatingSearch');
 		const floatingSearchInput = document.getElementById('floatingSearchInput');
 		const vendorsRef = collection(db, 'vendors');
+		const ratingsRef = collection(db, 'vendorRatings');
 		const MIN_LOAD = 450;
+		let currentUser = null;
+		let userRatings = new Map();
 
 		const setPageLoading = (on, text = 'Loading shops…') => {
 			if (pageLoader) pageLoader.style.display = on ? 'flex' : 'none';
@@ -467,6 +477,22 @@
 			localStorage.setItem('favouriteShopsData', JSON.stringify(favData));
 		};
 
+		async function loadUserRatings(uid) {
+			userRatings = new Map();
+			try {
+				const snap = await getDocs(query(ratingsRef, where('userId', '==', uid)));
+				snap.forEach(docSnap => {
+					const data = docSnap.data();
+					if (data && data.vendorId && data.rating) {
+						userRatings.set(data.vendorId, Number(data.rating));
+					}
+				});
+				render();
+			} catch (err) {
+				console.error('Failed to load ratings', err);
+			}
+		}
+
 		const debounce = (fn, wait = 160) => {
 			let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
 		};
@@ -479,18 +505,20 @@
 			floatingSearch.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
 		};
 
-		onAuthStateChanged(auth, user => {
+		onAuthStateChanged(auth, async user => {
 			if (!user) {
 				alert('Please log in first.');
 				window.location.href = 'student-login.html';
 				return;
 			}
+			currentUser = user;
 			if (profileBadge) {
 				const initial = (user.email && user.email[0]) ? user.email[0].toUpperCase() : 'U';
 				profileBadge.textContent = initial;
 				profileBadge.setAttribute('aria-label', `Profile badge ${initial}`);
 			}
 			setPageLoading(true, 'Loading shops…');
+			await loadUserRatings(user.uid);
 			onSnapshot(vendorsRef, snap => handleSnapshot(snap));
 		});
 
@@ -601,10 +629,32 @@
 
 			const foot = document.createElement('div');
 			foot.className = 'card-foot';
+			const ratingRow = document.createElement('div');
+			ratingRow.className = 'rating-row';
+			const starsWrap = document.createElement('div');
+			starsWrap.className = 'rating-stars';
+			starsWrap.dataset.shopid = shop.id;
+			const userRating = Number(userRatings.get(shop.id) || 0);
+			for (let i = 1; i <= 5; i++) {
+				const star = document.createElement('button');
+				star.type = 'button';
+				star.className = 'rating-star' + (i <= userRating ? ' filled' : '');
+				star.dataset.shopid = shop.id;
+				star.dataset.rating = i;
+				star.textContent = '★';
+				starsWrap.appendChild(star);
+			}
+			const ratingMeta = document.createElement('span');
+			ratingMeta.className = 'rating-meta';
+			const total = Number(shop.ratingTotal || 0);
+			const count = Number(shop.ratingCount || 0);
+			const average = count > 0 ? (total / count) : 0;
+			ratingMeta.textContent = count > 0 ? `${average.toFixed(1)} • ${count} rating${count === 1 ? '' : 's'}` : 'No ratings yet';
+			ratingRow.append(starsWrap, ratingMeta);
 			const cta = document.createElement('div');
 			cta.className = 'cta';
 			cta.textContent = shop.isOpen ? 'View menu' : 'Preview menu';
-			foot.append(cta);
+			foot.append(ratingRow, cta);
 
 			body.append(head, desc, foot);
 
@@ -628,6 +678,14 @@
 				if (id) toggleFavourite(id);
 				return;
 			}
+			const starBtn = e.target.closest('.rating-star');
+			if (starBtn) {
+				e.stopPropagation();
+				const id = starBtn.dataset.shopid;
+				const rating = Number(starBtn.dataset.rating || 0);
+				if (id && rating) submitRating(id, rating, starBtn);
+				return;
+			}
 			const card = e.target.closest('.card');
 			if (card && card.dataset.isOpen === 'true') {
 				const vendor = card.dataset.shopid;
@@ -643,6 +701,50 @@
 			const currentY = window.scrollY;
 			render();
 			requestAnimationFrame(() => window.scrollTo(0, currentY));
+		}
+
+		async function submitRating(id, rating, button) {
+			if (!currentUser) {
+				alert('Please log in to rate shops.');
+				return;
+			}
+			button.disabled = true;
+			const ratingDoc = doc(ratingsRef, `${id}_${currentUser.uid}`);
+			let previousRating = Number(userRatings.get(id) || 0);
+			try {
+				await runTransaction(db, async (tx) => {
+					const vendorRef = doc(db, 'vendors', id);
+					const vendorSnap = await tx.get(vendorRef);
+					if (!vendorSnap.exists()) throw new Error('Shop not found');
+					const vendorData = vendorSnap.data() || {};
+					const currentTotal = Number(vendorData.ratingTotal || 0);
+					const currentCount = Number(vendorData.ratingCount || 0);
+					const existingRatingSnap = await tx.get(ratingDoc);
+					previousRating = existingRatingSnap.exists ? Number(existingRatingSnap.data().rating || 0) : 0;
+					let newTotal = currentTotal;
+					let newCount = currentCount;
+					if (previousRating) {
+						newTotal = currentTotal - previousRating + rating;
+					} else {
+						newTotal = currentTotal + rating;
+						newCount = currentCount + 1;
+					}
+					tx.set(ratingDoc, { vendorId: id, userId: currentUser.uid, rating, updatedAt: Date.now() });
+					tx.update(vendorRef, { ratingTotal: newTotal, ratingCount: newCount });
+				});
+				userRatings.set(id, rating);
+				shopsData = shopsData.map(shop => shop.id === id ? {
+					...shop,
+					ratingTotal: Number(shop.ratingTotal || 0) - previousRating + rating,
+					ratingCount: Number(shop.ratingCount || 0) + (previousRating ? 0 : 1)
+				} : shop);
+				render();
+			} catch (err) {
+				console.error('Failed to submit rating', err);
+				alert('Could not update rating right now. Please try again.');
+			} finally {
+				button.disabled = false;
+			}
 		}
 
 		function renderSkeletons(count = 6) {
