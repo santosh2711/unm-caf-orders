@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Your Order History</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -155,9 +156,19 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    const guestModeEnabled = () => localStorage.getItem('guestMode') === '1';
+
     // Use email for user identification, as in your Firestore orders
     const userEmail = localStorage.getItem("email");
     const historyContainer = document.getElementById("history-container");
+
+    const showLoginPrompt = (message) => {
+      historyContainer.innerHTML = `
+        <div class="no-orders">${message}</div>
+        <div style="text-align:center; margin-top:14px;">
+          <button onclick="window.location.href='student-login.html'" style="padding:10px 18px; border:none; border-radius:10px; background:#00aaff; color:#fff; font-weight:800; cursor:pointer;">Sign in</button>
+        </div>`;
+    };
 
     function orderAgain(orderData) {
       // Save items, vendorId, note to localStorage and redirect to summary.html
@@ -167,8 +178,8 @@
       window.location.href = "summary.html";
     }
 
-    if (!userEmail) {
-      historyContainer.innerHTML = `<div class="no-orders">No user found. Please log in.</div>`;
+    if (guestModeEnabled() || !userEmail) {
+      showLoginPrompt('Sign in to see your order history.');
     } else {
       // Query orders for this user, most recent first
       const q = query(
