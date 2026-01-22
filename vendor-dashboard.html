@@ -195,7 +195,7 @@
     <section id="orders-container" class="orders-grid"></section>
   </main>
 
-  <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
+  <audio id="ding-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -221,7 +221,30 @@
     const dingSound = document.getElementById("ding-sound");
     const closeShopBtn = document.getElementById("close-shop-btn");
     const shopStatusChip = document.getElementById("shop-status");
+    const orderCountEl = document.getElementById("orderCount");
     const vendorRef = doc(db, "vendors", vendorId);
+
+    // Track and control the 5s alarm loop for new orders
+    let alertTimeout = null;
+
+    function playNewOrderAlert() {
+      if (!dingSound) return;
+      if (alertTimeout) {
+        clearTimeout(alertTimeout);
+        alertTimeout = null;
+      }
+      dingSound.currentTime = 0;
+      dingSound.loop = true;
+      const playPromise = dingSound.play();
+      if (playPromise && playPromise.catch) {
+        playPromise.catch((err) => console.error("Audio play blocked", err));
+      }
+      alertTimeout = setTimeout(() => {
+        dingSound.pause();
+        dingSound.currentTime = 0;
+        dingSound.loop = false;
+      }, 5000);
+    }
 
     // Helper: is this a cold beverage?
     function isColdBeverage(item) {
@@ -333,10 +356,6 @@
       const orderRef = doc(db, "orders", orderId);
       try {
         await updateDoc(orderRef, { status: "Ready" });
-        await updateDoc(vendorRef, {
-          orderCount: increment(1)
-        });
-        loadVendorInfo();
       } catch (err) {
         console.error("❌ Failed to update order:", err);
       }
@@ -394,12 +413,16 @@
     const q = query(collection(db, "orders"), where("vendorId", "==", vendorId), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
       if (!firstLoad) {
-        dingSound.play();
+        playNewOrderAlert();
       }
       firstLoad = false;
 
       ordersContainer.innerHTML = "";
       snapshot.forEach(doc => renderOrder(doc));
+
+      // Update processed count without touching vendor doc to avoid student reloads
+      const readyCount = snapshot.docs.filter(d => (d.data().status || "") === "Ready").length;
+      if (orderCountEl) orderCountEl.textContent = readyCount;
     });
 
     loadVendorInfo();
