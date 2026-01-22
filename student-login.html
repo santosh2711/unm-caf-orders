@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>UNM Cafeteria — User Login</title>
+  <title>UNM Cafeteria — Student Login</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -209,7 +209,7 @@
       <header>
         <div class="badge" aria-hidden="true">UNM</div>
         <div>
-          <h1>User Access</h1>
+          <h1>Student Access</h1>
           <p class="subtitle">Fast, secure sign-in for UNM Cafeteria.</p>
         </div>
       </header>
@@ -226,6 +226,7 @@
         <label for="password">Password</label>
         <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" />
         <button class="btn-primary" id="loginBtn">Login</button>
+        <button class="btn-secondary" id="guestBtn">Continue as guest</button>
         <div class="inline-spinner" id="loginSpinner"></div>
         <div class="row">
           <span>Need help?</span><span class="link" id="switchToReset">Reset password</span>
@@ -308,6 +309,32 @@
     const resetError = document.getElementById('resetError');
     const resetSuccess = document.getElementById('resetSuccess');
     const signOutBtn = document.getElementById('signOutBtn');
+    const guestBtn = document.getElementById('guestBtn');
+
+    const ensureGuestIdentity = () => {
+      let guestId = localStorage.getItem('guestId');
+      if (!guestId) {
+        guestId = (crypto.randomUUID ? crypto.randomUUID() : `guest-${Date.now()}`);
+        localStorage.setItem('guestId', guestId);
+      }
+      const guestEmail = localStorage.getItem('guestEmail') || 'guest@unm.local';
+      localStorage.setItem('guestEmail', guestEmail);
+      return { guestId, guestEmail };
+    };
+
+    const activateGuestMode = () => {
+      clearErrors();
+      const { guestEmail } = ensureGuestIdentity();
+      localStorage.setItem('guestMode', '1');
+      localStorage.setItem('studentEmail', 'Guest');
+      localStorage.setItem('guestEmail', guestEmail);
+      setPageLoading(true, 'Continuing as guest…');
+      window.location.href = 'shop-list.html';
+    };
+
+    const clearGuestMode = () => {
+      localStorage.removeItem('guestMode');
+    };
 
     const setPageLoading = (on, text = 'Checking session…') => {
       if (pageLoader) pageLoader.classList.toggle('hidden', !on);
@@ -343,6 +370,7 @@
     onAuthStateChanged(auth, (user) => {
       if (user) {
         localStorage.setItem('studentEmail', user.email || '');
+        clearGuestMode();
         signOutBtn.style.display = 'block';
         setPageLoading(true, 'Signing you in…');
         window.location.href = 'shop-list.html';
@@ -367,6 +395,7 @@
       try {
         const cred = await signInWithEmailAndPassword(auth, email, password);
         localStorage.setItem('studentEmail', cred.user.email || '');
+        clearGuestMode();
         setPageLoading(true, 'Signing you in…');
         window.location.href = 'shop-list.html';
       } catch (err) {
@@ -390,6 +419,7 @@
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db, 'students', cred.user.uid), { email, points: 0 });
         localStorage.setItem('studentEmail', cred.user.email || '');
+        clearGuestMode();
         setPageLoading(true, 'Creating your account…');
         window.location.href = 'shop-list.html';
       } catch (err) {
@@ -399,6 +429,11 @@
       } finally {
         toggleInlineSpinner(registerSpinner, false);
       }
+    };
+
+    guestBtn.onclick = () => {
+      toggleInlineSpinner(loginSpinner, true);
+      activateGuestMode();
     };
 
     document.getElementById('resetBtn').onclick = async () => {
@@ -422,4 +457,3 @@
   </script>
 </body>
 </html>
-
