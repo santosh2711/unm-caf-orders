@@ -293,7 +293,23 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    import('./i18n.js').then(({ applyTranslations }) => applyTranslations());
+    let applyTranslations = () => {};
+    try {
+      const mod = await import('./i18n.js');
+      applyTranslations = mod.applyTranslations || applyTranslations;
+    } catch (err) {
+      try {
+        const repoBase = window.location.pathname.split('/')[1] || '';
+        if (repoBase) {
+          const altUrl = `${window.location.origin}/${repoBase}/i18n.js`;
+          const mod = await import(altUrl);
+          applyTranslations = mod.applyTranslations || applyTranslations;
+        }
+      } catch (fallbackErr) {
+        console.warn('i18n failed to load; continuing without translations', fallbackErr);
+      }
+    }
+    applyTranslations();
 
     const pageLoader = document.getElementById('pageLoader');
     const loaderText = document.getElementById('loaderText');
