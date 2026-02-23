@@ -524,9 +524,11 @@
       // Register service worker for FCM
       let swReg = null;
       if ('serviceWorker' in navigator) {
+        const repoBase = window.location.pathname.split('/')[1] || '';
+        const swPath = repoBase ? `/${repoBase}/firebase-messaging-sw.js` : '/firebase-messaging-sw.js';
         try {
-          // Absolute path so GitHub Pages/hosting serve the correct script at site root
-          swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+          // Register at the project base path so scope matches the hosted files (GitHub Pages adds repo folder)
+          swReg = await navigator.serviceWorker.register(swPath);
           console.log("Service worker registered", swReg.scope);
         } catch (err) {
           console.warn("Service worker registration failed", err);
