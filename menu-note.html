@@ -4,10 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Item Note</title>
+  <script type="module">
+    import('./i18n.js').then(({ applyTranslations }) => applyTranslations());
+  </script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
       --orange: #f97316;
@@ -21,7 +24,7 @@
     html, body { font-size: 15px; }
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-family: 'Nunito', 'Inter', 'Segoe UI', sans-serif;
       background: #ffffff;
       color: var(--black);
       padding-bottom: 98px;
