@@ -1,571 +1,924 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>User Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --panel: #ffffff;
-      --gray: #f8fafc;
-      --border: #e2e8f0;
-      --shadow: 0 14px 36px rgba(0,0,0,0.08);
-      --orange: #f97316;
-      --orange-dark: #ea580c;
-      --black: #0f172a;
-      --subtle: #64748b;
-    }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UNM Cafeteria – Food Shops</title>
+	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--orange: #f97316;
+			--orange-dark: #ea580c;
+			--black: #0f172a;
+			--gray: #f8fafc;
+			--border: #e2e8f0;
+			--panel: #ffffff;
+			--panel-strong: #f8fafc;
+			--stroke: #e2e8f0;
+			--text: #0f172a;
+			--subtle: #475569;
+			--shadow: 0 8px 18px rgba(0,0,0,0.06);
+		}
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			font-family: 'Nunito', 'Inter', 'Segoe UI', Arial, sans-serif;
+			background: #ffffff;
+			color: var(--black);
+			min-height: 100vh;
+			padding-bottom: 32px;
+			-webkit-font-smoothing: antialiased;
+		}
+		.page {
+			max-width: 1180px;
+			margin: 0 auto;
+			padding: 12px clamp(12px, 3vw, 20px) 32px clamp(12px, 3vw, 20px);
+			display: grid;
+			gap: 12px;
+		}
+		.topbar {
+			position: static;
+			margin: 0 -4px;
+			padding: 6px 8px;
+			background: #ffffff;
+			border-bottom: 1px solid var(--border);
+			box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+			border-radius: 0 0 8px 8px;
+		}
+		.hero {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 12px;
+			align-items: center;
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: 10px;
+			padding: 8px 10px;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+		}
+		.hero-main { display: grid; gap: 4px; align-content: center; }
+		.brand {
+			display: flex;
+			gap: 10px;
+			align-items: center;
+			font-weight: 800;
+			color: var(--orange-dark);
+			letter-spacing: 0.45px;
+		}
+		.hero h1 {
+			margin: 0;
+			font-size: clamp(1.2rem, 3.2vw, 1.55rem);
+			letter-spacing: 0.45px;
+			color: var(--orange-dark);
+		}
+		.quote-chip { display: none; }
+		.actions {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			justify-content: flex-end;
+			align-self: center;
+			justify-self: end;
+			margin-left: auto;
+		}
+		.profile {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 6px;
+			border-radius: 12px;
+			background: var(--gray);
+			border: 1px solid var(--border);
+			box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+			cursor: pointer;
+			min-width: 48px;
+			transition: transform 0.12s ease, box-shadow 0.16s ease;
+		}
+		.profile:active { transform: translateY(1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+		.profile .profile-badge {
+			width: 36px;
+			height: 36px;
+			border-radius: 10px;
+			background: var(--orange);
+			display: grid;
+			place-items: center;
+			color: #ffffff;
+			font-weight: 800;
+			letter-spacing: 0.4px;
+			border: 1px solid rgba(0,0,0,0.04);
+			box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+		}
+		.filters {
+			display: grid;
+			gap: 10px;
+			background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+			padding: 12px;
+			border-radius: 14px;
+			border: 1px solid var(--border);
+			box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+		}
+		.filter-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+		.filter-box {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 6px 10px;
+			border-radius: 10px;
+			border: 1px solid var(--border);
+			background: #ffffff;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+			color: var(--black);
+		}
+		.input, select {
+			width: 100%;
+			padding: 12px 14px;
+			border-radius: 14px;
+			border: 1px solid var(--border);
+			background: #ffffff;
+			color: var(--black);
+			font-size: 1rem;
+			outline: none;
+			box-shadow: var(--shadow);
+			transition: border 0.15s, box-shadow 0.2s, transform 0.1s ease;
+		}
+		.search-input {
+			padding: 14px 16px 14px 46px;
+			border-radius: 16px;
+			border: 1px solid transparent;
+			background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cline x1='14' y1='14' x2='19' y2='19'/%3E%3C/svg%3E") no-repeat 16px center;
+			background-size: 18px;
+			box-shadow: 0 14px 32px rgba(0,0,0,0.08);
+			font-weight: 700;
+			letter-spacing: 0.2px;
+		}
+		.input::placeholder { color: #94a3b8; font-weight: 600; }
+		select option { color: var(--black); background: #ffffff; }
+		.input:focus, select:focus {
+			border-color: var(--orange);
+			box-shadow: 0 0 0 6px rgba(249,115,22,0.14);
+			transform: translateY(-1px);
+		}
+		.grid {
+			margin-top: 16px;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+			gap: 14px;
+		}
+		.card {
+			position: relative;
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: 14px;
+			overflow: hidden;
+			box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+			display: grid;
+			grid-template-rows: auto 1fr;
+			min-height: 300px;
+			transition: transform 0.12s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+		}
+		.card:hover { transform: translateY(-3px); border-color: var(--orange); box-shadow: 0 10px 26px rgba(0,0,0,0.1); }
+		.card img {
+			width: 100%;
+			height: auto;
+			aspect-ratio: 16 / 9;
+			object-fit: cover;
+			display: block;
+			background: #f8fafc;
+		}
+		.card-body { padding: 14px; display: grid; gap: 10px; }
+		.card-head { display: flex; gap: 10px; align-items: center; }
+		.card h3 { margin: 0; font-size: 1.08rem; letter-spacing: 0.2px; flex: 1; color: var(--black); }
+		.status { padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 0.9rem; border: 1px solid transparent; }
+		.status.open { background: #dcfce7; color: #166534; border-color: #86efac; }
+		.status.closed { background: #fee2e2; color: #b91c1c; border-color: #fecdd3; }
+		.card p { margin: 0; color: #475569; line-height: 1.5; font-size: 0.95rem; }
+		.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+		.rating-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+		.rating-stars { display: inline-flex; gap: 6px; }
+		.rating-star { width: auto; height: auto; padding: 4px; border: none; background: transparent; color: #cbd5e1; font-weight: 800; font-size: 1.05rem; cursor: pointer; display: grid; place-items: center; transition: transform 0.12s ease, color 0.16s ease; }
+		.rating-star:hover { color: #f97316; }
+		.rating-star:active { transform: translateY(1px); }
+		.rating-star.filled { color: #f97316; }
+		.rating-star.disabled { opacity: 0.45; cursor: not-allowed; color: #cbd5e1 !important; }
+		.rating-row.hidden { display: none; }
+		.rating-meta { color: var(--subtle); font-weight: 700; letter-spacing: 0.2px; }
+		.rate-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--black); font-weight: 800; cursor: pointer; transition: border-color 0.16s ease, color 0.16s ease, transform 0.12s ease; }
+		.rate-btn:hover { border-color: var(--orange); color: var(--orange-dark); }
+		.rate-btn:active { transform: translateY(1px); }
+		.cta { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--orange); background: var(--orange); color: #ffffff; font-weight: 800; letter-spacing: 0.3px; }
+		.fav-btn { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: #ffffff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
+		.fav-btn svg { width: 22px; height: 22px; fill: none; stroke: #94a3b8; stroke-width: 2.1; transition: fill 0.18s, stroke 0.18s; }
+		.fav-btn.fav svg { fill: #ef4444; stroke: #ef4444; }
+		.loader-wrap { width: 100%; display: flex; align-items: center; justify-items: center; justify-content: center; padding: 18px 0 10px 0; gap: 12px; }
+		.dot-loader { display: inline-flex; gap: 8px; }
+		.dot-loader span { width: 12px; height: 12px; border-radius: 50%; background: var(--orange); animation: floatDots 1s ease-in-out infinite; }
+		.dot-loader span:nth-child(2) { animation-delay: 0.16s; }
+		.dot-loader span:nth-child(3) { animation-delay: 0.32s; }
+		@keyframes floatDots { 0%,80%,100%{transform:translateY(0);opacity:0.6;} 40%{transform:translateY(-6px);opacity:1;} }
+		.page-loader {
+			position: fixed;
+			inset: 0;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			gap: 12px;
+			background: rgba(255,255,255,0.82);
+			backdrop-filter: blur(6px);
+			z-index: 50;
+			color: var(--black);
+			font-weight: 800;
+			letter-spacing: 0.3px;
+		}
+		.page-loader .spinner {
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			border: 4px solid rgba(255,255,255,0.7);
+			border-top-color: var(--orange);
+			animation: spin 0.8s linear infinite;
+			box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+		}
+		@keyframes spin { to { transform: rotate(360deg); } }
+		.skeleton { position: relative; border-radius: 14px; border: 1px solid var(--border); background: var(--panel); overflow: hidden; min-height: 300px; box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
+		.sk-img, .sk-line, .sk-pill {
+			background: linear-gradient(90deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 100%);
+			background-size: 200% 100%;
+			animation: shimmer 1.2s ease-in-out infinite;
+		}
+		.sk-img { height: 160px; }
+		.sk-body { padding: 14px; display: grid; gap: 10px; }
+		.sk-line { height: 14px; border-radius: 10px; }
+		.sk-pill { height: 22px; width: 120px; border-radius: 999px; }
+		@keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+		.empty { grid-column: 1 / -1; text-align: center; padding: 24px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; color: #475569; }
 
-    * { box-sizing: border-box; }
+		.floating-search {
+			position: fixed;
+			top: 10px;
+			left: 50%;
+			transform: translate(-50%, -18px) scale(0.98);
+			width: min(760px, 94vw);
+			padding: 8px 10px;
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: 14px;
+			box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+			opacity: 0;
+			pointer-events: none;
+			transition: transform 0.3s ease, opacity 0.28s ease;
+			z-index: 60;
+		}
+		.floating-search.visible {
+			opacity: 1;
+			transform: translate(-50%, 0) scale(1);
+			pointer-events: auto;
+		}
+		.floating-search .input { box-shadow: 0 8px 22px rgba(0,0,0,0.08); }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Nunito', 'Inter', sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(249,115,22,0.12), transparent 32%),
-                  radial-gradient(circle at 80% 10%, rgba(249,115,22,0.08), transparent 28%),
-                  var(--bg);
-      color: var(--black);
-      padding: 14px;
-    }
-
-    .background {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 50% 0%, rgba(249,115,22,0.12), transparent 30%);
-      opacity: 0.7;
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 620px;
-      margin: 0 auto;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 22px 18px 26px;
-      box-shadow: 0 0 0 2px rgba(249,115,22,0.25), 0 0 34px rgba(249,115,22,0.18), var(--shadow);
-      display: grid;
-      gap: 14px;
-    }
-
-    .brand-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      background: var(--gray);
-      border: 1px solid var(--border);
-      font-weight: 800;
-      color: var(--orange-dark);
-      letter-spacing: 0.4px;
-    }
-    .brand-chip img { width: 26px; height: 26px; border-radius: 8px; }
-
-    .profile-bar { display: flex; justify-content: flex-end; position: relative; }
-    .profile-btn {
-      border: 1px solid var(--border);
-      background: var(--gray);
-      border-radius: 14px;
-      padding: 6px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      transition: background 0.14s ease, box-shadow 0.18s ease;
-    }
-    .profile-btn:hover { background: #fff7ed; box-shadow: 0 8px 18px rgba(0,0,0,0.08); }
-
-    .profile-menu {
-      position: absolute;
-      right: 0;
-      top: 48px;
-      min-width: 200px;
-      display: none;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      padding: 8px 0;
-    }
-    .profile-menu header { padding: 10px 14px 6px; font-weight: 800; color: var(--orange-dark); font-family: 'Nunito', 'Inter', sans-serif; }
-    .profile-menu .email-row { padding: 0 14px 10px; color: var(--subtle); font-weight: 600; font-size: 0.95rem; }
-    .profile-menu button {
-      width: 100%;
-      padding: 12px 14px;
-      background: transparent;
-      border: none;
-      border-top: 1px solid var(--border);
-      text-align: left;
-      font-weight: 700;
-      color: var(--black);
-      cursor: pointer;
-      transition: background 0.14s ease, color 0.14s ease;
-    }
-    .profile-menu button:first-of-type { border-top: none; }
-    .profile-menu button:last-child { border-bottom: none; }
-    .profile-menu button:hover { background: #fff7ed; color: var(--orange-dark); }
-
-    .hero-stack { display: grid; gap: 6px; text-align: center; }
-
-    .avatar {
-      width: 82px;
-      height: 82px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #f97316, #f59e0b);
-      display: grid;
-      place-items: center;
-      margin: 0 auto;
-      font-size: 2.2rem;
-      color: #fff;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      box-shadow: 0 12px 26px rgba(249,115,22,0.25);
-    }
-
-    h1 {
-      margin: 6px 0 4px;
-      font-size: 1.55rem;
-      font-weight: 800;
-      color: var(--orange-dark);
-      letter-spacing: 0.4px;
-      font-family: 'Nunito', 'Inter', sans-serif;
-    }
-
-    .info { color: var(--subtle); font-weight: 600; font-size: 0.98rem; margin-bottom: 6px; }
-
-    .points {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #fff7ed;
-      color: var(--orange-dark);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-weight: 800;
-      box-shadow: 0 4px 12px rgba(249,115,22,0.18);
-    }
-
-    .quick-links {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      width: 100%;
-    }
-
-    .quick-link-box {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      border-radius: 14px;
-      padding: 16px 10px 14px;
-      display: grid;
-      place-items: center;
-      gap: 6px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      cursor: pointer;
-      transition: transform 0.12s ease, box-shadow 0.18s ease, border-color 0.12s ease;
-    }
-    .quick-link-box.primary {
-      background: linear-gradient(135deg, #ffedd5, #fff7ed);
-      border-color: rgba(234,88,12,0.6);
-      box-shadow: 0 12px 28px rgba(249,115,22,0.22), 0 0 12px rgba(234,88,12,0.18);
-    }
-    .quick-link-box:hover { transform: translateY(-2px); border-color: var(--orange); box-shadow: 0 10px 24px rgba(0,0,0,0.1); }
-    .quick-link-box.primary:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(249,115,22,0.26), 0 0 14px rgba(234,88,12,0.26); }
-
-    .quick-link-icon { font-size: 1.6rem; color: var(--orange-dark); }
-    .quick-link-box.primary .quick-link-icon { color: #c2410c; }
-    .quick-link-label { font-weight: 800; color: var(--black); letter-spacing: 0.2px; }
-
-    h3.section-title {
-      margin: 10px 0 6px;
-      color: var(--orange-dark);
-      font-size: 1.05rem;
-      letter-spacing: 0.2px;
-    }
-
-    .fav-list, .food-list {
-      margin: 0;
-      padding: 0 0 0 4px;
-      list-style: none;
-      display: grid;
-      gap: 6px;
-      color: var(--black);
-      font-weight: 600;
-      font-size: 0.96rem;
-    }
-
-    .fav-list li, .food-list li { display: flex; align-items: center; gap: 8px; }
-    .fav-icon { color: #ef4444; }
-    .shop-img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); background: var(--gray); }
-
-    .logout-btn {
-      width: 100%;
-      padding: 13px 0;
-      border: none;
-      border-radius: 12px;
-      background: var(--orange);
-      color: #fff;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      box-shadow: 0 10px 24px rgba(249,115,22,0.22);
-      transition: background 0.16s ease, transform 0.12s ease;
-    }
-
-    .logout-btn:hover { background: var(--orange-dark); }
-    .logout-btn:active { transform: translateY(1px); }
-
-    .fav-popup-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.32);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 40;
-      animation: fadeIn 0.18s ease;
-    }
-
-    .fav-popup-content {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      padding: 24px 18px 16px;
-      width: min(420px, 92vw);
-      display: grid;
-      gap: 12px;
-    }
-
-    .fav-popup-content h2 {
-      margin: 0;
-      font-size: 1.1rem;
-      color: var(--orange-dark);
-      text-align: center;
-      letter-spacing: 0.25px;
-    }
-
-    .fav-popup-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-    .fav-popup-list li { display: flex; align-items: center; gap: 10px; padding: 8px 8px; border-radius: 10px; border: 1px solid var(--border); cursor: pointer; transition: border-color 0.12s ease, background 0.12s ease; }
-    .fav-popup-list li:hover { background: #fff7ed; border-color: var(--orange); }
-
-    .fav-popup-close {
-      border: none;
-      padding: 12px;
-      border-radius: 12px;
-      background: var(--orange);
-      color: #fff;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 10px 22px rgba(249,115,22,0.24);
-      transition: background 0.14s ease, transform 0.12s ease;
-    }
-    .fav-popup-close:hover { background: var(--orange-dark); }
-    .fav-popup-close:active { transform: translateY(1px); }
-
-    @media (max-width: 540px) {
-      body { padding: 10px; }
-      .container { padding: 18px 14px; border-radius: 16px; }
-      .hero-stack h1 { font-size: 1.4rem; }
-      .quick-links { gap: 8px; }
-      .quick-link-box { padding: 14px 8px; }
-    }
-
-    /* Dark mode */
-    body.dark-mode { background: #0b1220; color: #e2e8f0; }
-    body.dark-mode .container,
-    body.dark-mode .profile-menu,
-    body.dark-mode .fav-popup-content { background: #0f172a; border-color: #1e293b; color: #e2e8f0; box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
-    body.dark-mode .profile-btn { background: #111827; border-color: #1e293b; }
-    body.dark-mode .profile-menu button { color: #e2e8f0; border-color: #1e293b; }
-    body.dark-mode .profile-menu button:hover { background: #1f2937; color: #fbbf24; }
-    body.dark-mode .avatar { background: linear-gradient(135deg, #f59e0b, #f97316); box-shadow: 0 12px 26px rgba(249,115,22,0.35); }
-    body.dark-mode .brand-chip,
-    body.dark-mode .points,
-    body.dark-mode .quick-link-box,
-    body.dark-mode .fav-popup-list li { background: #111827; border-color: #1e293b; color: #e2e8f0; box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
-    body.dark-mode .quick-link-box.primary { border-color: rgba(249,115,22,0.6); box-shadow: 0 14px 30px rgba(249,115,22,0.26), 0 0 14px rgba(234,88,12,0.22); }
-    body.dark-mode .quick-link-box:hover,
-    body.dark-mode .fav-popup-list li:hover { border-color: #f97316; }
-    body.dark-mode .logout-btn,
-    body.dark-mode .fav-popup-close { background: #f59e0b; box-shadow: 0 12px 26px rgba(249,115,22,0.35); color: #0f172a; }
-    body.dark-mode .profile-menu header { color: #fbbf24; }
-    body.dark-mode .info { color: #cbd5e1; }
-    body.dark-mode h3.section-title { color: #fbbf24; }
-  </style>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { bootI18n, initLanguageSelector, setLanguage } from "./i18n.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
-      authDomain: "unm-caf-orders.firebaseapp.com",
-      projectId: "unm-caf-orders",
-      storageBucket: "unm-caf-orders.appspot.com",
-      messagingSenderId: "562096834985",
-      appId: "1:562096834985:web:f4bfe451e5482521e49cb8",
-      measurementId: "G-J12PBDK7N1"
-    };
-
-    let app;
-    try {
-      app = initializeApp(firebaseConfig);
-    } catch (e) {
-      app = firebase.app();
-    }
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Profile menu logic
-    window.openProfileMenu = function() {
-      const menu = document.getElementById('profileMenu');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    };
-    document.addEventListener('click', (e) => {
-      const btn = document.getElementById('profileBtn');
-      const menu = document.getElementById('profileMenu');
-      if (btn && btn.contains(e.target)) return;
-      if (menu && !menu.contains(e.target)) menu.style.display = 'none';
-    });
-
-    // User info and points
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        alert("Please log in first.");
-        window.location.href = "student-login.html";
-      } else {
-        document.getElementById("user-email").textContent = user.email;
-        document.getElementById("avatar").textContent = user.email ? user.email[0].toUpperCase() : "U";
-        document.getElementById("profilePic").src =
-          `https://ui-avatars.com/api/?name=${user.email[0]}&background=00aaff&color=fff&rounded=true`;
-        localStorage.setItem("userId", user.uid);
-        localStorage.setItem("email", user.email);
-        const studentRef = doc(db, "students", user.uid);
-        const docSnap = await getDoc(studentRef);
-        if (docSnap.exists()) {
-          document.getElementById("points").textContent = docSnap.data().points || 0;
-        } else {
-          document.getElementById("points").textContent = "0";
-        }
-      }
-    });
-
-    // Quick links
-    window.goToShopList = function() {
-      window.location.href = 'shop-list.html';
-    }
-    window.goToFavourites = function() {
-      // Scroll to favourite shops section
-      document.getElementById('favShopsSection').scrollIntoView({behavior: "smooth"});
-    }
-    window.goToFavFoods = function() {
-      // Scroll to favourite foods section
-      document.getElementById('favFoodsSection').scrollIntoView({behavior: "smooth"});
-    }
-    window.goToOrderHistory = function() {
-      window.location.href = 'order-history.html';
-    }
-    window.logout = function() {
-      signOut(auth).then(() => {
-        window.location.href = "student-login.html";
-      });
-    }
-
-    const languageSelect = document.getElementById('languageSelect');
-
-    // Populate email in the profile dropdown
-    document.addEventListener('DOMContentLoaded', () => {
-      const email = localStorage.getItem("email") || "";
-      const emailSpan = document.getElementById("profileMenuEmail");
-      if (emailSpan) emailSpan.textContent = email;
-    });
-
-    // Load favourite shops and foods from localStorage
-    function renderFavourites() {
-      // Favourite shops
-      const favShops = JSON.parse(localStorage.getItem('favouriteShopsData') || '[]');
-      const favList = document.getElementById('favShopsList');
-      if (favShops.length === 0) {
-        favList.innerHTML = `<li style="color:#888;">No favourite shops yet.</li>`;
-      } else {
-        favList.innerHTML = favShops.map(shop =>
-          `<li><span class="fav-icon">❤️</span> <img class="shop-img" src="${shop.imageURL || 'https://via.placeholder.com/40'}" alt="">${shop.name}</li>`
-        ).join('');
-      }
-      // Favourite foods
-      const favFoods = JSON.parse(localStorage.getItem('favouriteFoodsData') || '[]');
-      const foodList = document.getElementById('favFoodsList');
-      if (favFoods.length === 0) {
-        foodList.innerHTML = `<li style="color:#888;">No favourite foods yet.</li>`;
-      } else {
-        foodList.innerHTML = favFoods.map(food =>
-          `<li><span class="fav-icon">🍔</span> ${food.name}</li>`
-        ).join('');
-      }
-    }
-    renderFavourites();
-
-    // Theme
-    function applyTitleTheme() {
-      const theme = localStorage.getItem('titleTheme') || 'default';
-      const title = document.querySelector('h1');
-      if (!title) return;
-      if (theme === 'blue') {
-        title.style.background = 'linear-gradient(90deg, #0077b6 40%, #0097a7 100%)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
-      } else if (theme === 'yellow') {
-        title.style.background = 'linear-gradient(90deg, #ffe066 60%, #ffb347 100%)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
-      } else {
-        title.style.background = 'linear-gradient(90deg, black, #005f73)';
-        title.style.webkitBackgroundClip = 'text';
-        title.style.backgroundClip = 'text';
-        title.style.color = 'transparent';
-      }
-    }
-    applyTitleTheme();
-
-    function applyDarkMode() {
-      if (localStorage.getItem('darkMode') === 'on') {
-        document.body.classList.add('dark-mode');
-      } else {
-        document.body.classList.remove('dark-mode');
-      }
-    }
-    applyDarkMode();
-
-    // Show favourite shops as popup modal
-    window.showFavShopsPopup = function() {
-      const favShops = JSON.parse(localStorage.getItem('favouriteShopsData') || '[]');
-      const popup = document.getElementById('favShopsPopup');
-      if (!popup) return;
-      if (favShops.length === 0) {
-        popup.innerHTML = `
-          <div class="fav-popup-modal">
-            <div class="fav-popup-content">
-              <h2>Favourite Shops</h2>
-              <div style="color:#888;text-align:center;margin-bottom:18px;">No favourite shops yet.</div>
-              <button class="fav-popup-close" onclick="closeFavShopsPopup()">Close</button>
-            </div>
-          </div>
-        `;
-      } else {
-        popup.innerHTML = `
-          <div class="fav-popup-modal">
-            <div class="fav-popup-content">
-              <h2>Favourite Shops</h2>
-              <ul class="fav-popup-list">
-                ${favShops.map(shop => `
-                  <li onclick="goToShopMenu('${shop.id}')">
-                    <img class="shop-img" src="${shop.imageURL || 'https://via.placeholder.com/40'}" alt="">
-                    <span>${shop.name}</span>
-                  </li>
-                `).join('')}
-              </ul>
-              <button class="fav-popup-close" onclick="closeFavShopsPopup()">Close</button>
-            </div>
-          </div>
-        `;
-      }
-      popup.style.display = "flex";
-      setTimeout(() => {
-        document.addEventListener('keydown', escFavPopup, { once: true });
-      }, 0);
-    };
-    window.closeFavShopsPopup = function() {
-      const popup = document.getElementById('favShopsPopup');
-      if (popup) popup.style.display = "none";
-      document.removeEventListener('keydown', escFavPopup);
-    };
-    function escFavPopup(e) {
-      if (e.key === "Escape") closeFavShopsPopup();
-    }
-    window.goToShopMenu = function(shopId) {
-      window.location.href = `menu.html?vendor=${shopId}`;
-    };
-
-    initLanguageSelector(languageSelect);
-    languageSelect?.addEventListener('change', async (e) => {
-      const code = e.target.value;
-      setLanguage(code);
-      if (auth.currentUser) {
-        try { await setDoc(doc(db, 'students', auth.currentUser.uid), { lang: code }, { merge: true }); } catch (err) { console.error('Failed to save language', err); }
-      }
-    });
-    bootI18n(['#languageSelect']);
-  </script>
+		/* Dark mode overrides */
+		body.dark-mode { background: #0b1220; color: #e2e8f0; }
+		body.dark-mode {
+			--panel: #0f172a;
+			--panel-strong: #0b1325;
+			--stroke: #1f2937;
+			--text: #e2e8f0;
+			--subtle: #cbd5e1;
+		}
+		body.dark-mode .topbar,
+		body.dark-mode .hero,
+		body.dark-mode .filters,
+		body.dark-mode .filter-box { background: #0f172a; border-color: #1f2937; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+		body.dark-mode .hero { box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+		body.dark-mode .brand,
+		body.dark-mode .hero h1 { color: #fbbf24; }
+		body.dark-mode .profile { background: #0b1325; border-color: #1f2937; box-shadow: 0 4px 12px rgba(0,0,0,0.35); }
+		body.dark-mode .profile .profile-badge { background: #f97316; color: #ffffff; }
+		body.dark-mode .input,
+		body.dark-mode select { background: #0b1325; border-color: #1f2937; color: #e2e8f0; box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
+		body.dark-mode .input::placeholder { color: #94a3b8; }
+		body.dark-mode select option { background: #0b1325; color: #e2e8f0; }
+		body.dark-mode .input:focus,
+		body.dark-mode select:focus { border-color: #f97316; box-shadow: 0 0 0 6px rgba(249,115,22,0.22); }
+		body.dark-mode .grid { gap: 14px; }
+		body.dark-mode .card { background: #0f172a; border-color: #1f2937; box-shadow: 0 10px 28px rgba(0,0,0,0.35); }
+		body.dark-mode .card h3 { color: #e2e8f0; }
+		body.dark-mode .card p { color: #cbd5e1; }
+		body.dark-mode .status.open { background: rgba(34,197,94,0.18); color: #34d399; border-color: rgba(52,211,153,0.4); }
+		body.dark-mode .status.closed { background: rgba(239,68,68,0.18); color: #fca5a5; border-color: rgba(248,113,113,0.35); }
+		body.dark-mode .cta { background: #f97316; border-color: #fb923c; color: #ffffff; box-shadow: 0 8px 18px rgba(249,115,22,0.25); }
+		body.dark-mode .rating-meta { color: #cbd5e1; }
+		body.dark-mode .rate-btn { background: #0b1325; border-color: #1f2937; color: #e2e8f0; }
+		body.dark-mode .rate-btn:hover { border-color: #f97316; color: #fbbf24; }
+		body.dark-mode .fav-btn { background: #0b1325; border-color: #1f2937; box-shadow: 0 8px 18px rgba(0,0,0,0.35); }
+		body.dark-mode .fav-btn svg { stroke: #cbd5e1; }
+		body.dark-mode .fav-btn.fav svg { stroke: #ef4444; fill: #ef4444; }
+		body.dark-mode .empty { background: #0f172a; border-color: #1f2937; color: #cbd5e1; }
+		body.dark-mode .page-loader { background: rgba(5,10,18,0.75); color: #e2e8f0; }
+		body.dark-mode .page-loader .spinner { border-color: rgba(255,255,255,0.25); border-top-color: #f97316; box-shadow: 0 8px 20px rgba(0,0,0,0.35); }
+		body.dark-mode .dot-loader span { background: #f97316; }
+		body.dark-mode .floating-search { background: #0f172a; border-color: #1f2937; box-shadow: 0 14px 32px rgba(0,0,0,0.45); }
+		body.dark-mode #settingsModal > div { background: var(--panel); border-color: var(--stroke); color: var(--text); }
+		#settingsModal > div { background: var(--panel); border-color: var(--stroke); color: var(--text); }
+		@media (max-width: 880px) { .hero { grid-template-columns: 1fr auto; align-items: center; } .actions { width: auto; } }
+		@media (max-width: 620px) {
+			.grid { grid-template-columns: 1fr; }
+				.card { grid-template-rows: auto 1fr; }
+			.filter-row { flex-direction: column; align-items: flex-start; }
+			.filter-box { width: 100%; }
+		}
+		@media (max-width: 720px) {
+			.page { padding: 10px 10px 24px 10px; }
+			.topbar { margin: 0 -6px; padding: 6px 8px; box-shadow: none; border-bottom: none; }
+			.hero { padding: 8px 10px; border-radius: 10px; box-shadow: none; border: none; }
+			.filters { top: 0; }
+			.grid { gap: 12px; }
+		}
+		@media (max-width: 540px) {
+			.topbar { padding: 6px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.05); }
+			.hero { grid-template-columns: 1fr auto; gap: 8px; padding: 8px 10px; align-items: center; }
+			.hero h1 { font-size: 1.3rem; }
+			.filters { margin-top: 6px; }
+			.grid { grid-template-columns: 1fr; gap: 10px; }
+		}
+	</style>
 </head>
 <body>
-  <div class="background"></div>
-  <div class="container">
-    <div class="profile-bar">
-      <button class="profile-btn" id="profileBtn" onclick="openProfileMenu()">
-        <img id="profilePic" src="https://ui-avatars.com/api/?name=U&background=00aaff&color=fff&rounded=true" alt="Profile">
-      </button>
-      <div class="profile-menu" id="profileMenu">
-        <header>Email</header>
-        <div class="email-row"><span id="profileMenuEmail"></span></div>
-        <button onclick="goToShopList()">🛒 Shop List</button>
-        <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; font-weight:700;">
-          <span style="display:inline-flex; align-items:center; gap:8px;">🌐 <span data-i18n-key="Language">Language</span></span>
-          <select id="languageSelect" style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:var(--gray); color:var(--black); font-weight:700;"></select>
-        </label>
-        <button onclick="goToFavourites()">❤️ Favourite shops</button>
-        <button onclick="goToFavFoods()">🍲 Favourite foods</button>
-        <button onclick="goToOrderHistory()">📜 Order history</button>
-        <button onclick="logout()" class="logout-btn">Logout</button>
-      </div>
-    </div>
-    <div class="avatar" id="avatar">U</div>
-    <h1>Welcome!</h1>
-    <div class="info">
-      <strong>Email:</strong> <span id="user-email">Loading...</span>
-    </div>
-    <div class="points">
-      Points: <span id="points">Loading...</span>
-    </div>
-    <div class="quick-links">
-      <div class="quick-link-box primary" onclick="goToShopList()">
-        <span class="quick-link-icon">🛒</span>
-        <span class="quick-link-label">Shop List</span>
-      </div>
-      <div class="quick-link-box" onclick="showFavShopsPopup()">
-        <span class="quick-link-icon">❤️</span>
-        <span class="quick-link-label">Favourite Shops</span>
-      </div>
-      <div class="quick-link-box" onclick="goToFavFoods()">
-        <span class="quick-link-icon">🍔</span>
-        <span class="quick-link-label">Favourite Foods</span>
-      </div>
-      <div class="quick-link-box" onclick="goToOrderHistory()">
-        <span class="quick-link-icon">📜</span>
-        <span class="quick-link-label">Order History</span>
-      </div>
-    </div>
-    <div id="favShopsSection" style="width:100%;">
-      <h3 class="section-title">Favourite Shops</h3>
-      <ul class="fav-list" id="favShopsList"></ul>
-    </div>
-    <div id="favFoodsSection" style="width:100%;">
-      <h3 class="section-title">Favourite Foods</h3>
-      <ul class="food-list" id="favFoodsList"></ul>
-    </div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-    <div id="favShopsPopup" style="display:none;"></div>
-  </div>
-  
+	<div class="page">
+		<div id="pageLoader" class="page-loader" aria-live="polite" aria-label="Loading shops">
+			<div class="spinner"></div>
+			<span id="loaderText">Loading shops…</span>
+		</div>
+		<div class="topbar">
+			<div class="hero">
+				<div class="hero-main">
+					<div class="brand">
+						<h1>UNM Cafeteria</h1>
+					</div>
+					<div class="quote-chip" id="quoteChip" aria-live="polite">Good food. Good friends. Good day.</div>
+				</div>
+				<div class="actions">
+					<div class="profile" id="profileCard" title="Profile menu">
+						<div id="profileBadge" class="profile-badge" aria-label="Profile badge">U</div>
+					</div>
+				</div>
+			</div>
+			<div class="filters">
+				<input class="input search-input" id="shopSearch" placeholder="Search shops" aria-label="Search shops" />
+				<div class="filter-row">
+					<div style="flex:1; min-width: 140px; color:var(--subtle); font-weight:700;">Quick filters</div>
+					<div class="filter-box" aria-label="Sort and filter">
+						<select id="shopSort" aria-label="Sort shops">
+							<option value="asc">A-Z</option>
+							<option value="desc">Z-A</option>
+						</select>
+						<select id="shopFilter" aria-label="Filter status">
+							<option value="all">All</option>
+							<option value="open">Open now</option>
+							<option value="closed">Closed</option>
+							<option value="fav">Favourites</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="floating-search" id="floatingSearch" aria-hidden="true">
+				<input class="input search-input" id="floatingSearchInput" placeholder="Search shops" aria-label="Search shops when scrolling" />
+			</div>
+		</div>
+
+		<div class="loader-wrap" id="dotLoader" aria-live="polite" aria-label="Loading shops" style="display:none;">
+			<div class="dot-loader"><span></span><span></span><span></span></div>
+			<span style="color:var(--subtle); font-weight:700;">Preparing menus…</span>
+		</div>
+
+		<div class="grid" id="shopList"></div>
+	</div>
+
+		<div id="settingsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.28); backdrop-filter:blur(4px); z-index:20;">
+			<div style="background:var(--panel); color:var(--text); width:min(360px, 92vw); margin:12vh auto; padding:22px; border-radius:16px; border:1px solid var(--stroke); box-shadow:var(--shadow); display:grid; gap:14px;">
+				<div style="display:flex; justify-content:space-between; align-items:center;">
+					<h2 style="margin:0; font-size:1.1rem; letter-spacing:0.6px;">Profile</h2>
+					<button id="settingsClose" aria-label="Close" style="padding:8px 10px; border-radius:10px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); cursor:pointer;">✕</button>
+				</div>
+				<button id="homeLink" style="padding:11px 12px; border-radius:12px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); font-weight:700; text-align:left; cursor:pointer;">Home</button>
+				<button id="settingsEntry" style="padding:11px 12px; border-radius:12px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); font-weight:700; text-align:left; cursor:pointer;">Settings</button>
+				<label style="display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:700;">
+					<span>Dark mode</span>
+					<input type="checkbox" id="darkModeSwitch" />
+				</label>
+				<label style="display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:700;">
+					<span style="display:inline-flex; align-items:center; gap:8px;">🌐 <span data-i18n-key="Language">Language</span></span>
+					<select id="languageSelect" style="flex:1; padding:9px 10px; border-radius:10px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); font-weight:700;"></select>
+				</label>
+				<button id="signOutBtn" style="padding:11px 12px; border-radius:12px; border:1px solid rgba(249,115,22,0.4); background:linear-gradient(120deg, rgba(249,115,22,0.12), rgba(255,183,3,0.16)); color:var(--text); font-weight:800; letter-spacing:0.2px; cursor:pointer;">Sign out</button>
+			</div>
+		</div>
+
+	<script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+		import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+		import { getFirestore, collection, onSnapshot, doc, query, where, getDocs, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+		let bootI18n = () => {};
+		let initLanguageSelector = () => {};
+		let setLanguage = () => {};
+
+		// Load i18n with fallbacks so missing file on hosting doesn't break the page
+		try {
+			const mod = await import(new URL('./i18n.js', import.meta.url));
+			bootI18n = mod.bootI18n || bootI18n;
+			initLanguageSelector = mod.initLanguageSelector || initLanguageSelector;
+			setLanguage = mod.setLanguage || setLanguage;
+		} catch (err) {
+			try {
+				const repoBase = window.location.pathname.split('/')[1] || '';
+				if (repoBase) {
+					const altUrl = `${window.location.origin}/${repoBase}/i18n.js`;
+					const mod = await import(altUrl);
+					bootI18n = mod.bootI18n || bootI18n;
+					initLanguageSelector = mod.initLanguageSelector || initLanguageSelector;
+					setLanguage = mod.setLanguage || setLanguage;
+				}
+			} catch (fallbackErr) {
+				console.warn('i18n failed to load; continuing without translations', fallbackErr);
+			}
+		}
+
+		const firebaseConfig = {
+			apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
+			authDomain: "unm-caf-orders.firebaseapp.com",
+			projectId: "unm-caf-orders",
+			storageBucket: "unm-caf-orders.appspot.com",
+			messagingSenderId: "562096834985",
+			appId: "1:562096834985:web:f4bfe451e5482521e49cb8",
+			measurementId: "G-J12PBDK7N1"
+		};
+
+		const app = initializeApp(firebaseConfig);
+		const auth = getAuth(app);
+		const db = getFirestore(app);
+
+		const shopList = document.getElementById('shopList');
+		const searchInput = document.getElementById('shopSearch');
+		const sortSelect = document.getElementById('shopSort');
+		const filterSelect = document.getElementById('shopFilter');
+		const filters = document.querySelector('.filters');
+		const quoteChip = document.getElementById('quoteChip');
+		const profileBadge = document.getElementById('profileBadge');
+		const profileCard = document.getElementById('profileCard');
+		const dotLoader = document.getElementById('dotLoader');
+		const pageLoader = document.getElementById('pageLoader');
+		const loaderText = document.getElementById('loaderText');
+		const settingsModal = document.getElementById('settingsModal');
+		const darkModeSwitch = document.getElementById('darkModeSwitch');
+		const homeLink = document.getElementById('homeLink');
+		const settingsEntry = document.getElementById('settingsEntry');
+		const signOutBtn = document.getElementById('signOutBtn');
+		const languageSelect = document.getElementById('languageSelect');
+		const floatingSearch = document.getElementById('floatingSearch');
+		const floatingSearchInput = document.getElementById('floatingSearchInput');
+		const vendorsRef = collection(db, 'vendors');
+		const ratingsRef = collection(db, 'vendorRatings');
+		const MIN_LOAD = 450;
+		let currentUser = null;
+		let userRatings = new Map();
+		let ratingAllowed = false;
+
+		const guestModeEnabled = () => localStorage.getItem('guestMode') === '1';
+		const ensureGuestIdentity = () => {
+			let guestId = localStorage.getItem('guestId');
+			if (!guestId) {
+				guestId = crypto.randomUUID ? `guest-${crypto.randomUUID()}` : `guest-${Date.now()}`;
+				localStorage.setItem('guestId', guestId);
+			}
+			const guestEmail = localStorage.getItem('guestEmail') || 'guest@unm.local';
+			localStorage.setItem('guestEmail', guestEmail);
+			return { guestId, guestEmail };
+		};
+		const getDisplayEmail = (user) => user?.email || localStorage.getItem('guestEmail') || 'guest@unm.local';
+
+		const setPageLoading = (on, text = 'Loading shops…') => {
+			if (pageLoader) pageLoader.style.display = on ? 'flex' : 'none';
+			if (loaderText) loaderText.textContent = text;
+		};
+
+		const quotes = [
+			'Good food. Good friends. Good day.',
+			'Grab a bite, skip the stress.',
+			'Fast lines, fresh plates, full focus.',
+			'Eat well now, ace it later.',
+			'Campus life tastes better together.'
+		];
+		let quoteIndex = 0;
+		function cycleQuote() {
+			quoteChip.textContent = quotes[quoteIndex];
+			quoteIndex = (quoteIndex + 1) % quotes.length;
+		}
+		cycleQuote();
+		setInterval(cycleQuote, 11000);
+
+		let shopsData = [];
+		let favouriteShops = JSON.parse(localStorage.getItem('favouriteShops') || '[]');
+		let isLoading = true;
+
+		const syncFavouriteData = () => {
+			const favData = shopsData
+				.filter(shop => favouriteShops.includes(shop.id))
+				.map(shop => ({ id: shop.id, name: shop.name || 'Shop', imageURL: shop.imageURL || '' }));
+			localStorage.setItem('favouriteShopsData', JSON.stringify(favData));
+		};
+
+		async function loadUserRatings(uid) {
+			userRatings = new Map();
+			try {
+				const snap = await getDocs(query(ratingsRef, where('userId', '==', uid)));
+				snap.forEach(docSnap => {
+					const data = docSnap.data();
+					if (data && data.vendorId && data.rating) {
+						userRatings.set(data.vendorId, Number(data.rating));
+					}
+				});
+				render();
+			} catch (err) {
+				console.error('Failed to load ratings', err);
+			}
+		}
+
+		const debounce = (fn, wait = 160) => {
+			let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
+		};
+
+		const updateFloatingSearch = () => {
+			if (!floatingSearch || !filters) return;
+			const trigger = filters.offsetTop + filters.offsetHeight;
+			const shouldShow = window.scrollY > trigger - 16;
+			floatingSearch.classList.toggle('visible', shouldShow);
+			floatingSearch.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+		};
+
+		onAuthStateChanged(auth, async user => {
+			const isGuest = !user && guestModeEnabled();
+			if (!user && !isGuest) {
+				alert('Please log in first.');
+				window.location.href = 'student-login.html';
+				return;
+			}
+
+			const identityEmail = getDisplayEmail(user);
+			const initial = (identityEmail[0] || 'G').toUpperCase();
+			if (profileBadge) {
+				profileBadge.textContent = initial;
+				profileBadge.setAttribute('aria-label', `Profile badge ${initial}`);
+			}
+
+			currentUser = user || null;
+			ratingAllowed = Boolean(user);
+			setPageLoading(true, 'Loading shops…');
+			if (user) {
+				await loadUserRatings(user.uid);
+			} else {
+				ensureGuestIdentity();
+				userRatings = new Map();
+			}
+			onSnapshot(vendorsRef, snap => handleSnapshot(snap));
+		});
+
+	if (profileCard) {
+		profileCard.addEventListener('click', () => openSettings());
+	}
+
+		searchInput.addEventListener('input', debounce(() => {
+			if (floatingSearchInput) floatingSearchInput.value = searchInput.value;
+			render();
+		}));
+		sortSelect.addEventListener('change', render);
+		filterSelect.addEventListener('change', render);
+		if (floatingSearchInput) {
+			floatingSearchInput.addEventListener('input', debounce(() => {
+				searchInput.value = floatingSearchInput.value;
+				render();
+			}));
+		}
+		window.addEventListener('scroll', updateFloatingSearch, { passive: true });
+		window.addEventListener('resize', debounce(updateFloatingSearch, 120));
+		document.getElementById('settingsClose').addEventListener('click', () => closeSettings());
+		settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettings(); });
+		darkModeSwitch.addEventListener('change', () => {
+			localStorage.setItem('darkMode', darkModeSwitch.checked ? 'on' : 'off');
+			applyTheme();
+		});
+		initLanguageSelector(languageSelect);
+		languageSelect?.addEventListener('change', async (e) => {
+			const code = e.target.value;
+			setLanguage(code);
+			if (currentUser) {
+				try { await setDoc(doc(db, 'students', currentUser.uid), { lang: code }, { merge: true }); } catch (err) { console.error('Failed to save language', err); }
+			}
+		});
+		homeLink.addEventListener('click', () => { window.location.href = 'student-home.html'; });
+		settingsEntry.addEventListener('click', () => { alert('Settings coming soon.'); });
+		signOutBtn.addEventListener('click', async () => {
+			setPageLoading(true, 'Signing out…');
+			localStorage.removeItem('guestMode');
+			try {
+				if (auth.currentUser) await signOut(auth);
+			} catch (e) {}
+			window.location.href = 'student-login.html';
+		});
+
+		async function handleSnapshot(snapshot) {
+			isLoading = true;
+			const start = Date.now();
+			setPageLoading(true, 'Loading shops…');
+			shopsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+			const elapsed = Date.now() - start;
+			const waitTime = Math.max(MIN_LOAD - elapsed, 0);
+			setTimeout(() => {
+				isLoading = false;
+				render();
+				setPageLoading(false);
+			}, waitTime);
+		}
+
+		function render() {
+			if (isLoading) {
+				shopList.innerHTML = '<div class="empty">Loading shops…</div>';
+				return;
+			}
+
+			syncFavouriteData();
+
+			const term = searchInput.value.trim().toLowerCase();
+			const sort = sortSelect.value;
+			const filter = filterSelect.value;
+
+			let data = shopsData.slice();
+			if (term) data = data.filter(s => (s.name || '').toLowerCase().includes(term));
+			if (filter === 'open') data = data.filter(s => s.isOpen);
+			if (filter === 'closed') data = data.filter(s => !s.isOpen);
+			if (filter === 'fav') data = data.filter(s => favouriteShops.includes(s.id));
+
+			data.sort((a, b) => sort === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name));
+
+			if (!data.length) {
+				shopList.innerHTML = '<div class="empty">No shops match right now.</div>';
+				return;
+			}
+
+			const frag = document.createDocumentFragment();
+			data.forEach(shop => frag.appendChild(buildCard(shop)));
+			shopList.replaceChildren(frag);
+		}
+
+		function buildCard(shop) {
+			const card = document.createElement('article');
+			card.className = 'card';
+			card.dataset.shopid = shop.id;
+			card.dataset.isOpen = shop.isOpen ? 'true' : 'false';
+			const hasUserRating = userRatings.has(shop.id);
+			const total = Number(shop.ratingTotal || 0);
+			const count = Number(shop.ratingCount || 0);
+			const average = count > 0 ? (total / count) : 0;
+			const hasRatings = count > 0 || hasUserRating;
+
+			const imgWrap = document.createElement('div');
+			const img = document.createElement('img');
+			img.loading = 'lazy';
+			img.decoding = 'async';
+			img.src = shop.imageURL || 'https://via.placeholder.com/600x320?text=Menu+coming+soon';
+			img.alt = `${shop.name || 'Shop'} cover`;
+			imgWrap.append(img);
+
+			const body = document.createElement('div');
+			body.className = 'card-body';
+
+			const head = document.createElement('div');
+			head.className = 'card-head';
+			const h3 = document.createElement('h3');
+			h3.textContent = shop.name || 'Shop';
+			const status = document.createElement('span');
+			status.className = `status ${shop.isOpen ? 'open' : 'closed'}`;
+			status.textContent = shop.isOpen ? 'Open' : 'Closed';
+			head.append(h3, status);
+
+			const desc = document.createElement('p');
+			desc.textContent = shop.description || 'Menu details coming soon.';
+
+			const foot = document.createElement('div');
+			foot.className = 'card-foot';
+			const ratingRow = document.createElement('div');
+			ratingRow.className = 'rating-row';
+			if (!hasRatings) ratingRow.classList.add('hidden');
+			const starsWrap = document.createElement('div');
+			starsWrap.className = 'rating-stars';
+			starsWrap.dataset.shopid = shop.id;
+			const userRating = Number(userRatings.get(shop.id) || 0);
+			for (let i = 1; i <= 5; i++) {
+				const star = document.createElement('button');
+				star.type = 'button';
+				star.className = 'rating-star' + (i <= userRating ? ' filled' : '') + (ratingAllowed ? '' : ' disabled');
+				star.dataset.shopid = shop.id;
+				star.dataset.rating = i;
+				star.textContent = '★';
+				starsWrap.appendChild(star);
+			}
+			const ratingMeta = document.createElement('span');
+			ratingMeta.className = 'rating-meta';
+			ratingMeta.textContent = count > 0
+				? `${average.toFixed(1)} • ${count} rating${count === 1 ? '' : 's'}`
+				: (hasUserRating ? 'Thanks for rating!' : 'Be the first to rate');
+			ratingRow.append(starsWrap, ratingMeta);
+
+			const rateBtn = document.createElement('button');
+			rateBtn.type = 'button';
+			rateBtn.className = 'rate-btn';
+			rateBtn.dataset.shopid = shop.id;
+			rateBtn.textContent = ratingAllowed ? (hasUserRating || hasRatings ? 'Update rating' : 'Rate this shop') : 'Sign in to rate';
+			rateBtn.disabled = !ratingAllowed;
+			const cta = document.createElement('div');
+			cta.className = 'cta';
+			cta.textContent = shop.isOpen ? 'View menu' : 'Preview menu';
+			foot.append(ratingRow, cta, rateBtn);
+
+			body.append(head, desc, foot);
+
+			const fav = document.createElement('button');
+			fav.type = 'button';
+			fav.className = 'fav-btn' + (favouriteShops.includes(shop.id) ? ' fav' : '');
+			fav.setAttribute('aria-label', 'Toggle favourite');
+			fav.dataset.shopid = shop.id;
+			fav.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.2 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.2 6.86-8.55 11.54L12 21.35z"/></svg>';
+
+			card.append(imgWrap, body, fav);
+			return card;
+		}
+
+		// Delegate clicks to reduce per-card listeners
+		shopList.addEventListener('click', e => {
+			const favBtn = e.target.closest('.fav-btn');
+			if (favBtn) {
+				e.stopPropagation();
+				const id = favBtn.dataset.shopid;
+				if (id) toggleFavourite(id);
+				return;
+			}
+			const rateBtn = e.target.closest('.rate-btn');
+			if (rateBtn) {
+				e.stopPropagation();
+				if (!ratingAllowed) {
+					alert('Please sign in to rate shops.');
+					return;
+				}
+				const card = rateBtn.closest('.card');
+				const row = card?.querySelector('.rating-row');
+				if (row) row.classList.remove('hidden');
+				rateBtn.textContent = 'Update rating';
+				return;
+			}
+			const starBtn = e.target.closest('.rating-star');
+			if (starBtn) {
+				e.stopPropagation();
+				if (!ratingAllowed) {
+					alert('Please sign in to rate shops.');
+					return;
+				}
+				const id = starBtn.dataset.shopid;
+				const rating = Number(starBtn.dataset.rating || 0);
+				if (id && rating) submitRating(id, rating, starBtn);
+				return;
+			}
+			const card = e.target.closest('.card');
+			if (card && card.dataset.isOpen === 'true') {
+				const vendor = card.dataset.shopid;
+				if (vendor) window.location.href = `menu.html?vendor=${vendor}`;
+			}
+		});
+
+		// Hover highlight: show up-to selection when cursor moves across stars
+		shopList.addEventListener('mouseover', e => {
+			const starBtn = e.target.closest('.rating-star');
+			if (!starBtn || starBtn.classList.contains('disabled')) return;
+			const wrap = starBtn.parentElement;
+			const hoverRating = Number(starBtn.dataset.rating || 0);
+			if (!wrap || !hoverRating) return;
+			wrap.querySelectorAll('.rating-star').forEach(star => {
+				const value = Number(star.dataset.rating || 0);
+				star.classList.toggle('filled', value <= hoverRating);
+			});
+		});
+
+		shopList.addEventListener('mouseout', e => {
+			const starBtn = e.target.closest('.rating-star');
+			if (!starBtn || starBtn.classList.contains('disabled')) return;
+			const wrap = starBtn.parentElement;
+			const shopId = starBtn.dataset.shopid;
+			if (!wrap || !shopId) return;
+			const saved = Number(userRatings.get(shopId) || 0);
+			wrap.querySelectorAll('.rating-star').forEach(star => {
+				const value = Number(star.dataset.rating || 0);
+				star.classList.toggle('filled', value <= saved);
+			});
+		});
+
+		function toggleFavourite(id) {
+			if (guestModeEnabled() && !currentUser) {
+				alert('Please sign in to add favourites.');
+				return;
+			}
+			const idx = favouriteShops.indexOf(id);
+			if (idx === -1) favouriteShops.push(id); else favouriteShops.splice(idx, 1);
+			localStorage.setItem('favouriteShops', JSON.stringify(favouriteShops));
+			syncFavouriteData();
+			const currentY = window.scrollY;
+			render();
+			requestAnimationFrame(() => window.scrollTo(0, currentY));
+		}
+
+		async function submitRating(id, rating, button) {
+			if (!currentUser) {
+				alert('Please sign in to rate shops.');
+				return;
+			}
+			button.disabled = true;
+			const ratingDoc = doc(ratingsRef, `${id}_${currentUser.uid}`);
+			let previousRating = Number(userRatings.get(id) || 0);
+			try {
+				await runTransaction(db, async (tx) => {
+					const vendorRef = doc(db, 'vendors', id);
+					const vendorSnap = await tx.get(vendorRef);
+					if (!vendorSnap.exists()) throw new Error('Shop not found');
+					const vendorData = vendorSnap.data() || {};
+					const currentTotal = Number(vendorData.ratingTotal || 0);
+					const currentCount = Number(vendorData.ratingCount || 0);
+					const existingRatingSnap = await tx.get(ratingDoc);
+					const hasExisting = existingRatingSnap.exists();
+					previousRating = hasExisting ? Number(existingRatingSnap.data().rating || 0) : 0;
+					let newTotal = currentTotal;
+					let newCount = currentCount;
+					if (previousRating) {
+						newTotal = currentTotal - previousRating + rating;
+					} else {
+						newTotal = currentTotal + rating;
+						newCount = currentCount + 1;
+					}
+					tx.set(ratingDoc, { vendorId: id, userId: currentUser.uid, rating, updatedAt: Date.now() });
+					tx.set(vendorRef, { ratingTotal: newTotal, ratingCount: newCount }, { merge: true });
+				});
+				userRatings.set(id, rating);
+				shopsData = shopsData.map(shop => shop.id === id ? {
+					...shop,
+					ratingTotal: Number(shop.ratingTotal || 0) - previousRating + rating,
+					ratingCount: Number(shop.ratingCount || 0) + (previousRating ? 0 : 1)
+				} : shop);
+				render();
+			} catch (err) {
+				console.error('Failed to submit rating', err);
+				alert('Could not update rating right now. Please try again.');
+			} finally {
+				button.disabled = false;
+			}
+		}
+
+		function renderSkeletons(count = 6) {
+			const frag = document.createDocumentFragment();
+			for (let i = 0; i < count; i++) {
+				const sk = document.createElement('div');
+				sk.className = 'skeleton';
+				sk.innerHTML = `
+					<div class="sk-img"></div>
+					<div class="sk-body">
+						<div class="sk-line" style="width:70%"></div>
+						<div class="sk-line" style="width:92%"></div>
+						<div class="sk-pill"></div>
+					</div>`;
+				frag.appendChild(sk);
+			}
+			shopList.replaceChildren(frag);
+		}
+
+		function toggleLoader(show) { dotLoader.style.display = show ? 'flex' : 'none'; }
+		function wait() { return Promise.resolve(); }
+		async function preloadImages() { return; }
+
+		function applyTheme() {
+			const mode = localStorage.getItem('darkMode') || 'off';
+			darkModeSwitch.checked = mode === 'on';
+			if (mode === 'on') document.body.classList.add('dark-mode'); else document.body.classList.remove('dark-mode');
+		}
+
+		function openSettings() {
+			settingsModal.style.display = 'block';
+			darkModeSwitch.checked = localStorage.getItem('darkMode') === 'on';
+		}
+
+		function closeSettings() {
+			settingsModal.style.display = 'none';
+		}
+
+		applyTheme();
+		bootI18n(['#languageSelect']);
+		updateFloatingSearch();
+	</script>
 </body>
 </html>
