@@ -5,7 +5,7 @@
   <title>User Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #f8fafc;
@@ -24,7 +24,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: 'Inter', 'Nunito', sans-serif;
+      font-family: 'Nunito', 'Inter', sans-serif;
       background: radial-gradient(circle at 20% 20%, rgba(249,115,22,0.12), transparent 32%),
                   radial-gradient(circle at 80% 10%, rgba(249,115,22,0.08), transparent 28%),
                   var(--bg);
@@ -303,7 +303,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { bootI18n, initLanguageSelector, setLanguage } from "./i18n.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
@@ -378,6 +379,8 @@
         window.location.href = "student-login.html";
       });
     }
+
+    const languageSelect = document.getElementById('languageSelect');
 
     // Populate email in the profile dropdown
     document.addEventListener('DOMContentLoaded', () => {
@@ -493,6 +496,16 @@
     window.goToShopMenu = function(shopId) {
       window.location.href = `menu.html?vendor=${shopId}`;
     };
+
+    initLanguageSelector(languageSelect);
+    languageSelect?.addEventListener('change', async (e) => {
+      const code = e.target.value;
+      setLanguage(code);
+      if (auth.currentUser) {
+        try { await setDoc(doc(db, 'students', auth.currentUser.uid), { lang: code }, { merge: true }); } catch (err) { console.error('Failed to save language', err); }
+      }
+    });
+    bootI18n(['#languageSelect']);
   </script>
 </head>
 <body>
@@ -506,6 +519,14 @@
         <header>Email</header>
         <div class="email-row"><span id="profileMenuEmail"></span></div>
         <button onclick="goToShopList()">🛒 Shop List</button>
+        <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; font-weight:700;">
+          <span style="display:inline-flex; align-items:center; gap:8px;">🌐 <span data-i18n-key="Language">Language</span></span>
+          <select id="languageSelect" style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:var(--gray); color:var(--black); font-weight:700;"></select>
+        </label>
+        <button onclick="goToFavourites()">❤️ Favourite shops</button>
+        <button onclick="goToFavFoods()">🍲 Favourite foods</button>
+        <button onclick="goToOrderHistory()">📜 Order history</button>
+        <button onclick="logout()" class="logout-btn">Logout</button>
       </div>
     </div>
     <div class="avatar" id="avatar">U</div>
