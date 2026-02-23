@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>UNM Cafeteria – Food Shops</title>
 	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
-	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 	<style>
 		:root {
 			--orange: #f97316;
@@ -24,7 +24,7 @@
 		* { box-sizing: border-box; }
 		body {
 			margin: 0;
-			font-family: 'Inter', 'Segoe UI', Tahoma, Arial, sans-serif;
+			font-family: 'Nunito', 'Inter', 'Segoe UI', Arial, sans-serif;
 			background: #ffffff;
 			color: var(--black);
 			min-height: 100vh;
@@ -196,12 +196,17 @@
 		.card p { margin: 0; color: #475569; line-height: 1.5; font-size: 0.95rem; }
 		.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 		.rating-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-		.rating-stars { display: inline-flex; gap: 4px; }
-		.rating-star { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel-strong); color: var(--subtle); font-weight: 800; cursor: pointer; display: grid; place-items: center; transition: transform 0.12s ease, box-shadow 0.16s ease, border 0.16s ease, color 0.16s ease, background 0.16s ease; }
-		.rating-star:hover { border-color: var(--orange); box-shadow: 0 6px 14px rgba(0,0,0,0.06); color: var(--orange); }
+		.rating-stars { display: inline-flex; gap: 6px; }
+		.rating-star { width: auto; height: auto; padding: 4px; border: none; background: transparent; color: #cbd5e1; font-weight: 800; font-size: 1.05rem; cursor: pointer; display: grid; place-items: center; transition: transform 0.12s ease, color 0.16s ease; }
+		.rating-star:hover { color: #f97316; }
 		.rating-star:active { transform: translateY(1px); }
-		.rating-star.filled { background: #fef3c7; border-color: #fbbf24; color: #92400e; box-shadow: 0 8px 18px rgba(251,191,36,0.25); }
+		.rating-star.filled { color: #f97316; }
+		.rating-star.disabled { opacity: 0.45; cursor: not-allowed; color: #cbd5e1 !important; }
+		.rating-row.hidden { display: none; }
 		.rating-meta { color: var(--subtle); font-weight: 700; letter-spacing: 0.2px; }
+		.rate-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--black); font-weight: 800; cursor: pointer; transition: border-color 0.16s ease, color 0.16s ease, transform 0.12s ease; }
+		.rate-btn:hover { border-color: var(--orange); color: var(--orange-dark); }
+		.rate-btn:active { transform: translateY(1px); }
 		.cta { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--orange); background: var(--orange); color: #ffffff; font-weight: 800; letter-spacing: 0.3px; }
 		.fav-btn { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: #ffffff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
 		.fav-btn svg { width: 22px; height: 22px; fill: none; stroke: #94a3b8; stroke-width: 2.1; transition: fill 0.18s, stroke 0.18s; }
@@ -303,6 +308,9 @@
 		body.dark-mode .status.open { background: rgba(34,197,94,0.18); color: #34d399; border-color: rgba(52,211,153,0.4); }
 		body.dark-mode .status.closed { background: rgba(239,68,68,0.18); color: #fca5a5; border-color: rgba(248,113,113,0.35); }
 		body.dark-mode .cta { background: #f97316; border-color: #fb923c; color: #ffffff; box-shadow: 0 8px 18px rgba(249,115,22,0.25); }
+		body.dark-mode .rating-meta { color: #cbd5e1; }
+		body.dark-mode .rate-btn { background: #0b1325; border-color: #1f2937; color: #e2e8f0; }
+		body.dark-mode .rate-btn:hover { border-color: #f97316; color: #fbbf24; }
 		body.dark-mode .fav-btn { background: #0b1325; border-color: #1f2937; box-shadow: 0 8px 18px rgba(0,0,0,0.35); }
 		body.dark-mode .fav-btn svg { stroke: #cbd5e1; }
 		body.dark-mode .fav-btn.fav svg { stroke: #ef4444; fill: #ef4444; }
@@ -399,6 +407,10 @@
 					<span>Dark mode</span>
 					<input type="checkbox" id="darkModeSwitch" />
 				</label>
+				<label style="display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:700;">
+					<span style="display:inline-flex; align-items:center; gap:8px;">🌐 <span data-i18n-key="Language">Language</span></span>
+					<select id="languageSelect" style="flex:1; padding:9px 10px; border-radius:10px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); font-weight:700;"></select>
+				</label>
 				<button id="signOutBtn" style="padding:11px 12px; border-radius:12px; border:1px solid rgba(249,115,22,0.4); background:linear-gradient(120deg, rgba(249,115,22,0.12), rgba(255,183,3,0.16)); color:var(--text); font-weight:800; letter-spacing:0.2px; cursor:pointer;">Sign out</button>
 			</div>
 		</div>
@@ -406,7 +418,8 @@
 	<script type="module">
 		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 		import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-		import { getFirestore, collection, onSnapshot, doc, query, where, getDocs, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+		import { getFirestore, collection, onSnapshot, doc, query, where, getDocs, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+		import { bootI18n, initLanguageSelector, setLanguage } from "./i18n.js";
 
 		const firebaseConfig = {
 			apiKey: "AIzaSyBQZrBURFwenjWEEnQMMIH7sOSqPq0Qtx0",
@@ -438,6 +451,7 @@
 		const homeLink = document.getElementById('homeLink');
 		const settingsEntry = document.getElementById('settingsEntry');
 		const signOutBtn = document.getElementById('signOutBtn');
+		const languageSelect = document.getElementById('languageSelect');
 		const floatingSearch = document.getElementById('floatingSearch');
 		const floatingSearchInput = document.getElementById('floatingSearchInput');
 		const vendorsRef = collection(db, 'vendors');
@@ -445,6 +459,7 @@
 		const MIN_LOAD = 450;
 		let currentUser = null;
 		let userRatings = new Map();
+		let ratingAllowed = false;
 
 		const guestModeEnabled = () => localStorage.getItem('guestMode') === '1';
 		const ensureGuestIdentity = () => {
@@ -534,6 +549,7 @@
 			}
 
 			currentUser = user || null;
+			ratingAllowed = Boolean(user);
 			setPageLoading(true, 'Loading shops…');
 			if (user) {
 				await loadUserRatings(user.uid);
@@ -567,6 +583,14 @@
 		darkModeSwitch.addEventListener('change', () => {
 			localStorage.setItem('darkMode', darkModeSwitch.checked ? 'on' : 'off');
 			applyTheme();
+		});
+		initLanguageSelector(languageSelect);
+		languageSelect?.addEventListener('change', async (e) => {
+			const code = e.target.value;
+			setLanguage(code);
+			if (currentUser) {
+				try { await setDoc(doc(db, 'students', currentUser.uid), { lang: code }, { merge: true }); } catch (err) { console.error('Failed to save language', err); }
+			}
 		});
 		homeLink.addEventListener('click', () => { window.location.href = 'student-home.html'; });
 		settingsEntry.addEventListener('click', () => { alert('Settings coming soon.'); });
@@ -628,6 +652,11 @@
 			card.className = 'card';
 			card.dataset.shopid = shop.id;
 			card.dataset.isOpen = shop.isOpen ? 'true' : 'false';
+			const hasUserRating = userRatings.has(shop.id);
+			const total = Number(shop.ratingTotal || 0);
+			const count = Number(shop.ratingCount || 0);
+			const average = count > 0 ? (total / count) : 0;
+			const hasRatings = count > 0 || hasUserRating;
 
 			const imgWrap = document.createElement('div');
 			const img = document.createElement('img');
@@ -656,6 +685,7 @@
 			foot.className = 'card-foot';
 			const ratingRow = document.createElement('div');
 			ratingRow.className = 'rating-row';
+			if (!hasRatings) ratingRow.classList.add('hidden');
 			const starsWrap = document.createElement('div');
 			starsWrap.className = 'rating-stars';
 			starsWrap.dataset.shopid = shop.id;
@@ -663,7 +693,7 @@
 			for (let i = 1; i <= 5; i++) {
 				const star = document.createElement('button');
 				star.type = 'button';
-				star.className = 'rating-star' + (i <= userRating ? ' filled' : '');
+				star.className = 'rating-star' + (i <= userRating ? ' filled' : '') + (ratingAllowed ? '' : ' disabled');
 				star.dataset.shopid = shop.id;
 				star.dataset.rating = i;
 				star.textContent = '★';
@@ -671,15 +701,21 @@
 			}
 			const ratingMeta = document.createElement('span');
 			ratingMeta.className = 'rating-meta';
-			const total = Number(shop.ratingTotal || 0);
-			const count = Number(shop.ratingCount || 0);
-			const average = count > 0 ? (total / count) : 0;
-			ratingMeta.textContent = count > 0 ? `${average.toFixed(1)} • ${count} rating${count === 1 ? '' : 's'}` : 'No ratings yet';
+			ratingMeta.textContent = count > 0
+				? `${average.toFixed(1)} • ${count} rating${count === 1 ? '' : 's'}`
+				: (hasUserRating ? 'Thanks for rating!' : 'Be the first to rate');
 			ratingRow.append(starsWrap, ratingMeta);
+
+			const rateBtn = document.createElement('button');
+			rateBtn.type = 'button';
+			rateBtn.className = 'rate-btn';
+			rateBtn.dataset.shopid = shop.id;
+			rateBtn.textContent = ratingAllowed ? (hasUserRating || hasRatings ? 'Update rating' : 'Rate this shop') : 'Sign in to rate';
+			rateBtn.disabled = !ratingAllowed;
 			const cta = document.createElement('div');
 			cta.className = 'cta';
 			cta.textContent = shop.isOpen ? 'View menu' : 'Preview menu';
-			foot.append(ratingRow, cta);
+			foot.append(ratingRow, cta, rateBtn);
 
 			body.append(head, desc, foot);
 
@@ -703,9 +739,26 @@
 				if (id) toggleFavourite(id);
 				return;
 			}
+			const rateBtn = e.target.closest('.rate-btn');
+			if (rateBtn) {
+				e.stopPropagation();
+				if (!ratingAllowed) {
+					alert('Please sign in to rate shops.');
+					return;
+				}
+				const card = rateBtn.closest('.card');
+				const row = card?.querySelector('.rating-row');
+				if (row) row.classList.remove('hidden');
+				rateBtn.textContent = 'Update rating';
+				return;
+			}
 			const starBtn = e.target.closest('.rating-star');
 			if (starBtn) {
 				e.stopPropagation();
+				if (!ratingAllowed) {
+					alert('Please sign in to rate shops.');
+					return;
+				}
 				const id = starBtn.dataset.shopid;
 				const rating = Number(starBtn.dataset.rating || 0);
 				if (id && rating) submitRating(id, rating, starBtn);
@@ -716,6 +769,32 @@
 				const vendor = card.dataset.shopid;
 				if (vendor) window.location.href = `menu.html?vendor=${vendor}`;
 			}
+		});
+
+		// Hover highlight: show up-to selection when cursor moves across stars
+		shopList.addEventListener('mouseover', e => {
+			const starBtn = e.target.closest('.rating-star');
+			if (!starBtn || starBtn.classList.contains('disabled')) return;
+			const wrap = starBtn.parentElement;
+			const hoverRating = Number(starBtn.dataset.rating || 0);
+			if (!wrap || !hoverRating) return;
+			wrap.querySelectorAll('.rating-star').forEach(star => {
+				const value = Number(star.dataset.rating || 0);
+				star.classList.toggle('filled', value <= hoverRating);
+			});
+		});
+
+		shopList.addEventListener('mouseout', e => {
+			const starBtn = e.target.closest('.rating-star');
+			if (!starBtn || starBtn.classList.contains('disabled')) return;
+			const wrap = starBtn.parentElement;
+			const shopId = starBtn.dataset.shopid;
+			if (!wrap || !shopId) return;
+			const saved = Number(userRatings.get(shopId) || 0);
+			wrap.querySelectorAll('.rating-star').forEach(star => {
+				const value = Number(star.dataset.rating || 0);
+				star.classList.toggle('filled', value <= saved);
+			});
 		});
 
 		function toggleFavourite(id) {
@@ -749,7 +828,8 @@
 					const currentTotal = Number(vendorData.ratingTotal || 0);
 					const currentCount = Number(vendorData.ratingCount || 0);
 					const existingRatingSnap = await tx.get(ratingDoc);
-					previousRating = existingRatingSnap.exists ? Number(existingRatingSnap.data().rating || 0) : 0;
+					const hasExisting = existingRatingSnap.exists();
+					previousRating = hasExisting ? Number(existingRatingSnap.data().rating || 0) : 0;
 					let newTotal = currentTotal;
 					let newCount = currentCount;
 					if (previousRating) {
@@ -759,7 +839,7 @@
 						newCount = currentCount + 1;
 					}
 					tx.set(ratingDoc, { vendorId: id, userId: currentUser.uid, rating, updatedAt: Date.now() });
-					tx.update(vendorRef, { ratingTotal: newTotal, ratingCount: newCount });
+					tx.set(vendorRef, { ratingTotal: newTotal, ratingCount: newCount }, { merge: true });
 				});
 				userRatings.set(id, rating);
 				shopsData = shopsData.map(shop => shop.id === id ? {
@@ -813,6 +893,7 @@
 		}
 
 		applyTheme();
+		bootI18n(['#languageSelect']);
 		updateFloatingSearch();
 	</script>
 </body>
