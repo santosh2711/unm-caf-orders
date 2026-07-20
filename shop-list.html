@@ -40,10 +40,12 @@
 			min-height: 100vh;
 			padding-top: env(safe-area-inset-top, 0px);
 			padding-bottom: 32px;
+			overflow-x: hidden;
 			-webkit-font-smoothing: antialiased;
 		}
 		.page {
 			max-width: 1180px;
+			width: 100%;
 			margin: 0 auto;
 			padding: 12px clamp(12px, 3vw, 20px) 32px clamp(12px, 3vw, 20px);
 			display: grid;
@@ -51,20 +53,25 @@
 		}
 		.topbar {
 			position: sticky;
-			top: 0;
-			margin: 0;
+			top: 6px;
+			margin: 0 2px;
 			padding: 12px;
 			background: rgba(255, 249, 239, 0.95);
 			backdrop-filter: blur(12px);
 			border: 1px solid #eddcc6;
 			box-shadow: 0 12px 28px rgba(91, 49, 23, 0.11);
 			border-radius: 18px;
-			z-index: 35;
-			transition: box-shadow 150ms ease, background-color 150ms ease;
+			z-index: 90;
+			overflow: hidden;
+			isolation: isolate;
+			transition: box-shadow 140ms ease, background-color 140ms ease, opacity 200ms ease;
 		}
 		.topbar.compact {
-			padding: 8px;
 			box-shadow: 0 10px 22px rgba(61,33,18,0.14);
+		}
+		.topbar.is-hidden {
+			opacity: 0;
+			pointer-events: none;
 		}
 		.hero {
 			display: grid;
@@ -76,11 +83,11 @@
 			border-radius: 14px;
 			padding: 12px 14px;
 			box-shadow: 0 10px 22px rgba(61, 33, 18, 0.28);
-			transition: border-radius 150ms ease;
+			transition: border-radius 140ms ease;
 		}
 		.topbar.compact .hero {
-			padding: 9px 11px;
-			border-radius: 12px;
+			padding: 12px 14px;
+			border-radius: 14px;
 		}
 		.hero-main { display: grid; gap: 2px; align-content: center; }
 		.brand {
@@ -92,6 +99,7 @@
 			color: #ffffff;
 			letter-spacing: 0.45px;
 			font-family: 'Plus Jakarta Sans', 'Manrope', sans-serif;
+			min-width: 0;
 		}
 		.hero h1 {
 			margin: 0;
@@ -100,27 +108,12 @@
 			color: var(--luxury-gold);
 			font-family: 'Plus Jakarta Sans', 'Manrope', sans-serif;
 			transition: font-size 220ms ease;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		.topbar.compact .hero h1 {
-			font-size: clamp(1.08rem, 2.6vw, 1.34rem);
-		}
-		.hero-note {
-			margin: 2px 0 0;
-			font-size: 0.9rem;
-			font-weight: 600;
-			letter-spacing: 0.12px;
-			color: rgba(255, 245, 230, 0.94);
-			max-height: 32px;
-			opacity: 1;
-			transform: translateY(0);
-			overflow: hidden;
-			transition: opacity 120ms ease, transform 120ms ease;
-		}
-		.topbar.compact .hero-note {
-			max-height: 0;
-			opacity: 0;
-			transform: translateY(-6px);
-			margin: 2px 0 0;
+			font-size: clamp(1.24rem, 3.1vw, 1.72rem);
 		}
 		.quote-chip { display: none; }
 		.actions {
@@ -162,16 +155,19 @@
 		.filters {
 			display: grid;
 			gap: 12px;
+			margin-top: 8px;
 			background: var(--luxury-cream);
 			padding: 14px;
 			border-radius: 16px;
 			border: 1px solid #ecdac1;
 			box-shadow: 0 8px 22px rgba(91,49,23,0.09);
-			transition: box-shadow 180ms ease;
+			transition: box-shadow 140ms ease;
+			min-width: 0;
 		}
 		.topbar.compact .filters {
-			padding: 10px;
-			gap: 8px;
+			margin-top: 8px;
+			padding: 14px;
+			gap: 12px;
 		}
 		.filters-label {
 			flex: 1;
@@ -191,14 +187,13 @@
 			max-height: 120px;
 			opacity: 1;
 			overflow: hidden;
-			transform: translateY(0);
-			transition: max-height 140ms ease, opacity 120ms ease, transform 120ms ease;
+			transition: opacity 120ms ease;
 		}
 		.topbar.compact .filter-row {
-			max-height: 0;
-			opacity: 0;
-			transform: translateY(-6px);
-			pointer-events: none;
+			position: static;
+			opacity: 1;
+			pointer-events: auto;
+			visibility: visible;
 		}
 		.filter-box {
 			display: inline-grid;
@@ -212,12 +207,14 @@
 			background: #fffdf8;
 			box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 			color: var(--black);
+			min-width: 0;
+			width: 100%;
 			transform-origin: right center;
 			transition: transform 130ms ease, opacity 130ms ease;
 		}
 		.topbar.compact .filter-box {
-			transform: scale(0.94);
-			opacity: 0.9;
+			transform: none;
+			opacity: 1;
 		}
 		.filter-box select {
 			border-radius: 12px;
@@ -250,13 +247,13 @@
 			transition: border-color 180ms ease, box-shadow 180ms ease, transform 100ms ease;
 		}
 		.topbar.compact .search-input {
-			padding: 10px 12px 10px 36px;
-			font-size: 0.92rem;
-			line-height: 1.2;
-			border-radius: 10px;
-			background-size: 14px;
-			background-position: 12px center;
-			box-shadow: 0 4px 10px rgba(91,49,23,0.08);
+			padding: 14px 16px 14px 46px;
+			font-size: 1rem;
+			line-height: normal;
+			border-radius: 14px;
+			background-size: 18px;
+			background-position: 16px center;
+			box-shadow: 0 8px 20px rgba(91,49,23,0.09);
 			transform: none;
 		}
 		.input::placeholder { color: #94a3b8; font-weight: 600; }
@@ -268,6 +265,8 @@
 		}
 		.grid {
 			margin-top: 16px;
+			position: relative;
+			z-index: 1;
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 			gap: 14px;
@@ -363,10 +362,10 @@
 
 		.floating-search {
 			position: fixed;
-			top: 12px;
+			top: 10px;
 			left: 50%;
-			transform: translate(-50%, -18px) scale(0.98);
-			width: min(760px, 94vw);
+			transform: translateX(-50%);
+			width: min(760px, calc(100vw - 20px));
 			padding: 10px;
 			background: rgba(255,255,255,0.98);
 			backdrop-filter: blur(6px);
@@ -375,16 +374,23 @@
 			box-shadow: 0 12px 28px rgba(0,0,0,0.14);
 			opacity: 0;
 			pointer-events: none;
-			transition: transform 0.3s ease, opacity 0.28s ease;
-			z-index: 60;
-			display: none;
+			transition: opacity 0.22s ease;
+			z-index: 100;
+			display: block;
 		}
 		.floating-search.visible {
 			opacity: 1;
-			transform: translate(-50%, 0) scale(1);
 			pointer-events: auto;
 		}
 		.floating-search .input { box-shadow: 0 8px 22px rgba(0,0,0,0.08); }
+		.floating-search .floating-controls {
+			display: flex;
+			gap: 10px;
+			margin-top: 10px;
+		}
+		.floating-search .floating-controls select {
+			min-width: 0;
+		}
 
 		.settings-modal {
 			display: none;
@@ -464,7 +470,6 @@
 		body.dark-mode .hero { box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
 		body.dark-mode .brand,
 		body.dark-mode .hero h1 { color: #f6d7a6; }
-		body.dark-mode .hero-note { color: #ecd6b4; }
 		body.dark-mode .profile { background: #0b1325; border-color: #1f2937; box-shadow: 0 4px 12px rgba(0,0,0,0.35); }
 		body.dark-mode .profile .profile-badge { background: #f6d7a6; color: #2f1c11; }
 		body.dark-mode .input,
@@ -533,45 +538,56 @@
 			}
 			.filter-box {
 				width: 100%;
-				grid-template-columns: 1fr 1fr;
+				grid-template-columns: 1fr;
 				grid-auto-flow: row;
 				grid-auto-columns: unset;
 			}
 			.filter-box select {
 				min-width: 0;
 			}
-			.floating-search {
-				display: none;
-			}
 		}
 		@media (max-width: 720px) {
 			.page { padding: 10px 10px 24px 10px; }
 			.topbar {
-				margin: 0;
+				margin: 0 4px;
 				padding: 8px;
 				top: calc(env(safe-area-inset-top, 0px) + 4px);
 				box-shadow: 0 6px 18px rgba(61,33,18,0.14);
 				border-bottom: 1px solid #ecdac1;
 				border-radius: 16px;
 			}
+			.topbar.compact {
+				top: calc(env(safe-area-inset-top, 0px) + 4px);
+			}
 			.hero { padding: 10px 12px; border-radius: 12px; box-shadow: 0 4px 12px rgba(15,23,42,0.06); border: 1px solid var(--border); }
+			.topbar.compact .hero { padding: 6px 8px; }
+			.topbar.compact .hero { padding: 10px 12px; }
 			.filters { padding: 10px; gap: 8px; }
 			.filters { top: 0; }
 			.grid { gap: 12px; }
 		}
 		@media (max-width: 540px) {
 			.page { padding: 8px 8px 20px 8px; }
-			.topbar { padding: 7px; box-shadow: 0 4px 10px rgba(61,33,18,0.14); border-radius: 14px; }
+			.topbar { margin: 0 6px; padding: 7px; box-shadow: 0 4px 10px rgba(61,33,18,0.14); border-radius: 14px; }
+			.topbar.compact { top: calc(env(safe-area-inset-top, 0px) + 4px); }
 			.hero { grid-template-columns: 1fr auto; gap: 8px; padding: 9px 10px; align-items: center; }
+			.topbar.compact .hero { padding: 6px 7px; }
+			.topbar.compact .hero { padding: 9px 10px; }
 			.hero h1 { font-size: 1.25rem; }
-			.hero-note { font-size: 0.82rem; }
-			.topbar.compact .hero-note { display: none; }
 			.profile .profile-badge {
 				width: 36px;
 				height: 36px;
 			}
 			.filters { margin-top: 6px; padding: 9px; border-radius: 12px; }
+			.topbar.compact .filters { padding: 6px; }
+			.topbar.compact .filters { padding: 9px; }
 			.search-input {
+				padding: 11px 12px 11px 38px;
+				font-size: 0.95rem;
+				background-size: 14px;
+				background-position: 12px center;
+			}
+			.topbar.compact .search-input {
 				padding: 11px 12px 11px 38px;
 				font-size: 0.95rem;
 				background-size: 14px;
@@ -597,8 +613,6 @@
 					<div class="brand">
 						<h1>UNM Cafeteria</h1>
 					</div>
-					<p class="hero-note">Freshly cooked campus favourites, crafted fast and served warm.</p>
-					<div class="quote-chip" id="quoteChip" aria-live="polite">Good food. Good friends. Good day.</div>
 				</div>
 				<div class="actions">
 					<div class="profile" id="profileCard" title="Profile menu">
@@ -624,8 +638,20 @@
 					</div>
 				</div>
 			</div>
-			<div class="floating-search" id="floatingSearch" aria-hidden="true">
-				<input class="input search-input" id="floatingSearchInput" placeholder="Search shops" aria-label="Search shops when scrolling" />
+		</div>
+		<div class="floating-search" id="floatingSearch" aria-hidden="true">
+			<input class="input search-input" id="floatingSearchInput" placeholder="Search shops" aria-label="Search shops when scrolling" />
+			<div class="floating-controls" aria-label="Floating quick filters">
+				<select id="floatingSort" aria-label="Sort shops when scrolling">
+					<option value="asc">A-Z</option>
+					<option value="desc">Z-A</option>
+				</select>
+				<select id="floatingFilter" aria-label="Filter status when scrolling">
+					<option value="all">All</option>
+					<option value="open">Open now</option>
+					<option value="closed">Closed</option>
+					<option value="fav">Favourites</option>
+				</select>
 			</div>
 		</div>
 
@@ -706,7 +732,6 @@
 		const sortSelect = document.getElementById('shopSort');
 		const filterSelect = document.getElementById('shopFilter');
 		const filters = document.querySelector('.filters');
-		const quoteChip = document.getElementById('quoteChip');
 		const profileBadge = document.getElementById('profileBadge');
 		const profileCard = document.getElementById('profileCard');
 		const dotLoader = document.getElementById('dotLoader');
@@ -720,6 +745,8 @@
 		const languageSelect = document.getElementById('languageSelect');
 		const floatingSearch = document.getElementById('floatingSearch');
 		const floatingSearchInput = document.getElementById('floatingSearchInput');
+		const floatingSortSelect = document.getElementById('floatingSort');
+		const floatingFilterSelect = document.getElementById('floatingFilter');
 		const topbar = document.querySelector('.topbar');
 		const vendorsRef = collection(db, 'vendors');
 		const ratingsRef = collection(db, 'vendorRatings');
@@ -745,21 +772,6 @@
 			if (pageLoader) pageLoader.style.display = on ? 'flex' : 'none';
 			if (loaderText) loaderText.textContent = text;
 		};
-
-		const quotes = [
-			'Good food. Good friends. Good day.',
-			'Grab a bite, skip the stress.',
-			'Fast lines, fresh plates, full focus.',
-			'Eat well now, ace it later.',
-			'Campus life tastes better together.'
-		];
-		let quoteIndex = 0;
-		function cycleQuote() {
-			quoteChip.textContent = quotes[quoteIndex];
-			quoteIndex = (quoteIndex + 1) % quotes.length;
-		}
-		cycleQuote();
-		setInterval(cycleQuote, 11000);
 
 		let shopsData = [];
 		let favouriteShops = JSON.parse(localStorage.getItem('favouriteShops') || '[]');
@@ -792,22 +804,30 @@
 			let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
 		};
 
+		let isTopbarHidden = false;
+		let topbarRaf = null;
+		const HIDE_ENTER_Y = 96;
+		const SHOW_EXIT_Y = 28;
+		let lastScrollY = window.scrollY;
 		const updateFloatingSearch = () => {
 			if (!floatingSearch) return;
-			floatingSearch.classList.remove('visible');
-			floatingSearch.setAttribute('aria-hidden', 'true');
+			const shouldShow = isTopbarHidden;
+			floatingSearch.classList.toggle('visible', shouldShow);
+			floatingSearch.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
 		};
-
-		let isTopbarCompact = false;
-		let lastScrollY = 0;
-		let topbarRaf = null;
 		const updateTopbarState = () => {
 			if (!topbar) return;
 			const y = window.scrollY;
-			const shouldCompact = isTopbarCompact ? y > 12 : y > 28;
-			if (shouldCompact === isTopbarCompact) return;
-			isTopbarCompact = shouldCompact;
-			topbar.classList.toggle('compact', shouldCompact);
+			const isScrollingDown = y > (lastScrollY + 0.5);
+			const isScrollingUp = y < (lastScrollY - 0.5);
+			let shouldHide = isTopbarHidden;
+			if (!isTopbarHidden && isScrollingDown && y > HIDE_ENTER_Y) shouldHide = true;
+			if (isTopbarHidden && (isScrollingUp || y <= SHOW_EXIT_Y)) shouldHide = false;
+			lastScrollY = y;
+			if (shouldHide === isTopbarHidden) return;
+			isTopbarHidden = shouldHide;
+			topbar.classList.toggle('is-hidden', shouldHide);
+			updateFloatingSearch();
 		};
 
 		const handleScrollTopbar = () => {
@@ -855,11 +875,29 @@
 		}));
 		sortSelect.addEventListener('change', render);
 		filterSelect.addEventListener('change', render);
+		sortSelect.addEventListener('change', () => {
+			if (floatingSortSelect) floatingSortSelect.value = sortSelect.value;
+		});
+		filterSelect.addEventListener('change', () => {
+			if (floatingFilterSelect) floatingFilterSelect.value = filterSelect.value;
+		});
 		if (floatingSearchInput) {
 			floatingSearchInput.addEventListener('input', debounce(() => {
 				searchInput.value = floatingSearchInput.value;
 				render();
 			}));
+		}
+		if (floatingSortSelect) {
+			floatingSortSelect.addEventListener('change', () => {
+				sortSelect.value = floatingSortSelect.value;
+				render();
+			});
+		}
+		if (floatingFilterSelect) {
+			floatingFilterSelect.addEventListener('change', () => {
+				filterSelect.value = floatingFilterSelect.value;
+				render();
+			});
 		}
 		window.addEventListener('scroll', updateFloatingSearch, { passive: true });
 		window.addEventListener('scroll', handleScrollTopbar, { passive: true });
@@ -1180,6 +1218,8 @@
 
 		applyTheme();
 		bootI18n(['#languageSelect']);
+		if (floatingSortSelect) floatingSortSelect.value = sortSelect.value;
+		if (floatingFilterSelect) floatingFilterSelect.value = filterSelect.value;
 		updateFloatingSearch();
 		updateTopbarState();
 	</script>
