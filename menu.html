@@ -37,6 +37,13 @@
 			--black: #0f172a;
 			--gray: #f8fafc;
 			--border: #e2e8f0;
+			--top-cream: #f8f2e6;
+			--top-cream-border: #e9d7b1;
+			--top-gold: #d8b468;
+			--top-gold-deep: #c8a352;
+			--top-blue-start: #1d4ed8;
+			--top-blue-mid: #1e40af;
+			--top-blue-end: #1d4ed8;
 		}
 
 		* {
@@ -61,14 +68,36 @@
 			left: 0;
 			right: 0;
 			height: 76px;
-			background: #ffffff;
-			border-bottom: 1px solid var(--border);
+			background:
+				radial-gradient(900px 140px at 16% -50%, rgba(255,255,255,0.18), transparent 60%),
+				linear-gradient(135deg, var(--top-blue-start) 0%, var(--top-blue-mid) 56%, var(--top-blue-end) 100%);
+			border-bottom: 1px solid rgba(59,130,246,0.55);
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			padding: 0 16px;
 			z-index: 100;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+			box-shadow: 0 10px 24px rgba(29, 78, 216, 0.42);
+			overflow: hidden;
+		}
+
+		header::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			background-image:
+				radial-gradient(rgba(255,255,255,0.42) 1px, transparent 1px),
+				radial-gradient(rgba(255,255,255,0.3) 0.9px, transparent 0.9px),
+				radial-gradient(rgba(255,255,255,0.22) 0.8px, transparent 0.8px);
+			background-size: 28px 28px, 36px 36px, 46px 46px;
+			background-position: 0 0, 12px 10px, 20px 16px;
+			opacity: 0.58;
+		}
+
+		header > * {
+			position: relative;
+			z-index: 1;
 		}
 
 		.header-left {
@@ -86,7 +115,7 @@
 			font-size: 20px;
 			font-weight: 700;
 			letter-spacing: 0.5px;
-			color: var(--orange-dark);
+			color: #ffd08a;
 			white-space: normal;
 			flex: 1;
 			min-width: 0;
@@ -114,7 +143,7 @@
 			align-items: center;
 			gap: 14px;
 			font-size: 14px;
-			color: var(--black);
+			color: #eaf2ff;
 			flex-shrink: 0;
 		}
 
@@ -137,19 +166,37 @@
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-			gap: 6px;
-			padding: 8px 12px;
+			gap: 7px;
+			padding: 8px 13px;
 			border-radius: 12px;
-			border: 1px solid var(--border);
-			background: var(--gray);
-			color: var(--black);
+			border: 1px solid rgba(216,180,104,0.5);
+			background: linear-gradient(145deg, #fff9ed, #f8ecd5);
+			color: #7a431a;
 			font-weight: 800;
+			letter-spacing: 0.2px;
 			cursor: pointer;
-			transition: background 0.18s ease, transform 0.18s ease;
+			box-shadow: 0 6px 16px rgba(122, 67, 26, 0.16);
+			transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 		}
 
-		.back-btn:hover { background: #fff7ed; }
+		.back-btn:hover {
+			background: linear-gradient(145deg, #fffaf2, #f6e6c5);
+			box-shadow: 0 8px 18px rgba(122, 67, 26, 0.2);
+		}
 		.back-btn:active { transform: translateY(1px); }
+		.back-btn span[aria-hidden="true"] {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 20px;
+			height: 20px;
+			border-radius: 999px;
+			background: rgba(216,180,104,0.22);
+			font-size: 14px;
+			font-weight: 900;
+			line-height: 1;
+		}
+		.back-label { transform: translateY(-0.2px); }
 
 		.profile-circle {
 			width: 28px;
@@ -343,19 +390,19 @@
 			gap: 10px;
 			padding: 14px 18px;
 			border-radius: 999px;
-			background: var(--orange);
+			background: linear-gradient(135deg, var(--top-blue-start) 0%, var(--top-blue-mid) 56%, var(--top-blue-end) 100%);
 			color: #ffffff;
 			border: none;
 			font-weight: 800;
 			font-size: 15px;
 			font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
-			box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+			box-shadow: 0 12px 28px rgba(29, 78, 216, 0.35);
 			cursor: pointer;
 			z-index: 215;
 		}
 
 		.cart-pill-bar:hover {
-			background: var(--orange-dark);
+			background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
 		}
 
 		.cart-pill-bar.pulse {
@@ -836,13 +883,15 @@
 			color: #e2e8f0;
 			box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 		}
+		body.dark-mode header::before { opacity: 0.24; }
 		body.dark-mode .back-btn,
 		body.dark-mode .profile-fab {
 			background: #111827;
-			border-color: #1e293b;
-			color: #e2e8f0;
+			border-color: #2c3a50;
+			color: #f8d486;
 			box-shadow: 0 8px 20px rgba(0,0,0,0.35);
 		}
+		body.dark-mode .back-btn span[aria-hidden="true"] { background: rgba(248,212,134,0.2); color: #f8d486; }
 		body.dark-mode .brand,
 		body.dark-mode .category-title,
 		body.dark-mode .price,
@@ -879,7 +928,10 @@
 		body.dark-mode .unavailable-badge { background: #2f1b2d; color: #f9a8d4; }
 		body.dark-mode .cart-empty,
 		body.dark-mode .empty { color: #cbd5e1; }
-		body.dark-mode .cart-pill-bar { background: #f59e0b; box-shadow: 0 12px 28px rgba(0,0,0,0.35); }
+		body.dark-mode .cart-pill-bar {
+			background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+			box-shadow: 0 12px 28px rgba(29,78,216,0.35);
+		}
 		body.dark-mode .checkout-btn,
 		body.dark-mode .add-btn,
 		body.dark-mode .cart-pill { box-shadow: 0 8px 20px rgba(249,115,22,0.35); }
@@ -1032,7 +1084,7 @@
 			const hot = pickVariantPrice(item, ["hotPrice", "priceHot", "hot_price", "price_hot", "hot"], fallback);
 			const regular = pickVariantPrice(item, ["regularPrice", "priceRegular", "regular_price", "price_regular", "regular"], fallback);
 			const large = pickVariantPrice(item, ["largePrice", "priceLarge", "large_price", "price_large", "large"], fallback);
-			return [{ label: "Size", required: true, options: [
+			return [{ label: "Size", required: true, priceMode: "absolute", options: [
 				{ label: "Hot", value: "Hot", price: hot },
 				{ label: "Regular", value: "Regular", price: regular },
 				{ label: "Large", value: "Large", price: large },
@@ -1042,7 +1094,7 @@
 			const fallback = Number(item?.price) || 0;
 			const regular = pickVariantPrice(item, ["regularPrice", "priceRegular", "regular_price", "price_regular", "regular"], fallback);
 			const large = pickVariantPrice(item, ["largePrice", "priceLarge", "large_price", "price_large", "large"], fallback);
-			return [{ label: "Size", required: true, options: [
+			return [{ label: "Size", required: true, priceMode: "absolute", options: [
 				{ label: "Regular", value: "Regular", price: regular },
 				{ label: "Large", value: "Large", price: large },
 			]}];
@@ -1051,6 +1103,19 @@
 			{ label: "Drink", required: true, options: ["Black Coffee", "Milk Coffee", "Tea"] },
 			{ label: "Egg Style", required: true, options: ["Scrambled", "Sunny side up"] },
 			{ label: "Bread", required: false, options: ["White toast", "Wholemeal toast"] },
+		];
+		const ALL_DAY_BREAKFAST_SOUP_CHOICES = [
+			{ label: "Choose Toast", required: true, options: [
+				{ label: "Garlic Toast", value: "Garlic Toast", price: 0 },
+				{ label: "French Toast", value: "French Toast", price: 0 },
+			]},
+		];
+		const ALL_DAY_BREAKFAST_PASTA_CHOICES = [
+			{ label: "Choose Protein", required: true, options: [
+				{ label: "Chicken Sausage", value: "Chicken Sausage", price: 0 },
+				{ label: "Chicken Ham", value: "Chicken Ham", price: 0 },
+				{ label: "Steak Beef", value: "Steak Beef", price: 0 },
+			]},
 		];
 		const CUSTOM_CATEGORY_ORDERS = {
 			"nasi kandar ibrahim shah (mamak)": [
@@ -1067,8 +1132,11 @@
 			],
 		};
 		const normalizeCategoryLabel = (label = "") => (label || "").trim().toLowerCase();
+		const hasMenuChoices = (value) => Array.isArray(value) ? value.length > 0 : Boolean(value);
+		const hasMenuIncludes = (value) => Array.isArray(value) ? value.length > 0 : Boolean(value);
 		let allItems = [];
 		let isLetsCafeVendor = false;
+		let isAllDayBreakfastVendor = false;
         const stashCustomizeItem = (item) => { try { sessionStorage.setItem("customizeItem", JSON.stringify(item)); } catch (err) { console.error("Failed to stash customize item", err); } };
         const goToNote = (item, imageSrc) => { const params = new URLSearchParams({ id: item.id, name: item.name || "", price: item.price !== undefined ? item.price : 0, img: imageSrc, category: item.category || "", vendor: vendorId || "", returnUrl: vendorId ? `menu.html?vendor=${vendorId}` : "menu.html" }); window.location.href = `menu-note.html?${params.toString()}`; };
 		let profileOpen = false;
@@ -1097,7 +1165,9 @@
 
 		const setBrandDetails = (name = brandNameFallback, imageUrl = forkAndSpoonIcon) => {
 			vendorName = name || brandNameFallback;
-			isLetsCafeVendor = normalizeVendorName(vendorName) === "let's cafe";
+			const normalizedVendorName = normalizeVendorName(vendorName);
+			isLetsCafeVendor = normalizedVendorName === "let's cafe";
+			isAllDayBreakfastVendor = normalizedVendorName === "all day breakfast";
 			if (brandNameEl) brandNameEl.textContent = vendorName;
 			if (brandLogo) {
 				brandLogo.src = imageUrl || forkAndSpoonIcon;
@@ -1519,7 +1589,7 @@ card.className = "item-card";
 const img = document.createElement("img");
 img.className = "item-image";
 const imageSrc = item.image || item.imageURL || "https://via.placeholder.com/120x120?text=No+Image";
-				const baseNeedsCustomization = Boolean(item.choices) || (Array.isArray(item.includes) && item.includes.length) || Boolean(item.time_window);
+				const baseNeedsCustomization = hasMenuChoices(item.choices) || hasMenuIncludes(item.includes) || Boolean(item.time_window);
 				const catName = (item.category || "").toLowerCase();
 				const itemName = (item.name || "").toLowerCase();
 				const isLetsCafeBreakfast = isLetsCafeVendor && itemName.includes("breakfast set");
@@ -1529,11 +1599,23 @@ const imageSrc = item.image || item.imageURL || "https://via.placeholder.com/120
 					(itemName.includes("coffee") && itemName.includes("tea") && itemName.includes("series"))
 				);
 				const isLetsCafeMatcha = isLetsCafeVendor && (catName.includes("matcha") || itemName.includes("matcha"));
+				const isAllDayBreakfastHomemadeSoup = isAllDayBreakfastVendor && (catName.includes("homemade soup") || itemName.includes("soup"));
+				const isAllDayBreakfastPasta = isAllDayBreakfastVendor && catName.includes("pasta");
 const itemForNote = isLetsCafeBreakfast
 	? {
 		...item,
 		choices: Array.isArray(item.choices) && item.choices.length ? item.choices : LETS_CAFE_BREAKFAST_CHOICES,
 	}
+	: isAllDayBreakfastHomemadeSoup
+		? {
+			...item,
+			choices: Array.isArray(item.choices) && item.choices.length ? item.choices : ALL_DAY_BREAKFAST_SOUP_CHOICES,
+		}
+	: isAllDayBreakfastPasta
+		? {
+			...item,
+			choices: Array.isArray(item.choices) && item.choices.length ? item.choices : ALL_DAY_BREAKFAST_PASTA_CHOICES,
+		}
 	: isLetsCafeCoffeeTea
 		? {
 			...item,
@@ -1545,7 +1627,7 @@ const itemForNote = isLetsCafeBreakfast
 				choices: Array.isArray(item.choices) && item.choices.length ? item.choices : buildLetsCafeMatchaChoices(item),
 			}
 			: item;
-const needsCustomization = baseNeedsCustomization || isLetsCafeBreakfast || isLetsCafeCoffeeTea || isLetsCafeMatcha;
+const needsCustomization = baseNeedsCustomization || isLetsCafeBreakfast || isAllDayBreakfastHomemadeSoup || isAllDayBreakfastPasta || isLetsCafeCoffeeTea || isLetsCafeMatcha;
 img.src = imageSrc;
 img.alt = item.name || "Menu item";
 img.loading = "lazy";
@@ -1596,13 +1678,13 @@ if (unavailable) card.classList.add("unavailable");
 const addBtn = document.createElement("button");
 addBtn.className = "add-btn";
 addBtn.type = "button";
-addBtn.textContent = unavailable ? "Not available" : needsCustomization ? "Customize" : "Add";
+				addBtn.textContent = unavailable ? "Not available" : needsCustomization ? "Customize" : "Add";
 addBtn.disabled = unavailable;
-addBtn.addEventListener("click", (event) => {
+				addBtn.addEventListener("click", (event) => {
 event.stopPropagation();
 if (unavailable) return;
 if (needsCustomization) {
-stashCustomizeItem({ ...itemForNote, image: imageSrc, imageURL: imageSrc });
+	stashCustomizeItem({ ...itemForNote, image: imageSrc, imageURL: imageSrc, vendorId: vendorId || "" });
 goToNote(itemForNote, imageSrc);
 return;
 }
@@ -1628,7 +1710,7 @@ card.style.cursor = unavailable ? "not-allowed" : "pointer";
 card.addEventListener("click", () => {
 if (unavailable) return;
 if (needsCustomization) {
-stashCustomizeItem({ ...itemForNote, image: imageSrc, imageURL: imageSrc });
+	stashCustomizeItem({ ...itemForNote, image: imageSrc, imageURL: imageSrc, vendorId: vendorId || "" });
 }
 goToNote(itemForNote, imageSrc);
 });
@@ -1794,7 +1876,6 @@ buildCategoryNav(sectionsInfo);
 	</script>
 </body>
 </html>
-
 
 
 
