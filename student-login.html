@@ -553,6 +553,7 @@
           </div>
           <p class="input-help">Create a secure password with letters, numbers, and symbols.</p>
           <button class="btn-primary" id="registerBtn">Create account</button>
+          <button class="btn-secondary" id="guestBtnRegister">Continue as guest</button>
           <div class="inline-spinner" id="registerSpinner"></div>
           <div class="row">
             <span>Have an account?</span><span class="link" id="switchToLogin">Back to login</span>
@@ -651,6 +652,7 @@
     const resetSuccess = document.getElementById('resetSuccess');
     const signOutBtn = document.getElementById('signOutBtn');
     const guestBtn = document.getElementById('guestBtn');
+    const guestBtnRegister = document.getElementById('guestBtnRegister');
 
     const ensureGuestIdentity = () => {
       let guestId = localStorage.getItem('guestId');
@@ -789,6 +791,11 @@
 
     guestBtn.onclick = () => {
       toggleInlineSpinner(loginSpinner, true);
+      activateGuestMode();
+    };
+
+    guestBtnRegister.onclick = () => {
+      toggleInlineSpinner(registerSpinner, true);
       activateGuestMode();
     };
 
