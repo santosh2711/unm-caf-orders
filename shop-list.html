@@ -389,6 +389,7 @@
 			margin-top: 10px;
 		}
 		.floating-search .floating-controls select {
+			flex: 1;
 			min-width: 0;
 		}
 
@@ -544,6 +545,9 @@
 			}
 			.filter-box select {
 				min-width: 0;
+			}
+			.floating-search .floating-controls {
+				flex-direction: column;
 			}
 		}
 		@media (max-width: 720px) {
@@ -819,10 +823,9 @@
 			if (!topbar) return;
 			const y = window.scrollY;
 			const isScrollingDown = y > (lastScrollY + 0.5);
-			const isScrollingUp = y < (lastScrollY - 0.5);
 			let shouldHide = isTopbarHidden;
 			if (!isTopbarHidden && isScrollingDown && y > HIDE_ENTER_Y) shouldHide = true;
-			if (isTopbarHidden && (isScrollingUp || y <= SHOW_EXIT_Y)) shouldHide = false;
+			if (isTopbarHidden && y <= SHOW_EXIT_Y) shouldHide = false;
 			lastScrollY = y;
 			if (shouldHide === isTopbarHidden) return;
 			isTopbarHidden = shouldHide;
