@@ -603,6 +603,16 @@
 			box-shadow: 0 30px 80px rgba(2,8,23,.32) !important;
 			animation: profilePop .25s ease-out;
 		}
+		.settings-drag-handle {
+			width: 48px;
+			height: 5px;
+			margin: -4px auto 2px;
+			border-radius: 99px;
+			background: #cbd5e1;
+			cursor: grab;
+			touch-action: none;
+		}
+		.settings-drag-handle:active { cursor: grabbing; }
 		@keyframes profilePop { from { opacity: 0; transform: translateY(18px) scale(.97); } }
 		#settingsModal h2 { font-size: 1.3rem !important; letter-spacing: -.02em !important; }
 		#settingsClose {
@@ -642,6 +652,7 @@
 		#languageSelect { margin-left: auto; max-width: 150px; box-shadow: none !important; }
 		body.dark-mode #settingsModal > div { background: #0f172a !important; border-color: #29364a !important; }
 		body.dark-mode #settingsModal h2 { color: #f8fafc; }
+		body.dark-mode .settings-drag-handle { background: #526279; }
 		body.dark-mode #settingsClose { background: #1e293b !important; color: #e2e8f0 !important; }
 		body.dark-mode #homeLink, body.dark-mode #settingsEntry,
 		body.dark-mode #settingsModal > div > label { background: #151f32 !important; color: #e8eef8 !important; }
@@ -728,6 +739,7 @@
 
 		<div id="settingsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.28); backdrop-filter:blur(4px); z-index:20;">
 			<div style="background:var(--panel); color:var(--text); width:min(360px, 92vw); margin:12vh auto; padding:22px; border-radius:16px; border:1px solid var(--stroke); box-shadow:var(--shadow); display:grid; gap:14px;">
+				<div class="settings-drag-handle" id="settingsDragHandle" aria-label="Drag down to close"></div>
 				<div style="display:flex; justify-content:space-between; align-items:center;">
 					<h2 style="margin:0; font-size:1.1rem; letter-spacing:0.6px;">Profile</h2>
 					<button id="settingsClose" aria-label="Close" style="padding:8px 10px; border-radius:10px; border:1px solid var(--stroke); background:var(--panel-strong); color:var(--text); cursor:pointer;">✕</button>
@@ -1268,7 +1280,36 @@
 		}
 
 		function closeSettings() {
+			const sheet = settingsModal.firstElementChild;
+			if (sheet) {
+				sheet.style.transform = '';
+				sheet.style.transition = '';
+			}
 			settingsModal.style.display = 'none';
+		}
+
+		const settingsDragHandle = document.getElementById('settingsDragHandle');
+		const settingsSheet = settingsModal?.firstElementChild;
+		if (settingsDragHandle && settingsSheet) {
+			let dragStartY = 0;
+			let dragDistance = 0;
+			settingsDragHandle.addEventListener('pointerdown', (event) => {
+				dragStartY = event.clientY;
+				dragDistance = 0;
+				settingsDragHandle.setPointerCapture(event.pointerId);
+				settingsSheet.style.transition = 'none';
+			});
+			settingsDragHandle.addEventListener('pointermove', (event) => {
+				if (!settingsDragHandle.hasPointerCapture(event.pointerId)) return;
+				dragDistance = Math.max(0, event.clientY - dragStartY);
+				settingsSheet.style.transform = `translateY(${dragDistance}px)`;
+			});
+			settingsDragHandle.addEventListener('pointerup', (event) => {
+				settingsDragHandle.releasePointerCapture(event.pointerId);
+				settingsSheet.style.transition = 'transform .22s ease';
+				if (dragDistance > 70) closeSettings();
+				else settingsSheet.style.transform = '';
+			});
 		}
 
 		applyTheme();
