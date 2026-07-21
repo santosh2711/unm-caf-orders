@@ -408,8 +408,8 @@
 			overflow: hidden;
 		}
 		.hero {
-			min-height: 230px;
-			padding: clamp(26px, 5vw, 54px);
+			min-height: 188px;
+			padding: clamp(22px, 4vw, 40px);
 			background: transparent;
 			border: 0;
 			border-radius: 0;
@@ -765,8 +765,11 @@
 		.search-input { border-color:#ffd1a7; background-color:#fff; }
 		.input:focus,select:focus,.search-input:focus { border-color:var(--energy-orange); box-shadow:0 0 0 5px rgba(255,90,31,.17); }
 		.select-field select { border-color:#ffd1a7; background:#fff; }
-		.card { border-color:#f2d2b8; box-shadow:0 9px 25px rgba(93,40,15,.1); }
-		.card:hover { border-color:var(--energy-orange); box-shadow:0 18px 38px rgba(255,90,31,.18); }
+		.card {
+			border-color:#f2d2b8;
+			box-shadow:0 18px 38px rgba(78,35,16,.13),0 4px 10px rgba(78,35,16,.07),inset 0 1px 0 rgba(255,255,255,.85);
+		}
+		.card:hover { border-color:var(--energy-orange); box-shadow:0 25px 52px rgba(115,42,15,.18),0 8px 18px rgba(255,90,31,.12); }
 		.card img {
 			filter:saturate(1.28) contrast(1.08) brightness(1.02);
 			transition:filter .25s ease,transform .35s ease;
@@ -779,7 +782,7 @@
 		body.dark-mode { background:radial-gradient(circle at 10% 0,rgba(19,104,232,.18),transparent 30rem),radial-gradient(circle at 90% 10%,rgba(239,51,64,.14),transparent 28rem),#0c1422; }
 		body.dark-mode .topbar { background:linear-gradient(125deg,#4d1027,#8f1d32 42%,#c9342f 76%,#e65f13); }
 		body.dark-mode .filters { background:rgba(17,27,43,.98); border-color:#514459; }
-		body.dark-mode .card { background:#151f31; border-color:#37445a; }
+		body.dark-mode .card { background:#151f31; border-color:#37445a; box-shadow:0 20px 44px rgba(0,0,0,.38),0 5px 14px rgba(0,0,0,.25); }
 		body.dark-mode .card:hover { border-color:#ff7849; box-shadow:0 18px 38px rgba(255,90,31,.17); }
 		body.dark-mode .cta { background:linear-gradient(135deg,#ff682f,#e93545); }
 		body.dark-mode .site-footer strong { color:#ffc928; }
@@ -812,9 +815,60 @@
 		@media (prefers-reduced-motion:reduce) {
 			.topbar,.card,.site-footer { animation:none!important; }
 		}
+
+		/* Shop interaction refinements */
+		.card-body { padding:20px 16px 17px; }
+		.card:active { transform:scale(.98); transition-duration:100ms; }
+		.status.open { animation:openGlow 1.2s ease-in-out infinite; }
+		@keyframes openGlow {
+			0%,100% { box-shadow:0 0 0 0 rgba(63,125,91,0); }
+			50% { box-shadow:0 0 0 5px rgba(63,125,91,.14),0 0 14px rgba(63,125,91,.18); }
+		}
+		.rating-row { width:100%; align-items:flex-start; gap:7px; }
+		.rating-input { display:grid; gap:2px; }
+		.rating-input-label { color:var(--subtle); font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+		.rating-stars { gap:3px; }
+		.rating-star { font-size:1.2rem; padding:2px; }
+		.rating-star:not(.disabled) { cursor:pointer; }
+		.rating-star:not(.disabled):hover { transform:scale(1.18); }
+		.rating-meta { margin-left:auto; padding-top:17px; font-size:.82rem; white-space:nowrap; }
+		.rate-btn { width:100%; padding:6px 0 0; border:0; text-align:left; color:var(--orange-dark); font-size:.82rem; }
+		.rate-btn:disabled { cursor:default; opacity:.7; }
+		.fav-btn.heart-pop { animation:heartPop .32s cubic-bezier(.2,1.5,.4,1); }
+		@keyframes heartPop { 45% { transform:scale(1.28) rotate(-8deg); } 75% { transform:scale(.92); } }
+		.skeleton { isolation:isolate; }
+		.skeleton::after {
+			content:'';
+			position:absolute;
+			inset:0;
+			z-index:3;
+			width:34%;
+			transform:translateX(-180%);
+			background:linear-gradient(90deg,transparent,rgba(255,255,255,.78),transparent);
+			filter:blur(2px);
+			animation:skeletonLightSweep 1.25s ease-in-out infinite;
+			pointer-events:none;
+		}
+		@keyframes skeletonLightSweep { to { transform:translateX(390%); } }
+		body.dark-mode .skeleton::after { background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent); }
+		.empty-search-icon { display:block; margin-bottom:8px; font-size:2rem; }
+		.pull-refresh {
+			position:fixed; top:10px; left:50%; z-index:200; transform:translate(-50%,-70px);
+			padding:8px 13px; border-radius:999px; background:#fff; color:#7c2d12;
+			box-shadow:0 9px 24px rgba(0,0,0,.16); font-size:.8rem; font-weight:800;
+			transition:transform .2s ease,opacity .2s; opacity:0; pointer-events:none;
+		}
+		.pull-refresh.visible { opacity:1; }
+		body.dark-mode .pull-refresh { background:#18222c; color:#ffc928; }
+		body.dark-mode .rating-input-label,body.dark-mode .rating-meta { color:#d4c3ad; }
+		body.dark-mode .rate-btn { color:#ff9b73; }
+		@media (prefers-reduced-motion:reduce) {
+			.status.open,.fav-btn.heart-pop,.skeleton::after { animation:none!important; }
+		}
 	</style>
 </head>
 <body>
+	<div class="pull-refresh" id="pullRefresh" aria-hidden="true">Pull to refresh</div>
 	<div class="page">
 		<div id="pageLoader" class="page-loader" aria-live="polite" aria-label="Loading shops">
 			<div class="spinner"></div>
@@ -990,8 +1044,10 @@
 		const getDisplayEmail = (user) => user?.email || localStorage.getItem('guestEmail') || 'guest@unm.local';
 
 		const setPageLoading = (on, text = 'Loading shops…') => {
-			if (pageLoader) pageLoader.style.display = on ? 'flex' : 'none';
+			const loadingShops = on && /loading shops/i.test(text);
+			if (pageLoader) pageLoader.style.display = on && !loadingShops ? 'flex' : 'none';
 			if (loaderText) loaderText.textContent = text;
+			if (loadingShops && shopList) renderSkeletons(6);
 		};
 
 		const quotes = [
@@ -1156,6 +1212,8 @@
 
 		function render() {
 			if (isLoading) {
+				renderSkeletons(6);
+				return;
 				shopList.innerHTML = '<div class="empty">Loading shops…</div>';
 				return;
 			}
@@ -1175,7 +1233,7 @@
 			data.sort((a, b) => sort === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name));
 
 			if (!data.length) {
-				shopList.innerHTML = '<div class="empty">No shops match right now.</div>';
+				shopList.innerHTML = '<div class="empty"><span class="empty-search-icon" aria-hidden="true">&#128269;</span><strong>No shops found.</strong><br>Try another keyword or filter.</div>';
 				return;
 			}
 
@@ -1222,7 +1280,11 @@
 			foot.className = 'card-foot';
 			const ratingRow = document.createElement('div');
 			ratingRow.className = 'rating-row';
-			if (!hasRatings) ratingRow.classList.add('hidden');
+			const ratingInput = document.createElement('div');
+			ratingInput.className = 'rating-input';
+			const ratingInputLabel = document.createElement('span');
+			ratingInputLabel.className = 'rating-input-label';
+			ratingInputLabel.textContent = 'Your rating';
 			const starsWrap = document.createElement('div');
 			starsWrap.className = 'rating-stars';
 			starsWrap.dataset.shopid = shop.id;
@@ -1236,18 +1298,20 @@
 				star.textContent = '★';
 				starsWrap.appendChild(star);
 			}
+			ratingInput.append(ratingInputLabel, starsWrap);
 			const ratingMeta = document.createElement('span');
 			ratingMeta.className = 'rating-meta';
 			ratingMeta.textContent = count > 0
 				? `${average.toFixed(1)} • ${count} rating${count === 1 ? '' : 's'}`
 				: (hasUserRating ? 'Thanks for rating!' : 'Be the first to rate');
-			ratingRow.append(starsWrap, ratingMeta);
+			ratingMeta.textContent = count > 0 ? `${average.toFixed(1)} avg · ${count}` : 'No ratings yet';
+			ratingRow.append(ratingInput, ratingMeta);
 
 			const rateBtn = document.createElement('button');
 			rateBtn.type = 'button';
 			rateBtn.className = 'rate-btn';
 			rateBtn.dataset.shopid = shop.id;
-			rateBtn.textContent = ratingAllowed ? (hasUserRating || hasRatings ? 'Update rating' : 'Rate this shop') : 'Sign in to rate';
+			rateBtn.textContent = ratingAllowed ? (hasUserRating ? `Your rating: ${userRating}/5 · Tap a star to change` : 'Tap a star to rate') : 'Sign in to rate';
 			rateBtn.disabled = !ratingAllowed;
 			const cta = document.createElement('div');
 			cta.className = 'cta';
@@ -1272,8 +1336,16 @@
 			const favBtn = e.target.closest('.fav-btn');
 			if (favBtn) {
 				e.stopPropagation();
+				if (guestModeEnabled() && !currentUser) {
+					alert('Please sign in to add favourites.');
+					return;
+				}
 				const id = favBtn.dataset.shopid;
-				if (id) toggleFavourite(id);
+				if (id && !favBtn.classList.contains('heart-pop')) {
+					favBtn.classList.add('heart-pop');
+					favBtn.disabled = true;
+					setTimeout(() => toggleFavourite(id), 220);
+				}
 				return;
 			}
 			const rateBtn = e.target.closest('.rate-btn');
@@ -1344,9 +1416,17 @@
 			if (idx === -1) favouriteShops.push(id); else favouriteShops.splice(idx, 1);
 			localStorage.setItem('favouriteShops', JSON.stringify(favouriteShops));
 			syncFavouriteData();
-			const currentY = window.scrollY;
-			render();
-			requestAnimationFrame(() => window.scrollTo(0, currentY));
+			if (filterSelect.value === 'fav') {
+				render();
+				return;
+			}
+			const button = shopList.querySelector(`.fav-btn[data-shopid="${CSS.escape(id)}"]`);
+			if (button) {
+				button.classList.toggle('fav', favouriteShops.includes(id));
+				button.classList.remove('heart-pop');
+				button.disabled = false;
+				button.setAttribute('aria-pressed', favouriteShops.includes(id) ? 'true' : 'false');
+			}
 		}
 
 		async function submitRating(id, rating, button) {
@@ -1414,6 +1494,40 @@
 		function toggleLoader(show) { dotLoader.style.display = show ? 'flex' : 'none'; }
 		function wait() { return Promise.resolve(); }
 		async function preloadImages() { return; }
+
+		// Native-feeling pull to refresh for touch devices.
+		const pullRefresh = document.getElementById('pullRefresh');
+		let pullStartY = 0;
+		let pullDistance = 0;
+		let pulling = false;
+		window.addEventListener('touchstart', (event) => {
+			if (window.scrollY !== 0 || event.touches.length !== 1) return;
+			pullStartY = event.touches[0].clientY;
+			pullDistance = 0;
+			pulling = true;
+		}, { passive: true });
+		window.addEventListener('touchmove', (event) => {
+			if (!pulling || window.scrollY !== 0) return;
+			pullDistance = Math.max(0, Math.min(110, (event.touches[0].clientY - pullStartY) * .55));
+			if (pullDistance <= 4) return;
+			event.preventDefault();
+			pullRefresh?.classList.add('visible');
+			if (pullRefresh) {
+				pullRefresh.style.transform = `translate(-50%, ${pullDistance - 58}px)`;
+				pullRefresh.textContent = pullDistance >= 68 ? 'Release to refresh' : 'Pull to refresh';
+			}
+		}, { passive: false });
+		window.addEventListener('touchend', () => {
+			if (!pulling) return;
+			pulling = false;
+			if (pullDistance >= 68) {
+				if (pullRefresh) pullRefresh.textContent = 'Refreshing…';
+				setTimeout(() => window.location.reload(), 180);
+				return;
+			}
+			pullRefresh?.classList.remove('visible');
+			if (pullRefresh) pullRefresh.style.transform = '';
+		}, { passive: true });
 
 		function applyTheme() {
 			const mode = localStorage.getItem('darkMode') || 'off';
