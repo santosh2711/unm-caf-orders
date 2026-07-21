@@ -1154,6 +1154,7 @@
 
 		const urlParams = new URLSearchParams(window.location.search);
 		const vendorId = urlParams.get("vendor");
+		const previewMode = urlParams.get("preview") === "1";
 		if (vendorId) {
 			localStorage.setItem("activeVendorId", vendorId);
 		}
@@ -1246,7 +1247,7 @@
 			const total = cart.reduce((sum, item) => sum + (item.qty || 0), 0);
 			if (cartPillBar && cartPillCount) {
 				cartPillCount.textContent = total;
-				cartPillBar.style.display = total > 0 ? "flex" : "none";
+				cartPillBar.style.display = !previewMode && total > 0 ? "flex" : "none";
 			}
 		};
 
@@ -1367,11 +1368,12 @@
 			});
 
 			cartTotalEl.textContent = formatPrice(total);
-			checkoutBtn.disabled = false;
+			checkoutBtn.disabled = previewMode;
 			syncCartIndicators(cart);
 		};
 
 		const addToCart = (item) => {
+			if (previewMode) return;
 			const cart = getCart();
 			const incomingNotes = normalizeNote(item.notes);
 			const idx = findCartIndex(cart, item.id, incomingNotes);
@@ -1397,6 +1399,7 @@
 		};
 
 		const goToCheckout = () => {
+			if (previewMode) return;
 			stashCheckoutPayload();
 			const params = new URLSearchParams();
 			if (vendorId) params.set("vendor", vendorId);
@@ -1678,11 +1681,11 @@ if (unavailable) card.classList.add("unavailable");
 const addBtn = document.createElement("button");
 addBtn.className = "add-btn";
 addBtn.type = "button";
-				addBtn.textContent = unavailable ? "Not available" : needsCustomization ? "Customize" : "Add";
-addBtn.disabled = unavailable;
+				addBtn.textContent = unavailable ? "Not available" : previewMode ? "Preview only" : needsCustomization ? "Customize" : "Add";
+addBtn.disabled = unavailable || previewMode;
 				addBtn.addEventListener("click", (event) => {
 event.stopPropagation();
-if (unavailable) return;
+if (unavailable || previewMode) return;
 if (needsCustomization) {
 	stashCustomizeItem({ ...itemForNote, image: imageSrc, imageURL: imageSrc, vendorId: vendorId || "" });
 goToNote(itemForNote, imageSrc);
@@ -1706,9 +1709,9 @@ info.appendChild(topRow);
 info.appendChild(desc);
 info.appendChild(bottomRow);
 
-card.style.cursor = unavailable ? "not-allowed" : "pointer";
+card.style.cursor = unavailable || previewMode ? "not-allowed" : "pointer";
 card.addEventListener("click", () => {
-if (unavailable) return;
+if (unavailable || previewMode) return;
 if (needsCustomization) {
 	stashCustomizeItem({ ...itemForNote, image: imageSrc, imageURL: imageSrc, vendorId: vendorId || "" });
 }
