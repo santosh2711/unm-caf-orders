@@ -784,22 +784,22 @@
 		body.dark-mode .cta { background:linear-gradient(135deg,#ff682f,#e93545); }
 		body.dark-mode .site-footer strong { color:#ffc928; }
 		/* Page entrance motion */
-		.topbar { animation: shopHeaderDrop .7s cubic-bezier(.2,.8,.2,1) backwards; }
-		.card { animation: shopCardReveal .55s cubic-bezier(.2,.75,.25,1) backwards; }
+		.topbar { animation: shopHeaderDrop 1.15s cubic-bezier(.16,.78,.2,1) backwards; }
+		.card { animation: shopCardReveal .85s cubic-bezier(.18,.72,.22,1) backwards; }
 		body:not(.shops-ready) .topbar,
 		body:not(.shops-ready) .card,
 		body:not(.shops-ready) .site-footer { animation-play-state:paused; }
 		body.shops-ready .topbar,
 		body.shops-ready .card,
 		body.shops-ready .site-footer { animation-play-state:running; }
-		.card:nth-child(1) { animation-delay:.04s; }
-		.card:nth-child(2) { animation-delay:.09s; }
-		.card:nth-child(3) { animation-delay:.14s; }
-		.card:nth-child(4) { animation-delay:.19s; }
-		.card:nth-child(5) { animation-delay:.24s; }
-		.card:nth-child(6) { animation-delay:.29s; }
-		.card:nth-child(n+7) { animation-delay:.34s; }
-		.site-footer { animation: softFadeIn .6s .3s backwards; }
+		.card:nth-child(1) { animation-delay:.1s; }
+		.card:nth-child(2) { animation-delay:.2s; }
+		.card:nth-child(3) { animation-delay:.3s; }
+		.card:nth-child(4) { animation-delay:.4s; }
+		.card:nth-child(5) { animation-delay:.5s; }
+		.card:nth-child(6) { animation-delay:.6s; }
+		.card:nth-child(n+7) { animation-delay:.7s; }
+		.site-footer { animation: softFadeIn .9s .55s backwards; }
 		@keyframes shopHeaderDrop {
 			from { opacity:0; transform:translateY(-34px); }
 			to { opacity:1; transform:translateY(0); }
