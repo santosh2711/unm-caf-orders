@@ -421,6 +421,29 @@
 				radial-gradient(circle at 78% 72%, rgba(255,166,66,.25) 0 115px, transparent 116px);
 			opacity: 1;
 		}
+		.hero::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			z-index: 0;
+			pointer-events: none;
+			background-image:
+				radial-gradient(circle, rgba(255,255,255,.95) 0 1.2px, transparent 1.8px),
+				radial-gradient(circle, rgba(255,211,154,.9) 0 1px, transparent 1.6px),
+				radial-gradient(circle, rgba(191,219,254,.9) 0 1.4px, transparent 2px);
+			background-size: 47px 47px, 73px 73px, 101px 101px;
+			background-position: 7px 11px, 26px 4px, 45px 35px;
+			opacity: .5;
+			animation: headerTwinkle 4.5s ease-in-out infinite alternate;
+		}
+		@keyframes headerTwinkle {
+			0% { opacity: .28; filter: brightness(.95); }
+			45% { opacity: .68; filter: brightness(1.2); }
+			100% { opacity: .4; filter: brightness(1.05); background-position: 9px 13px, 24px 6px, 47px 33px; }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.hero::after { animation: none; }
+		}
 		.hero-main { max-width: 720px; gap: 10px; }
 		.hero-eyebrow {
 			margin: 0;
@@ -488,11 +511,22 @@
 
 		body.dark-mode .topbar { background: linear-gradient(140deg, #112751, #173e78 58%, #1b5596); }
 		body.dark-mode .hero { background: transparent; border: 0; box-shadow: none; }
+		body.dark-mode .hero::after {
+			opacity: .82;
+			background-image:
+				radial-gradient(circle, #ffffff 0 1.2px, transparent 2px),
+				radial-gradient(circle, #fbbf24 0 1.1px, transparent 1.9px),
+				radial-gradient(circle, #93c5fd 0 1.4px, transparent 2.1px);
+			filter: drop-shadow(0 0 3px rgba(255,255,255,.7));
+		}
 		body.dark-mode .hero h1 { color: #fff; }
 		body.dark-mode .hero-copy { color: #bfdbfe; }
 		body.dark-mode .filters { background: rgba(15,23,42,.96); border-color: #29364a; }
 		body.dark-mode .filter-title { color: #f1f5f9; }
 		body.dark-mode .filter-box { background: transparent; border: 0; box-shadow: none; }
+		body.dark-mode .search-input {
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23fbbf24' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cline x1='14' y1='14' x2='19' y2='19'/%3E%3C/svg%3E");
+		}
 
 		@media (max-width: 620px) {
 			.page { padding: 8px; gap: 10px; }
