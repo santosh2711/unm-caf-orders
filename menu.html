@@ -27,7 +27,7 @@
 	</script>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
 	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='12' ry='12' fill='%23fff' stroke='%23f97316' stroke-width='2'/%3E%3Cpath fill='%23f97316' d='M18 14c4.2 0 7.6 3.4 7.6 7.6 0 3.2-1.8 6-4.6 7.1V46h-6V28.7c-2.8-1.1-4.6-3.9-4.6-7.1C10.4 17.4 13.8 14 18 14z'/%3E%3Cpath fill='%23ea580c' d='M34 14h4v10h2V14h4v10h2V14h4v12h-6v20h-6V26h-6z'/%3E%3C/svg%3E" />
 	<title>Menu</title>
 	<style>
@@ -936,6 +936,148 @@
 		body.dark-mode .add-btn,
 		body.dark-mode .cart-pill { box-shadow: 0 8px 20px rgba(249,115,22,0.35); }
 		body.dark-mode .spinner { border-color: #fbbf24; border-top-color: transparent; }
+		/* Modern menu experience */
+		:root {
+			--page-bg: #f4f7fb;
+			--surface: #ffffff;
+			--soft-surface: #f7f9fc;
+			--modern-text: #142033;
+			--modern-muted: #64748b;
+			--modern-line: #dce5f0;
+			--blue: #1d5fc4;
+		}
+		body { padding-top: 92px; background: var(--page-bg); color: var(--modern-text); }
+		header {
+			height: 76px;
+			left: max(10px, calc((100vw - 1180px) / 2));
+			right: max(10px, calc((100vw - 1180px) / 2));
+			top: 10px;
+			padding: 0 14px;
+			border: 0;
+			border-radius: 20px;
+			background: linear-gradient(135deg,#163f91 0%,#1d5fc4 58%,#2879dc 100%);
+			box-shadow: 0 16px 38px rgba(29,78,216,.27);
+		}
+		header::before {
+			background-image:
+				radial-gradient(circle,rgba(255,255,255,.9) 0 1px,transparent 1.7px),
+				radial-gradient(circle,rgba(251,191,36,.85) 0 1px,transparent 1.6px),
+				radial-gradient(circle,rgba(191,219,254,.85) 0 1.2px,transparent 1.9px);
+			background-size: 43px 43px,71px 71px,97px 97px;
+			opacity: .44;
+			animation: menuStars 4.5s ease-in-out infinite alternate;
+		}
+		@keyframes menuStars { from { opacity:.25 } to { opacity:.7; filter:brightness(1.25) } }
+		.brand { color: #fff; font-size: 1.1rem; font-weight: 800; }
+		.brand-logo { width: 44px; height: 44px; border: 2px solid rgba(255,255,255,.75); border-radius: 14px; }
+		.back-btn { color: #fff; background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.25); box-shadow: none; }
+		.back-btn:hover { background: rgba(255,255,255,.22); box-shadow: none; }
+		.back-btn span[aria-hidden="true"] { background: rgba(255,255,255,.16); }
+		.profile-btn { padding: 5px; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); }
+		.profile-circle {
+			width: 36px; height: 36px; color: #422006;
+			background: linear-gradient(145deg,#fff0a8,#fbbf24 45%,#d89109);
+			border: 1px solid #ffe58a;
+			box-shadow: 0 0 0 3px rgba(251,191,36,.17),0 8px 18px rgba(68,38,3,.25);
+		}
+		main { max-width: 1120px; padding: 20px 18px 80px; }
+		.menu-intro { margin: 4px 0 16px; }
+		.menu-intro h1 { margin: 0; color: var(--modern-text); font-size: clamp(1.55rem,4vw,2.35rem); letter-spacing: -.035em; }
+		.menu-intro p { margin: 5px 0 0; color: var(--modern-muted); line-height: 1.55; }
+		.search-bar {
+			top: 96px;
+			padding: 12px;
+			margin-bottom: 14px;
+			border: 1px solid var(--modern-line);
+			border-radius: 18px;
+			background: rgba(255,255,255,.94);
+			box-shadow: 0 10px 30px rgba(30,55,90,.08);
+			backdrop-filter: blur(12px);
+		}
+		.search-input {
+			min-height: 48px;
+			padding: 11px 14px 11px 44px;
+			border-color: var(--modern-line);
+			border-radius: 13px;
+			background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%231d5fc4' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cpath d='m14 14 5 5'/%3E%3C/svg%3E") no-repeat 15px center;
+			outline: 0;
+		}
+		.search-input:focus { border-color: #f97316; box-shadow: 0 0 0 4px rgba(249,115,22,.14); }
+		.switch-btn { min-height: 48px; padding: 8px 12px; border-radius: 13px; background: var(--surface); }
+		.category-nav { top: 174px; margin: 0 0 18px; padding: 7px; border: 1px solid var(--modern-line); border-radius: 15px; background: rgba(255,255,255,.95); box-shadow: 0 8px 24px rgba(30,55,90,.07); }
+		.category-nav-inner { padding: 0; }
+		.category-pill-btn { padding: 9px 14px; border: 0; background: #eef3fa; }
+		.category-pill-btn.active { color: #fff; background: #1d5fc4; border-color: #1d5fc4; box-shadow: 0 6px 14px rgba(29,95,196,.22); }
+		.category { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin-bottom: 34px; }
+		.category-title { grid-column: 1/-1; margin: 0 0 2px; padding: 7px 0; border: 0; color: #1d5fc4; font-size: 1.35rem; }
+		.item-card {
+			min-height: 142px; margin: 0; padding: 12px; gap: 14px;
+			border-color: var(--modern-line); border-radius: 18px; background: var(--surface);
+			box-shadow: 0 7px 22px rgba(30,55,90,.07);
+			transition: transform .18s,box-shadow .18s,border-color .18s;
+		}
+		.item-card:hover { transform: translateY(-2px); border-color: #b7c9e4; box-shadow: 0 14px 30px rgba(30,55,90,.12); }
+		.item-image { width: 112px; height: 112px; border-radius: 14px; }
+		.item-name { font-size: 1.02rem; font-weight: 800; }
+		.item-desc { color: var(--modern-muted); }
+		.price { color: #1d5fc4; font-size: 1rem; }
+		.add-btn { min-width: 78px; padding: 10px 14px; border-radius: 11px; box-shadow: 0 7px 16px rgba(249,115,22,.2); }
+		.cart-pill-bar {
+			bottom: 16px;
+			border-radius: 16px;
+			background: #f97316;
+			box-shadow: 0 15px 32px rgba(249,115,22,.3);
+			font-family: 'Inter', 'Nunito', sans-serif;
+			font-weight: 600;
+			font-size: 14px;
+			letter-spacing: -.01em;
+		}
+		.cart-pill-bar #cart-pill-count { font-weight: 700; font-variant-numeric: tabular-nums; }
+		.cart-pill-bar:hover { background: #ea580c; }
+		.cart-overlay { backdrop-filter: blur(5px); }
+		.cart-drawer { max-width: 620px; left: 50%; right: auto; width: calc(100% - 20px); transform: translate(-50%,100%); border-radius: 25px 25px 0 0; box-shadow: 0 -20px 55px rgba(2,8,23,.25); }
+		.cart-drawer.active { transform: translate(-50%,0); }
+		.cart-header { padding: 18px 20px; font-size: 1.15rem; }
+		.checkout-btn { border-radius: 14px; font-size: 1rem; }
+		.profile-dropdown { top: 88px; right: max(14px,calc((100vw - 1160px)/2)); padding: 14px; border-radius: 18px; box-shadow: 0 22px 55px rgba(2,8,23,.2); }
+		.menu-footer { padding: 8px 16px 30px; text-align: center; color: var(--modern-muted); font-size: .84rem; letter-spacing: .04em; }
+		.menu-footer strong { color: #1d5fc4; font-weight: 900; letter-spacing: .08em; }
+		body.dark-mode { --page-bg:#0b1220; --surface:#101a2c; --soft-surface:#121e32; --modern-text:#eef4ff; --modern-muted:#aebdd2; --modern-line:#26364e; background:var(--page-bg); }
+		body.dark-mode header { background: linear-gradient(135deg,#112751,#173e78 58%,#1b5596); }
+		body.dark-mode .menu-intro h1 { color: var(--modern-text); }
+		body.dark-mode .search-bar,body.dark-mode .category-nav { background: rgba(15,23,42,.95); border-color:var(--modern-line); }
+		body.dark-mode .search-input { background-color:#101a2c; border-color:var(--modern-line); color:#eef4ff; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23fbbf24' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cpath d='m14 14 5 5'/%3E%3C/svg%3E"); }
+		body.dark-mode .category-pill-btn { background:#17243a; color:#dbe7f8; border:0; }
+		body.dark-mode .category-pill-btn.active { background:#347fd9; color:#fff; }
+		body.dark-mode .category-title,body.dark-mode .price { color:#79b8ff; }
+		body.dark-mode .item-card { background:var(--surface); border-color:var(--modern-line); box-shadow:0 9px 26px rgba(0,0,0,.28); }
+		body.dark-mode .item-desc { color:var(--modern-muted); }
+		body.dark-mode .menu-footer strong { color:#fbbf24; }
+		@media (prefers-reduced-motion:reduce) { header::before { animation:none; } }
+		@media (max-width:700px) {
+			body { padding-top:70px; }
+			header { top:0; left:0; right:0; height:64px; border-radius:0 0 16px 16px; padding:0 9px; }
+			.back-btn { padding:7px 9px; }
+			.back-label { display:none; }
+			.brand-logo { width:36px; height:36px; border-radius:11px; }
+			.brand { font-size:.96rem; gap:7px; }
+			main { padding:12px 10px 70px; }
+			.menu-intro { margin:2px 2px 10px; }
+			.menu-intro h1 { font-size:1.35rem; }
+			.menu-intro p { font-size:.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+			.search-bar { position:relative; top:auto; padding:8px; gap:7px; border-radius:14px; }
+			.search-input { min-height:44px; }
+			.switch-btn { min-width:auto; min-height:44px; }
+			.switch-label { display:none; }
+			.category-nav { position:sticky; top:66px; margin-bottom:13px; border-radius:13px; }
+			.category { grid-template-columns:1fr; gap:10px; margin-bottom:25px; }
+			.category-title { font-size:1.16rem; }
+			.item-card { min-height:116px; padding:9px; gap:10px; border-radius:15px; }
+			.item-image { width:92px; height:92px; border-radius:12px; }
+			.item-desc { -webkit-line-clamp:2; }
+			.add-btn { min-width:68px; padding:9px 10px; font-size:.86rem; }
+			.profile-dropdown { top:68px; right:8px; }
+		}
 	</style>
 </head>
 <body>
@@ -958,6 +1100,10 @@
 	</header>
 
 	<main>
+		<section class="menu-intro">
+			<h1>Fresh picks, made for your day.</h1>
+			<p>Browse the menu, discover something delicious, and order your campus favourites in a few taps.</p>
+		</section>
 		<div class="loading" id="loading">
 			<div class="spinner" aria-hidden="true"></div>
 			<span>Loading menu...</span>
@@ -981,6 +1127,7 @@
 		</div>
 		<div id="menu-container"></div>
 	</main>
+	<footer class="menu-footer">Powered by <strong>SKANDA SYSTEMS</strong></footer>
 
 	<button class="cart-pill-bar" id="cart-pill-bar" type="button">Cart · Items: (<span id="cart-pill-count">0</span>)</button>
 
