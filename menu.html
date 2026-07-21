@@ -957,6 +957,7 @@
 			border-radius: 20px;
 			background: linear-gradient(135deg,#163f91 0%,#1d5fc4 58%,#2879dc 100%);
 			box-shadow: 0 16px 38px rgba(29,78,216,.27);
+			z-index: 240;
 		}
 		header::before {
 			background-image:
@@ -1000,6 +1001,23 @@
 			outline: 0;
 		}
 		.search-input:focus { border-color: #f97316; box-shadow: 0 0 0 4px rgba(249,115,22,.14); }
+		.menu-search-wrap { position:relative; flex:1; min-width:180px; }
+		.menu-search-wrap .search-input { width:100%; }
+		.menu-search-hint {
+			position:absolute; left:44px; top:50%; transform:translateY(-50%);
+			color:#94a3b8; font-size:14px; font-weight:600; pointer-events:none;
+		}
+		.search-input:focus + .menu-search-hint,
+		.search-input:not(:placeholder-shown) + .menu-search-hint { opacity:0; }
+		.menu-floating-search {
+			position:fixed; top:112px; left:50%; z-index:210;
+			width:min(680px,calc(100% - 24px)); padding:8px;
+			transform:translate(-50%,-14px) scale(.98); opacity:0; pointer-events:none;
+			background:rgba(255,255,255,.96); border:1px solid var(--modern-line); border-radius:16px;
+			box-shadow:0 15px 38px rgba(15,35,65,.18); backdrop-filter:blur(12px);
+			transition:opacity .22s,transform .22s;
+		}
+		.menu-floating-search.visible { opacity:1; pointer-events:auto; transform:translate(-50%,0) scale(1); }
 		.switch-btn { min-height: 48px; padding: 8px 12px; border-radius: 13px; background: var(--surface); }
 		.category-nav { top: 190px; margin: 0 0 18px; padding: 7px; border: 1px solid var(--modern-line); border-radius: 15px; background: rgba(255,255,255,.95); box-shadow: 0 8px 24px rgba(30,55,90,.07); }
 		.category-nav-inner { padding: 0; }
@@ -1087,15 +1105,13 @@
 		body.dark-mode .dropdown-link { background:#162238; color:#eaf2ff; border-color:#29384e; }
 		body.dark-mode .dropdown-link::before { background:#1d3764; color:#93c5fd; }
 		body.dark-mode .logout-btn { background:#321d18; color:#fb923c; border-color:#573024; }
-		body.dark-mode .switch-btn {
-			color:#fbbf24;
-			border-color:rgba(251,191,36,.55);
-			background:#201b10;
-		}
-		body.dark-mode .switch-btn .switch-label { color:#fcd34d; }
-		body.dark-mode .switch-btn .switch-track { background:#6b4d0c; border-color:#a8790e; }
-		body.dark-mode .switch-btn.switch-on { background:#2c220b; border-color:#fbbf24; box-shadow:0 6px 18px rgba(251,191,36,.2); }
+		body.dark-mode .switch-btn { color:#e2e8f0; border-color:#334155; background:#101a2c; }
+		body.dark-mode .switch-btn .switch-label { color:#e2e8f0; }
+		body.dark-mode .switch-btn .switch-track { background:#8a650e; border-color:#c99616; }
+		body.dark-mode .switch-btn .switch-thumb { background:#fff4bd; }
+		body.dark-mode .switch-btn.switch-on { background:#101a2c; border-color:#475569; box-shadow:none; }
 		body.dark-mode .switch-btn.switch-on .switch-track { background:#fbbf24; border-color:#fcd34d; }
+		body.dark-mode .menu-floating-search { background:rgba(15,23,42,.97); border-color:#29384e; }
 		.menu-footer { padding: 8px 16px 30px; text-align: center; color: var(--modern-muted); font-size: .84rem; letter-spacing: .04em; }
 		.menu-footer strong { color: #1d5fc4; font-weight: 900; letter-spacing: .08em; }
 		body.dark-mode { --page-bg:#0b1220; --surface:#101a2c; --soft-surface:#121e32; --modern-text:#eef4ff; --modern-muted:#aebdd2; --modern-line:#26364e; background:var(--page-bg); }
@@ -1119,6 +1135,7 @@
 			.brand { font-size:1.02rem; gap:9px; }
 			main { padding:12px 10px 70px; }
 			.search-bar { position:relative; top:auto; padding:8px; gap:7px; border-radius:14px; }
+			.menu-floating-search { top:78px; }
 			.search-input { min-height:44px; }
 			.switch-btn { min-width:auto; min-height:44px; }
 			.switch-label { display:none; }
@@ -1162,7 +1179,10 @@
 			<span>Loading menu...</span>
 		</div>
 		<div class="search-bar" id="search-bar" style="display:none;">
-			<input class="search-input" id="menu-search" type="search" placeholder="Search menu..." aria-label="Search menu" />
+			<div class="menu-search-wrap">
+				<input class="search-input" id="menu-search" type="search" placeholder=" " aria-label="Search menu" />
+				<span class="menu-search-hint" id="menu-search-hint" aria-hidden="true">S</span>
+			</div>
 			<!-- Veg filter removed -->
 			<button class="filter-btn switch-btn" id="available-toggle" type="button" aria-pressed="false">
 				<span class="switch-track" aria-hidden="true">
@@ -1170,6 +1190,12 @@
 				</span>
 				<span class="switch-label">Available now</span>
 			</button>
+		</div>
+		<div class="menu-floating-search" id="menu-floating-search" aria-hidden="true">
+			<div class="menu-search-wrap">
+				<input class="search-input" id="floating-menu-search" type="search" placeholder=" " aria-label="Search menu while scrolling" />
+				<span class="menu-search-hint" id="floating-menu-search-hint" aria-hidden="true">S</span>
+			</div>
 		</div>
 		<div class="category-nav" id="category-nav" style="display:none;">
 			<div class="category-nav-inner" id="category-nav-inner"></div>
@@ -1262,6 +1288,10 @@
 		const guestEmail = "Continuing as guest";
 		const searchBar = document.getElementById("search-bar");
 		const searchInput = document.getElementById("menu-search");
+		const floatingMenuSearch = document.getElementById("menu-floating-search");
+		const floatingMenuSearchInput = document.getElementById("floating-menu-search");
+		const menuSearchHint = document.getElementById("menu-search-hint");
+		const floatingMenuSearchHint = document.getElementById("floating-menu-search-hint");
 		const availableToggle = document.getElementById("available-toggle");
 		const viewCategoriesBtn = document.getElementById("view-categories");
 		const subNav = document.getElementById("sub-nav");
@@ -2078,7 +2108,44 @@ buildCategoryNav(sectionsInfo);
 			if (loginBtn) loginBtn.style.display = user ? "none" : "block";
 		});
 
-		searchInput.addEventListener("input", handleSearch);
+		searchInput.addEventListener("input", () => {
+			if (floatingMenuSearchInput) floatingMenuSearchInput.value = searchInput.value;
+			handleSearch();
+		});
+		floatingMenuSearchInput?.addEventListener("input", () => {
+			searchInput.value = floatingMenuSearchInput.value;
+			handleSearch();
+		});
+
+		const updateFloatingMenuSearch = () => {
+			if (!floatingMenuSearch || !searchBar || searchBar.style.display === "none") return;
+			const show = searchBar.getBoundingClientRect().bottom < 82;
+			floatingMenuSearch.classList.toggle("visible", show);
+			floatingMenuSearch.setAttribute("aria-hidden", show ? "false" : "true");
+		};
+		window.addEventListener("scroll", updateFloatingMenuSearch, { passive:true });
+		window.addEventListener("resize", updateFloatingMenuSearch);
+
+		const animateMenuSearchHint = () => {
+			const text = "Search menu";
+			let index = 1;
+			let deleting = false;
+			const tick = () => {
+				const value = text.slice(0,index);
+				if (menuSearchHint) menuSearchHint.textContent = value;
+				if (floatingMenuSearchHint) floatingMenuSearchHint.textContent = value;
+				if (!deleting && index >= text.length) {
+					deleting = true;
+					setTimeout(tick,1200);
+					return;
+				}
+				if (deleting && index <= 1) deleting = false;
+				index += deleting ? -1 : 1;
+				setTimeout(tick,deleting ? 65 : 105);
+			};
+			tick();
+		};
+		animateMenuSearchHint();
 
 		availableToggle?.addEventListener("click", () => {
 			availableOnly = !availableOnly;
