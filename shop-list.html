@@ -666,6 +666,152 @@
 				border-radius: 27px 27px 0 0 !important; position: absolute; bottom: 0;
 			}
 		}
+		/* Midnight Mamak palette */
+		:root {
+			--mamak-cream:#fff8e8;
+			--mamak-cream-deep:#f7ead0;
+			--mamak-paprika:#e85d2a;
+			--mamak-paprika-dark:#c8451d;
+			--mamak-saffron:#f4b942;
+			--mamak-espresso:#3a2318;
+			--mamak-navy:#102a43;
+			--mamak-berry:#b83b5e;
+			--mamak-basil:#3f7d5b;
+		}
+		body {
+			background:
+				radial-gradient(circle at 8% 4%,rgba(244,185,66,.17),transparent 28rem),
+				linear-gradient(180deg,#fffdf7,var(--mamak-cream));
+			color:var(--mamak-espresso);
+		}
+		.topbar {
+			background:linear-gradient(135deg,#102a43 0%,#183f58 48%,#71351f 100%);
+			box-shadow:0 24px 60px rgba(58,35,24,.25);
+		}
+		.hero::before {
+			background:
+				radial-gradient(circle at 88% 18%,rgba(244,185,66,.2) 0 78px,transparent 79px),
+				radial-gradient(circle at 78% 76%,rgba(232,93,42,.25) 0 120px,transparent 121px);
+		}
+		.hero-eyebrow { color:#ffd98a; }
+		.hero-copy { color:#f8ead6; }
+		.quote-chip { background:rgba(244,185,66,.12); border-color:rgba(255,217,138,.32); }
+		.filters { background:rgba(255,248,232,.97); border-color:rgba(244,185,66,.3); }
+		.filter-title { color:var(--mamak-espresso); }
+		.search-input {
+			border-color:#ead9bb;
+			background-color:#fffdf8;
+			background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23e85d2a' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cline x1='14' y1='14' x2='19' y2='19'/%3E%3C/svg%3E");
+		}
+		.input:focus,select:focus,.search-input:focus { border-color:var(--mamak-paprika); box-shadow:0 0 0 5px rgba(232,93,42,.14); }
+		.select-field select { border-color:#ead9bb; background:#fffdf8; color:var(--mamak-espresso); }
+		.card { border-color:#eadfcb; box-shadow:0 8px 24px rgba(58,35,24,.08); }
+		.card:hover { border-color:var(--mamak-saffron); box-shadow:0 16px 34px rgba(58,35,24,.14); }
+		.card h3 { color:var(--mamak-espresso); }
+		.cta { background:var(--mamak-paprika); border-color:var(--mamak-paprika); box-shadow:0 7px 16px rgba(232,93,42,.2); }
+		.rating-star.filled,.rating-star:hover { color:var(--mamak-saffron); }
+		.fav-btn.fav svg { fill:var(--mamak-berry); stroke:var(--mamak-berry); }
+		.status.open { background:#e6f2e9; color:#285d42; border-color:#a9ceb6; }
+		.profile .profile-badge { background:linear-gradient(145deg,#fff1ab,var(--mamak-saffron) 46%,#ce8614); }
+		.site-footer strong { color:var(--mamak-paprika); }
+		body.dark-mode {
+			background:radial-gradient(circle at 10% 0,rgba(232,93,42,.1),transparent 30rem),#101923;
+			--panel:#18222c;
+			--panel-strong:#121b24;
+			--text:#fff6e7;
+			--subtle:#d4c3ad;
+		}
+		body.dark-mode .topbar { background:linear-gradient(135deg,#0d2236,#16344a 55%,#54291d); }
+		body.dark-mode .filters { background:rgba(24,34,44,.97); border-color:#58432e; }
+		body.dark-mode .filter-title,body.dark-mode .card h3 { color:#fff6e7; }
+		body.dark-mode .input,body.dark-mode select { background-color:#121b24; border-color:#3e4953; color:#fff6e7; }
+		body.dark-mode .search-input {
+			background-color:#121b24;
+			background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23f4b942' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cline x1='14' y1='14' x2='19' y2='19'/%3E%3C/svg%3E");
+		}
+		body.dark-mode .card { background:#18222c; border-color:#33404b; }
+		body.dark-mode .cta { background:var(--mamak-paprika); border-color:#f17749; }
+		body.dark-mode .site-footer strong { color:var(--mamak-saffron); }
+		body.dark-mode .profile-sheet,body.dark-mode #settingsModal>div { background:#18222c!important; border-color:#3b4650!important; }
+		/* Tropical Street Food energy layer */
+		:root {
+			--energy-orange:#ff5a1f;
+			--energy-red:#ef3340;
+			--energy-mango:#ffc928;
+			--energy-blue:#1368e8;
+			--energy-pink:#ec3f78;
+			--energy-ink:#23130d;
+		}
+		body {
+			background:
+				radial-gradient(circle at 8% 2%,rgba(255,201,40,.3),transparent 26rem),
+				radial-gradient(circle at 94% 18%,rgba(255,90,31,.17),transparent 25rem),
+				linear-gradient(180deg,#fffdf3 0%,#fff3dc 100%);
+		}
+		.topbar {
+			background:linear-gradient(125deg,#861f36 0%,#c92f31 38%,#ef4435 70%,#ff7a18 100%);
+			box-shadow:0 25px 65px rgba(201,47,49,.27),0 10px 26px rgba(255,122,24,.18);
+		}
+		.hero::before {
+			background:
+				radial-gradient(circle at 88% 16%,rgba(255,201,40,.38) 0 82px,transparent 83px),
+				radial-gradient(circle at 77% 78%,rgba(236,63,120,.28) 0 125px,transparent 126px);
+		}
+		.hero-eyebrow { color:#ffe27a; }
+		.hero-copy { color:#fff8eb; }
+		.quote-chip { background:rgba(255,201,40,.18); border-color:rgba(255,234,151,.48); }
+		.quote-chip { display:none; }
+		.filters { background:rgba(255,253,245,.98); border-color:rgba(255,146,55,.38); box-shadow:0 18px 42px rgba(140,55,20,.17); }
+		.search-input { border-color:#ffd1a7; background-color:#fff; }
+		.input:focus,select:focus,.search-input:focus { border-color:var(--energy-orange); box-shadow:0 0 0 5px rgba(255,90,31,.17); }
+		.select-field select { border-color:#ffd1a7; background:#fff; }
+		.card { border-color:#f2d2b8; box-shadow:0 9px 25px rgba(93,40,15,.1); }
+		.card:hover { border-color:var(--energy-orange); box-shadow:0 18px 38px rgba(255,90,31,.18); }
+		.card img {
+			filter:saturate(1.28) contrast(1.08) brightness(1.02);
+			transition:filter .25s ease,transform .35s ease;
+		}
+		.card:hover img { filter:saturate(1.4) contrast(1.1) brightness(1.03); transform:scale(1.025); }
+		.cta { background:linear-gradient(135deg,var(--energy-orange),var(--energy-red)); border-color:var(--energy-orange); box-shadow:0 8px 19px rgba(239,51,64,.27); }
+		.rating-star.filled,.rating-star:hover { color:#ffae00; filter:drop-shadow(0 2px 3px rgba(255,174,0,.25)); }
+		.fav-btn.fav svg { fill:var(--energy-pink); stroke:var(--energy-pink); }
+		.site-footer strong { color:var(--energy-red); }
+		body.dark-mode { background:radial-gradient(circle at 10% 0,rgba(19,104,232,.18),transparent 30rem),radial-gradient(circle at 90% 10%,rgba(239,51,64,.14),transparent 28rem),#0c1422; }
+		body.dark-mode .topbar { background:linear-gradient(125deg,#4d1027,#8f1d32 42%,#c9342f 76%,#e65f13); }
+		body.dark-mode .filters { background:rgba(17,27,43,.98); border-color:#514459; }
+		body.dark-mode .card { background:#151f31; border-color:#37445a; }
+		body.dark-mode .card:hover { border-color:#ff7849; box-shadow:0 18px 38px rgba(255,90,31,.17); }
+		body.dark-mode .cta { background:linear-gradient(135deg,#ff682f,#e93545); }
+		body.dark-mode .site-footer strong { color:#ffc928; }
+		/* Page entrance motion */
+		.topbar { animation: shopHeaderDrop .7s cubic-bezier(.2,.8,.2,1) backwards; }
+		.card { animation: shopCardReveal .55s cubic-bezier(.2,.75,.25,1) backwards; }
+		body:not(.shops-ready) .topbar,
+		body:not(.shops-ready) .card,
+		body:not(.shops-ready) .site-footer { animation-play-state:paused; }
+		body.shops-ready .topbar,
+		body.shops-ready .card,
+		body.shops-ready .site-footer { animation-play-state:running; }
+		.card:nth-child(1) { animation-delay:.04s; }
+		.card:nth-child(2) { animation-delay:.09s; }
+		.card:nth-child(3) { animation-delay:.14s; }
+		.card:nth-child(4) { animation-delay:.19s; }
+		.card:nth-child(5) { animation-delay:.24s; }
+		.card:nth-child(6) { animation-delay:.29s; }
+		.card:nth-child(n+7) { animation-delay:.34s; }
+		.site-footer { animation: softFadeIn .6s .3s backwards; }
+		@keyframes shopHeaderDrop {
+			from { opacity:0; transform:translateY(-34px); }
+			to { opacity:1; transform:translateY(0); }
+		}
+		@keyframes shopCardReveal {
+			from { opacity:0; transform:translateY(22px) scale(.975); }
+			to { opacity:1; transform:translateY(0) scale(1); }
+		}
+		@keyframes softFadeIn { from { opacity:0; } to { opacity:1; } }
+		@media (prefers-reduced-motion:reduce) {
+			.topbar,.card,.site-footer { animation:none!important; }
+		}
 	</style>
 </head>
 <body>
@@ -679,9 +825,9 @@
 				<div class="hero-main">
 					<p class="hero-eyebrow">Fresh choices on campus</p>
 					<div class="brand">
-						<h1>University of Nottingham Malaysia Cafeteria</h1>
+						<h1>UNM Cafeteria</h1>
 					</div>
-					<p class="hero-copy">Find your next delicious break. From comforting local favourites to quick bites between classes, discover fresh food made for busy days and good moments together.</p>
+					<p class="hero-copy">Fresh campus favourites, ready when you are.</p>
 					<div class="quote-chip" id="quoteChip" aria-live="polite">Good food. Good friends. Good day.</div>
 				</div>
 				<div class="actions">
@@ -1004,6 +1150,7 @@
 				isLoading = false;
 				render();
 				setPageLoading(false);
+				document.body.classList.add('shops-ready');
 			}, waitTime);
 		}
 
