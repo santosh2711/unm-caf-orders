@@ -408,8 +408,8 @@
 			overflow: hidden;
 		}
 		.hero {
-			min-height: 188px;
-			padding: clamp(22px, 4vw, 40px);
+			min-height: 176px;
+			padding: clamp(19px, 3.5vw, 34px);
 			background: transparent;
 			border: 0;
 			border-radius: 0;
@@ -817,7 +817,10 @@
 		}
 
 		/* Shop interaction refinements */
-		.card-body { padding:20px 16px 17px; }
+		.card > div:first-child { line-height:0; }
+		.card-body { padding:18px 16px 17px; }
+		.card h3 { font-size:1.14rem; font-weight:900; letter-spacing:-.01em; }
+		.cta { min-height:42px; padding:12px 14px; display:inline-flex; align-items:center; justify-content:center; }
 		.card:active { transform:scale(.98); transition-duration:100ms; }
 		.status.open { animation:openGlow 1.2s ease-in-out infinite; }
 		@keyframes openGlow {
@@ -832,7 +835,7 @@
 		.rating-star:not(.disabled) { cursor:pointer; }
 		.rating-star:not(.disabled):hover { transform:scale(1.18); }
 		.rating-meta { margin-left:auto; padding-top:17px; font-size:.82rem; white-space:nowrap; }
-		.rate-btn { width:100%; padding:6px 0 0; border:0; text-align:left; color:var(--orange-dark); font-size:.82rem; }
+		.rate-btn { width:auto; padding:2px 0 0; border:0; text-align:left; color:var(--orange-dark); font-size:.78rem; }
 		.rate-btn:disabled { cursor:default; opacity:.7; }
 		.fav-btn.heart-pop { animation:heartPop .32s cubic-bezier(.2,1.5,.4,1); }
 		@keyframes heartPop { 45% { transform:scale(1.28) rotate(-8deg); } 75% { transform:scale(.92); } }
@@ -864,6 +867,16 @@
 		body.dark-mode .rate-btn { color:#ff9b73; }
 		@media (prefers-reduced-motion:reduce) {
 			.status.open,.fav-btn.heart-pop,.skeleton::after { animation:none!important; }
+		}
+		/* High-refresh performance hints (browser follows the display's native Hz) */
+		html { scroll-behavior:auto; }
+		.card { contain:layout style; backface-visibility:hidden; transform:translateZ(0); }
+		.card img { backface-visibility:hidden; transform:translateZ(0); }
+		.grid { isolation:isolate; }
+		@media (max-width:700px) {
+			.hero,.filters,.floating-search { backdrop-filter:none; }
+			.card img { filter:saturate(1.18) contrast(1.05); }
+			.card:hover img { filter:saturate(1.2) contrast(1.05); transform:translateZ(0); }
 		}
 	</style>
 </head>
@@ -1168,7 +1181,14 @@
 				render();
 			}));
 		}
-		window.addEventListener('scroll', updateFloatingSearch, { passive: true });
+		let floatingSearchFrame = 0;
+		window.addEventListener('scroll', () => {
+			if (floatingSearchFrame) return;
+			floatingSearchFrame = requestAnimationFrame(() => {
+				floatingSearchFrame = 0;
+				updateFloatingSearch();
+			});
+		}, { passive: true });
 		window.addEventListener('resize', debounce(updateFloatingSearch, 120));
 		document.getElementById('settingsClose').addEventListener('click', () => closeSettings());
 		settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettings(); });
@@ -1313,10 +1333,11 @@
 			rateBtn.dataset.shopid = shop.id;
 			rateBtn.textContent = ratingAllowed ? (hasUserRating ? `Your rating: ${userRating}/5 · Tap a star to change` : 'Tap a star to rate') : 'Sign in to rate';
 			rateBtn.disabled = !ratingAllowed;
+			ratingInput.appendChild(rateBtn);
 			const cta = document.createElement('div');
 			cta.className = 'cta';
 			cta.textContent = shop.isOpen ? 'View menu' : 'Preview menu';
-			foot.append(ratingRow, cta, rateBtn);
+			foot.append(ratingRow, cta);
 
 			body.append(head, desc, foot);
 
