@@ -561,6 +561,17 @@
 		.loading.active {
 			display: flex;
 		}
+		.loading {
+			min-height:42vh;
+			flex-direction:column;
+			gap:14px;
+			font-size:.95rem;
+			animation:loaderFade .25s ease both;
+		}
+		.loading .spinner { width:34px; height:34px; border-width:4px; }
+		.loading span { animation:loadingBreathe 1.4s ease-in-out infinite; }
+		@keyframes loaderFade { from { opacity:0; } to { opacity:1; } }
+		@keyframes loadingBreathe { 50% { opacity:.5; } }
 
 		.spinner {
 			width: 20px;
@@ -1152,6 +1163,155 @@
 				box-shadow:0 -20px 55px rgba(2,8,23,.3);
 			}
 		}
+		/* Midnight Mamak palette */
+		:root {
+			--mamak-cream:#fff8e8;
+			--mamak-paprika:#e85d2a;
+			--mamak-paprika-dark:#c8451d;
+			--mamak-saffron:#f4b942;
+			--mamak-espresso:#3a2318;
+			--mamak-navy:#102a43;
+			--mamak-berry:#b83b5e;
+			--mamak-basil:#3f7d5b;
+			--page-bg:#fff8e8;
+			--surface:#fffdf8;
+			--soft-surface:#f9edd7;
+			--modern-text:#3a2318;
+			--modern-muted:#786354;
+			--modern-line:#ead9bb;
+		}
+		html { scroll-behavior:smooth; -webkit-overflow-scrolling:touch; }
+		body { touch-action:pan-y; }
+		body {
+			background:radial-gradient(circle at 8% 3%,rgba(244,185,66,.18),transparent 28rem),linear-gradient(180deg,#fffdf7,#fff8e8);
+		}
+		header { background:linear-gradient(135deg,#102a43 0%,#183f58 52%,#71351f 100%); box-shadow:0 18px 44px rgba(58,35,24,.28); }
+		.search-bar,.category-nav { background:rgba(255,253,248,.96); border-color:#ead9bb; }
+		.search-input {
+			background-color:#fffdf8;
+			border-color:#ead9bb;
+			background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23e85d2a' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cpath d='m14 14 5 5'/%3E%3C/svg%3E");
+		}
+		.search-input:focus { border-color:var(--mamak-paprika); box-shadow:0 0 0 4px rgba(232,93,42,.14); }
+		.category-pill-btn { background:#f6ead4; color:#5b3a29; }
+		.category-pill-btn.active { background:var(--mamak-paprika); box-shadow:0 7px 16px rgba(232,93,42,.22); }
+		.category-title { color:var(--mamak-paprika-dark); }
+		.item-card { background:#fffdf8; border-color:#eadfcb; box-shadow:0 8px 24px rgba(58,35,24,.08); }
+		.item-card:hover { border-color:var(--mamak-saffron); box-shadow:0 16px 34px rgba(58,35,24,.14); }
+		.item-name { color:var(--mamak-espresso); }
+		.item-desc { color:#786354; }
+		.price { color:var(--mamak-paprika-dark); }
+		.badge { color:#8a4c08; background:#fff0c7; border-color:#f4cd72; }
+		.add-btn,.cart-pill-bar,.checkout-btn { background:var(--mamak-paprika); box-shadow:0 10px 22px rgba(232,93,42,.24); }
+		.add-btn:hover,.cart-pill-bar:hover { background:var(--mamak-paprika-dark); }
+		.qty-btn { background:var(--mamak-paprika); }
+		.menu-footer strong { color:var(--mamak-paprika); }
+		.profile-circle,.menu-profile-avatar { background:linear-gradient(145deg,#fff1ab,var(--mamak-saffron) 46%,#ce8614); }
+		body.dark-mode {
+			--page-bg:#101923;
+			--surface:#18222c;
+			--soft-surface:#121b24;
+			--modern-text:#fff6e7;
+			--modern-muted:#d4c3ad;
+			--modern-line:#384550;
+			background:radial-gradient(circle at 8% 0,rgba(232,93,42,.1),transparent 30rem),#101923;
+		}
+		body.dark-mode header { background:linear-gradient(135deg,#0d2236,#16344a 55%,#54291d); }
+		body.dark-mode .search-bar,body.dark-mode .category-nav,body.dark-mode .menu-floating-search { background:rgba(24,34,44,.97); border-color:#3d4852; }
+		body.dark-mode .search-input {
+			background-color:#121b24;
+			background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23f4b942' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cpath d='m14 14 5 5'/%3E%3C/svg%3E");
+		}
+		body.dark-mode .category-pill-btn { background:#222d37; color:#f3e7d4; }
+		body.dark-mode .category-pill-btn.active { background:var(--mamak-paprika); color:#fff; }
+		body.dark-mode .category-title,body.dark-mode .price { color:#ff9b73; }
+		body.dark-mode .item-card { background:#18222c; border-color:#35424d; }
+		body.dark-mode .item-name { color:#fff6e7; }
+		body.dark-mode .item-desc { color:#d4c3ad; }
+		body.dark-mode .badge { background:#3c2d18; color:#ffd67c; border-color:#705527; }
+		body.dark-mode .menu-footer strong { color:var(--mamak-saffron); }
+		body.dark-mode .profile-dropdown { background:#18222c; border-color:#3b4751; }
+		/* Tropical Street Food energy layer */
+		:root {
+			--energy-orange:#ff5a1f;
+			--energy-red:#ef3340;
+			--energy-mango:#ffc928;
+			--energy-blue:#1368e8;
+			--energy-pink:#ec3f78;
+			--page-bg:#fff4df;
+			--surface:#fffdf7;
+			--soft-surface:#ffead0;
+			--modern-text:#25140e;
+			--modern-muted:#725443;
+			--modern-line:#f0cfb4;
+		}
+		body {
+			background:radial-gradient(circle at 7% 2%,rgba(255,201,40,.3),transparent 26rem),radial-gradient(circle at 95% 14%,rgba(255,90,31,.16),transparent 26rem),linear-gradient(180deg,#fffdf3,#fff1d8);
+		}
+		header { background:linear-gradient(125deg,#861f36 0%,#c92f31 38%,#ef4435 70%,#ff7a18 100%); box-shadow:0 20px 50px rgba(201,47,49,.26),0 9px 24px rgba(255,122,24,.18); }
+		.search-bar,.category-nav { background:rgba(255,253,247,.98); border-color:#f0cfb4; box-shadow:0 11px 30px rgba(105,43,14,.1); }
+		.search-input { background-color:#fff; border-color:#ffd0a8; }
+		.search-input:focus { border-color:var(--energy-orange); box-shadow:0 0 0 4px rgba(255,90,31,.17); }
+		.category-pill-btn { background:#ffe7c5; color:#61311d; }
+		.category-pill-btn.active { background:linear-gradient(135deg,var(--energy-orange),var(--energy-red)); box-shadow:0 8px 18px rgba(239,51,64,.25); }
+		.category-title { color:#d63e1d; }
+		.item-card { background:#fff; border-color:#f0d4bd; box-shadow:0 9px 25px rgba(91,37,13,.1); }
+		.item-card:hover { border-color:var(--energy-orange); box-shadow:0 18px 38px rgba(255,90,31,.18); }
+		.item-image {
+			filter:saturate(1.3) contrast(1.08) brightness(1.02);
+			transition:filter .25s ease,transform .3s ease;
+		}
+		.item-card:hover .item-image { filter:saturate(1.42) contrast(1.1) brightness(1.03); transform:scale(1.025); }
+		.price { color:#db3f1e; }
+		.badge { background:#fff0b8; color:#8c4800; border-color:#ffc94d; }
+		.add-btn,.cart-pill-bar,.checkout-btn { background:linear-gradient(135deg,var(--energy-orange),var(--energy-red)); box-shadow:0 11px 24px rgba(239,51,64,.27); }
+		.add-btn:hover,.cart-pill-bar:hover { background:linear-gradient(135deg,#f34815,#d92737); }
+		.menu-footer strong { color:var(--energy-red); }
+		body.dark-mode { --page-bg:#0c1422;--surface:#151f31;--soft-surface:#101a2a;--modern-text:#fff7eb;--modern-muted:#d8bfae;--modern-line:#39465a; background:radial-gradient(circle at 8% 0,rgba(19,104,232,.18),transparent 30rem),radial-gradient(circle at 92% 8%,rgba(239,51,64,.14),transparent 27rem),#0c1422; }
+		body.dark-mode header { background:linear-gradient(125deg,#4d1027,#8f1d32 42%,#c9342f 76%,#e65f13); }
+		body.dark-mode .search-bar,body.dark-mode .category-nav,body.dark-mode .menu-floating-search { background:rgba(17,27,43,.98); border-color:#3d485b; }
+		body.dark-mode .item-card { background:#151f31; border-color:#39465a; }
+		body.dark-mode .item-card:hover { border-color:#ff7849; box-shadow:0 18px 38px rgba(255,90,31,.18); }
+		body.dark-mode .category-pill-btn.active,body.dark-mode .add-btn,body.dark-mode .cart-pill-bar,body.dark-mode .checkout-btn { background:linear-gradient(135deg,#ff682f,#e93545); }
+		body.dark-mode .category-title,body.dark-mode .price { color:#ff8d63; }
+		body.dark-mode .menu-footer strong { color:#ffc928; }
+		/* Page entrance motion */
+		header { animation: menuHeaderDrop .7s cubic-bezier(.2,.8,.2,1) backwards; }
+		.search-bar { animation: menuControlReveal .5s .12s cubic-bezier(.2,.75,.25,1) backwards; }
+		.category-nav { animation: menuControlReveal .5s .2s cubic-bezier(.2,.75,.25,1) backwards; }
+		.item-card { animation: menuItemReveal .52s cubic-bezier(.2,.75,.25,1) backwards; }
+		body:not(.menu-ready) #menu-container { opacity:0; }
+		body.menu-ready #menu-container { opacity:1; transition:opacity .2s ease; }
+		.category { content-visibility:auto; contain-intrinsic-size:420px; }
+		.category .item-card:nth-child(2) { animation-delay:.03s; }
+		.category .item-card:nth-child(3) { animation-delay:.07s; }
+		.category .item-card:nth-child(4) { animation-delay:.11s; }
+		.category .item-card:nth-child(5) { animation-delay:.15s; }
+		.category .item-card:nth-child(6) { animation-delay:.19s; }
+		.category .item-card:nth-child(n+7) { animation-delay:.23s; }
+		.category-title { animation:softMenuFade .4s ease backwards; }
+		@keyframes menuHeaderDrop {
+			from { opacity:0; transform:translateY(-34px); }
+			to { opacity:1; transform:translateY(0); }
+		}
+		@keyframes menuControlReveal {
+			from { opacity:0; transform:translateY(13px); }
+			to { opacity:1; transform:translateY(0); }
+		}
+		@keyframes menuItemReveal {
+			from { opacity:0; transform:translateY(20px) scale(.98); }
+			to { opacity:1; transform:translateY(0) scale(1); }
+		}
+		@keyframes softMenuFade { from { opacity:0; } to { opacity:1; } }
+		@media (prefers-reduced-motion:reduce) {
+			header,.search-bar,.category-nav,.item-card,.category-title,.loading,.loading span { animation:none!important; }
+		}
+		@media (max-width:700px) {
+			.search-bar,.menu-floating-search { backdrop-filter:none; }
+			.item-image { filter:saturate(1.18) contrast(1.05); }
+			.item-card:hover .item-image { filter:saturate(1.22) contrast(1.06); transform:none; }
+			.item-card { box-shadow:0 5px 14px rgba(91,37,13,.09); }
+		}
 	</style>
 </head>
 <body>
@@ -1174,7 +1334,7 @@
 	</header>
 
 	<main>
-		<div class="loading" id="loading">
+		<div class="loading active" id="loading" aria-live="polite">
 			<div class="spinner" aria-hidden="true"></div>
 			<span>Loading menu...</span>
 		</div>
@@ -1658,7 +1818,7 @@
 			if (!categoryNavInner || !targetId) return;
 			const btn = categoryNavInner.querySelector(`.category-pill-btn[data-target="${targetId}"]`);
 			if (!btn) return;
-			btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+			btn.scrollIntoView({ behavior: "auto", inline: "center", block: "nearest" });
 		};
 
 		const updateActiveCategoryButton = (activeId) => {
@@ -1699,7 +1859,14 @@
 		const ensureScrollSyncHandlers = () => {
 			if (scrollHandlerAttached) return;
 			scrollHandlerAttached = true;
-			window.addEventListener("scroll", updateActiveCategoryOnScroll, { passive: true });
+			let scrollFrame = 0;
+			window.addEventListener("scroll", () => {
+				if (scrollFrame) return;
+				scrollFrame = requestAnimationFrame(() => {
+					scrollFrame = 0;
+					updateActiveCategoryOnScroll();
+				});
+			}, { passive: true });
 			window.addEventListener("resize", () => {
 				if (recalcTimer) cancelAnimationFrame(recalcTimer);
 				recalcTimer = requestAnimationFrame(() => {
@@ -1999,6 +2166,7 @@ buildCategoryNav(sectionsInfo);
 				loadingEl.classList.remove("active");
 				searchBar.style.display = "none";
 				menuContainer.innerHTML = '<div class="empty">No vendor specified. Please open this menu from a valid shop link.</div>';
+				document.body.classList.add("menu-ready");
 				return;
 			}
 			loadingEl.classList.add("active");
@@ -2009,8 +2177,10 @@ buildCategoryNav(sectionsInfo);
 				renderMenu(filteredItems());
 				searchBar.style.display = "flex";
 				loadingEl.classList.remove("active");
+				requestAnimationFrame(() => document.body.classList.add("menu-ready"));
 			}, (error) => {
 				loadingEl.classList.remove("active");
+				document.body.classList.add("menu-ready");
 				console.error("Error loading menu", error);
 				const message = error?.code === "permission-denied"
 					? '<div class="empty">Access denied: Firestore rules are blocking reads. Please allow reads for the menu or sign in with an authorized user.</div>'
@@ -2123,7 +2293,14 @@ buildCategoryNav(sectionsInfo);
 			floatingMenuSearch.classList.toggle("visible", show);
 			floatingMenuSearch.setAttribute("aria-hidden", show ? "false" : "true");
 		};
-		window.addEventListener("scroll", updateFloatingMenuSearch, { passive:true });
+		let floatingSearchFrame = 0;
+		window.addEventListener("scroll", () => {
+			if (floatingSearchFrame) return;
+			floatingSearchFrame = requestAnimationFrame(() => {
+				floatingSearchFrame = 0;
+				updateFloatingMenuSearch();
+			});
+		}, { passive:true });
 		window.addEventListener("resize", updateFloatingMenuSearch);
 
 		const animateMenuSearchHint = () => {
