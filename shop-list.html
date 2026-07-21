@@ -485,9 +485,17 @@
 			border-color: rgba(255,255,255,.28);
 		}
 		.profile .profile-badge {
-			background: #f97316;
-			color: #fff;
-			border: 0;
+			position: relative;
+			background: linear-gradient(145deg, #fff0a8 0%, #fbbf24 42%, #d89109 100%);
+			color: #422006;
+			border: 1px solid rgba(255,244,180,.9);
+			box-shadow: 0 0 0 3px rgba(251,191,36,.16), 0 8px 22px rgba(120,72,8,.3), inset 0 1px 1px rgba(255,255,255,.75);
+			text-shadow: 0 1px 0 rgba(255,255,255,.5);
+			transition: transform .2s ease, box-shadow .2s ease;
+		}
+		.profile:hover .profile-badge {
+			transform: translateY(-1px) rotate(-3deg) scale(1.04);
+			box-shadow: 0 0 0 4px rgba(251,191,36,.2), 0 10px 26px rgba(120,72,8,.38), inset 0 1px 1px rgba(255,255,255,.8);
 		}
 		.filters {
 			margin: 0 clamp(14px, 3vw, 32px) clamp(14px, 3vw, 30px);
@@ -520,12 +528,22 @@
 			filter: drop-shadow(0 0 3px rgba(255,255,255,.7));
 		}
 		body.dark-mode .hero h1 { color: #fff; }
+		body.dark-mode .profile .profile-badge {
+			background: linear-gradient(145deg, #fff3b0 0%, #fbbf24 45%, #b96e05 100%);
+			color: #321704;
+			border-color: #ffe68a;
+			box-shadow: 0 0 0 3px rgba(251,191,36,.2), 0 0 22px rgba(251,191,36,.38), inset 0 1px 1px rgba(255,255,255,.8);
+		}
 		body.dark-mode .hero-copy { color: #bfdbfe; }
 		body.dark-mode .filters { background: rgba(15,23,42,.96); border-color: #29364a; }
 		body.dark-mode .filter-title { color: #f1f5f9; }
 		body.dark-mode .filter-box { background: transparent; border: 0; box-shadow: none; }
 		body.dark-mode .search-input {
+			background-color: #0b1325;
 			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23fbbf24' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cline x1='14' y1='14' x2='19' y2='19'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: 16px center;
+			background-size: 18px;
 		}
 
 		@media (max-width: 620px) {
@@ -556,6 +574,86 @@
 			.select-field label { font-size: .67rem; }
 			.select-field select { min-height: 40px; padding: 7px 28px 7px 9px; font-size: .84rem; }
 			.grid { margin-top: 4px; }
+		}
+		.site-footer {
+			padding: 24px 16px 6px;
+			text-align: center;
+			color: var(--subtle);
+			font-size: .86rem;
+			letter-spacing: .04em;
+		}
+		.site-footer strong { color: #1d5fc4; font-weight: 900; letter-spacing: .08em; }
+		body.dark-mode .site-footer strong { color: #fbbf24; }
+
+		/* Modern app-style profile popup */
+		#settingsModal {
+			z-index: 100 !important;
+			padding: 20px;
+			background: rgba(7,14,28,.55) !important;
+			backdrop-filter: blur(13px) saturate(125%) !important;
+		}
+		#settingsModal > div {
+			width: min(410px, 100%) !important;
+			margin: 7vh auto !important;
+			padding: 20px !important;
+			gap: 10px !important;
+			border-radius: 26px !important;
+			border: 1px solid rgba(255,255,255,.82) !important;
+			background: rgba(255,255,255,.98) !important;
+			box-shadow: 0 30px 80px rgba(2,8,23,.32) !important;
+			animation: profilePop .25s ease-out;
+		}
+		@keyframes profilePop { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+		#settingsModal h2 { font-size: 1.3rem !important; letter-spacing: -.02em !important; }
+		#settingsClose {
+			width: 38px; height: 38px; padding: 0 !important; border: 0 !important; border-radius: 50% !important;
+			background: #edf1f6 !important; color: #334155 !important; font-size: 1.05rem; cursor: pointer;
+			transition: transform .18s, background .18s;
+		}
+		#settingsClose:hover { transform: rotate(8deg); background: #e2e8f0 !important; }
+		#homeLink, #settingsEntry, #signOutBtn,
+		#settingsModal > div > label {
+			position: relative;
+			min-height: 58px;
+			padding: 11px 14px 11px 58px !important;
+			border: 0 !important;
+			border-radius: 17px !important;
+			background: #f6f8fc !important;
+			color: #172033 !important;
+			font: inherit;
+			font-weight: 800 !important;
+			transition: transform .18s, background .18s;
+		}
+		#homeLink::before, #settingsEntry::before, #signOutBtn::before,
+		#settingsModal > div > label::before {
+			position: absolute; left: 11px; top: 10px; width: 38px; height: 38px;
+			display: grid; place-items: center; border-radius: 12px;
+			background: #e5edff; color: #1d5fc4; font-size: 1.08rem;
+		}
+		#homeLink::before { content: '\2302'; }
+		#settingsEntry::before { content: '\2699'; }
+		#settingsModal > div > label:nth-of-type(1)::before { content: '\263E'; }
+		#settingsModal > div > label:nth-of-type(2)::before { content: '\25CE'; }
+		#signOutBtn::before { content: '\2192'; background: #ffe5d2; color: #c2410c; }
+		#homeLink:hover, #settingsEntry:hover { background: #edf3ff !important; transform: translateX(2px); }
+		#signOutBtn { color: #c2410c !important; background: #fff3e9 !important; }
+		#signOutBtn:hover { background: #ffe9d7 !important; transform: translateX(2px); }
+		#darkModeSwitch { width: 46px; height: 25px; accent-color: #2563eb; cursor: pointer; }
+		#languageSelect { margin-left: auto; max-width: 150px; box-shadow: none !important; }
+		body.dark-mode #settingsModal > div { background: #0f172a !important; border-color: #29364a !important; }
+		body.dark-mode #settingsModal h2 { color: #f8fafc; }
+		body.dark-mode #settingsClose { background: #1e293b !important; color: #e2e8f0 !important; }
+		body.dark-mode #homeLink, body.dark-mode #settingsEntry,
+		body.dark-mode #settingsModal > div > label { background: #151f32 !important; color: #e8eef8 !important; }
+		body.dark-mode #homeLink::before, body.dark-mode #settingsEntry::before,
+		body.dark-mode #settingsModal > div > label::before { background: #1d3764; color: #93c5fd; }
+		body.dark-mode #signOutBtn { background: #321d18 !important; color: #fb923c !important; }
+		@media (max-width: 520px) {
+			#settingsModal { padding: 0; }
+			#settingsModal > div {
+				width: 100% !important; margin: auto 0 0 !important; padding: 18px 14px 22px !important;
+				border-radius: 27px 27px 0 0 !important; position: absolute; bottom: 0;
+			}
 		}
 	</style>
 </head>
@@ -626,6 +724,7 @@
 
 		<div class="grid" id="shopList"></div>
 	</div>
+	<footer class="site-footer">Powered by <strong>SKANDA SYSTEMS</strong></footer>
 
 		<div id="settingsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.28); backdrop-filter:blur(4px); z-index:20;">
 			<div style="background:var(--panel); color:var(--text); width:min(360px, 92vw); margin:12vh auto; padding:22px; border-radius:16px; border:1px solid var(--stroke); box-shadow:var(--shadow); display:grid; gap:14px;">
