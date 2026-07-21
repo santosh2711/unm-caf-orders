@@ -395,6 +395,134 @@
 			.filters { margin-top: 6px; }
 			.grid { grid-template-columns: 1fr; gap: 10px; }
 		}
+
+		/* Refined discovery header */
+		.page { gap: 18px; padding-top: 20px; }
+		.topbar {
+			margin: 0;
+			padding: 0;
+			background: linear-gradient(140deg, #163f91 0%, #1d5fc4 55%, #2879dc 100%);
+			border: 0;
+			border-radius: 26px;
+			box-shadow: 0 22px 55px rgba(29, 78, 216, .24);
+			overflow: hidden;
+		}
+		.hero {
+			min-height: 230px;
+			padding: clamp(26px, 5vw, 54px);
+			background: transparent;
+			border: 0;
+			border-radius: 0;
+			box-shadow: none;
+		}
+		.hero::before {
+			background:
+				radial-gradient(circle at 87% 18%, rgba(255,255,255,.18) 0 75px, transparent 76px),
+				radial-gradient(circle at 78% 72%, rgba(255,166,66,.25) 0 115px, transparent 116px);
+			opacity: 1;
+		}
+		.hero-main { max-width: 720px; gap: 10px; }
+		.hero-eyebrow {
+			margin: 0;
+			color: #ffd39a;
+			font-size: .78rem;
+			font-weight: 800;
+			letter-spacing: .16em;
+			text-transform: uppercase;
+		}
+		.hero h1 {
+			font-size: clamp(2rem, 5vw, 3.5rem);
+			line-height: 1.05;
+			letter-spacing: -.035em;
+			color: #fff;
+		}
+		.hero-copy {
+			max-width: 610px;
+			margin: 0;
+			color: #dbeafe;
+			font-size: clamp(.98rem, 2vw, 1.12rem);
+			line-height: 1.65;
+		}
+		.quote-chip {
+			display: inline-flex;
+			width: fit-content;
+			margin-top: 5px;
+			padding: 7px 12px;
+			border: 1px solid rgba(255,255,255,.24);
+			border-radius: 999px;
+			background: rgba(255,255,255,.11);
+			color: #fff;
+			font-size: .86rem;
+			font-weight: 700;
+			backdrop-filter: blur(8px);
+		}
+		.profile {
+			align-self: flex-start;
+			background: rgba(255,255,255,.12);
+			border-color: rgba(255,255,255,.28);
+		}
+		.profile .profile-badge {
+			background: #f97316;
+			color: #fff;
+			border: 0;
+		}
+		.filters {
+			margin: 0 clamp(14px, 3vw, 32px) clamp(14px, 3vw, 30px);
+			padding: clamp(14px, 2.5vw, 22px);
+			gap: 16px;
+			background: rgba(255,255,255,.97);
+			border: 1px solid rgba(255,255,255,.7);
+			border-radius: 20px;
+			box-shadow: 0 16px 38px rgba(15,23,42,.18);
+		}
+		.search-input { min-height: 58px; border-color: #dbe4ef; box-shadow: none; }
+		.search-input:focus { border-color: #f97316; box-shadow: 0 0 0 4px rgba(249,115,22,.15); }
+		.filter-row { align-items: end; }
+		.filter-intro { flex: 1 1 250px; }
+		.filter-title { margin: 0; color: var(--black); font-weight: 800; }
+		.filter-subtitle { margin: 2px 0 0; color: var(--subtle); font-size: .88rem; }
+		.filter-box { padding: 0; gap: 10px; border: 0; background: transparent; box-shadow: none; }
+		.select-field { display: grid; gap: 5px; min-width: 150px; }
+		.select-field label { color: var(--subtle); font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+		.select-field select { min-height: 46px; padding: 10px 38px 10px 13px; border-radius: 12px; box-shadow: none; font-weight: 700; }
+
+		body.dark-mode .topbar { background: linear-gradient(140deg, #112751, #173e78 58%, #1b5596); }
+		body.dark-mode .hero { background: transparent; border: 0; box-shadow: none; }
+		body.dark-mode .hero h1 { color: #fff; }
+		body.dark-mode .hero-copy { color: #bfdbfe; }
+		body.dark-mode .filters { background: rgba(15,23,42,.96); border-color: #29364a; }
+		body.dark-mode .filter-title { color: #f1f5f9; }
+		body.dark-mode .filter-box { background: transparent; border: 0; box-shadow: none; }
+
+		@media (max-width: 620px) {
+			.page { padding: 8px; gap: 10px; }
+			.topbar { border-radius: 18px; }
+			.hero { min-height: 0; padding: 16px; align-items: start; }
+			.hero-main { gap: 5px; }
+			.hero-eyebrow { font-size: .65rem; }
+			.hero h1 { max-width: 290px; font-size: clamp(1.55rem, 7vw, 1.9rem); line-height: 1.08; }
+			.hero-copy {
+				max-width: 300px;
+				font-size: .82rem;
+				line-height: 1.4;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			.quote-chip { display: none; }
+			.profile { padding: 4px; min-width: 42px; }
+			.profile .profile-badge { width: 32px; height: 32px; }
+			.filters { margin: 0 8px 8px; padding: 10px; gap: 9px; border-radius: 14px; }
+			.search-input { min-height: 46px; padding-top: 10px; padding-bottom: 10px; }
+			.filter-row { align-items: stretch; }
+			.filter-intro { display: none; }
+			.filter-box { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+			.select-field { min-width: 0; }
+			.select-field label { font-size: .67rem; }
+			.select-field select { min-height: 40px; padding: 7px 28px 7px 9px; font-size: .84rem; }
+			.grid { margin-top: 4px; }
+		}
 	</style>
 </head>
 <body>
@@ -406,9 +534,11 @@
 		<div class="topbar">
 			<div class="hero">
 				<div class="hero-main">
+					<p class="hero-eyebrow">Fresh choices on campus</p>
 					<div class="brand">
-						<h1>UNM Cafeteria</h1>
+						<h1>University of Nottingham Malaysia Cafeteria</h1>
 					</div>
+					<p class="hero-copy">Find your next delicious break. From comforting local favourites to quick bites between classes, discover fresh food made for busy days and good moments together.</p>
 					<div class="quote-chip" id="quoteChip" aria-live="polite">Good food. Good friends. Good day.</div>
 				</div>
 				<div class="actions">
@@ -423,18 +553,27 @@
 					<span class="search-hint" id="shopSearchHint" aria-hidden="true">S</span>
 				</div>
 				<div class="filter-row">
-					<div style="flex:1; min-width: 140px; color:var(--subtle); font-weight:700;">Quick filters</div>
+					<div class="filter-intro">
+						<p class="filter-title">Explore cafeteria shops</p>
+						<p class="filter-subtitle">Sort the list or find what is serving right now.</p>
+					</div>
 					<div class="filter-box" aria-label="Sort and filter">
-						<select id="shopSort" aria-label="Sort shops">
-							<option value="asc">A-Z</option>
-							<option value="desc">Z-A</option>
-						</select>
-						<select id="shopFilter" aria-label="Filter status">
-							<option value="all">All</option>
-							<option value="open">Open now</option>
-							<option value="closed">Closed</option>
-							<option value="fav">Favourites</option>
-						</select>
+						<div class="select-field">
+							<label for="shopSort">Sort by</label>
+							<select id="shopSort" aria-label="Sort shops">
+								<option value="asc">Name: A-Z</option>
+								<option value="desc">Name: Z-A</option>
+							</select>
+						</div>
+						<div class="select-field">
+							<label for="shopFilter">Show</label>
+							<select id="shopFilter" aria-label="Filter status">
+								<option value="all">All shops</option>
+								<option value="open">Open now</option>
+								<option value="closed">Closed</option>
+								<option value="fav">Favourites</option>
+							</select>
+						</div>
 					</div>
 				</div>
 			</div>
