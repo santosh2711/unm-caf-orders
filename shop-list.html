@@ -56,7 +56,7 @@
 				linear-gradient(135deg, var(--top-blue-start) 0%, var(--top-blue-mid) 56%, var(--top-blue-end) 100%);
 			border: 1px solid rgba(59,130,246,0.52);
 			box-shadow: 0 10px 22px rgba(29,78,216,0.34);
-			border-radius: 0 0 8px 8px;
+			border-radius: 16px;
 		}
 		.hero {
 			position: relative;
@@ -67,7 +67,7 @@
 			align-items: center;
 			background: linear-gradient(135deg, rgba(14,116,234,0.42), rgba(30,64,175,0.35));
 			border: 1px solid rgba(147,197,253,0.46);
-			border-radius: 10px;
+			border-radius: 16px;
 			padding: 8px 10px;
 			box-shadow: 0 8px 18px rgba(15,23,42,0.22);
 		}
@@ -145,7 +145,7 @@
 			gap: 10px;
 			background: linear-gradient(145deg, #fcf8f0 0%, #f8f2e7 100%);
 			padding: 12px;
-			border-radius: 14px;
+			border-radius: 16px;
 			border: 1px solid rgba(233,215,177,0.5);
 			box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 		}
@@ -183,6 +183,21 @@
 			font-weight: 700;
 			letter-spacing: 0.2px;
 		}
+		.search-hint {
+			position: absolute;
+			left: 46px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #94a3b8;
+			font-weight: 600;
+			font-size: 1rem;
+			letter-spacing: 0.2px;
+			pointer-events: none;
+			white-space: pre;
+			transition: opacity 0.16s ease;
+		}
+		.search-input:focus + .search-hint,
+		.search-input:not(:placeholder-shown) + .search-hint { opacity: 0; }
 		.input::placeholder { color: #94a3b8; font-weight: 600; }
 		select option { color: var(--black); background: #ffffff; }
 		.input:focus, select:focus {
@@ -206,6 +221,7 @@
 			display: grid;
 			grid-template-rows: auto 1fr;
 			min-height: 300px;
+			cursor: pointer;
 			transition: transform 0.12s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 		}
 		.card:hover { transform: translateY(-3px); border-color: var(--orange); box-shadow: 0 10px 26px rgba(0,0,0,0.1); }
@@ -237,7 +253,7 @@
 		.rate-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--black); font-weight: 800; cursor: pointer; transition: border-color 0.16s ease, color 0.16s ease, transform 0.12s ease; }
 		.rate-btn:hover { border-color: var(--orange); color: var(--orange-dark); }
 		.rate-btn:active { transform: translateY(1px); }
-		.cta { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--orange); background: var(--orange); color: #ffffff; font-weight: 800; letter-spacing: 0.3px; }
+		.cta { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--orange); background: var(--orange); color: #ffffff; font-weight: 800; letter-spacing: 0.3px; cursor: pointer; }
 		.fav-btn { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: #ffffff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
 		.fav-btn svg { width: 22px; height: 22px; fill: none; stroke: #94a3b8; stroke-width: 2.1; transition: fill 0.18s, stroke 0.18s; }
 		.fav-btn.fav svg { fill: #ef4444; stroke: #ef4444; }
@@ -300,6 +316,7 @@
 			transition: transform 0.3s ease, opacity 0.28s ease;
 			z-index: 60;
 		}
+		.search-input-wrap { position: relative; width: 100%; }
 		.floating-search.visible {
 			opacity: 1;
 			transform: translate(-50%, 0) scale(1);
@@ -317,9 +334,13 @@
 			--subtle: #cbd5e1;
 		}
 		body.dark-mode .topbar,
-		body.dark-mode .hero,
 		body.dark-mode .filters,
 		body.dark-mode .filter-box { background: #0f172a; border-color: #1f2937; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+		body.dark-mode .hero {
+			background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%);
+			border-color: rgba(96,165,250,0.45);
+			box-shadow: 0 8px 20px rgba(0,0,0,0.36);
+		}
 		body.dark-mode .hero::before { opacity: 0.2; }
 		body.dark-mode .hero { box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
 		body.dark-mode .brand,
@@ -329,6 +350,7 @@
 		body.dark-mode .input,
 		body.dark-mode select { background: #0b1325; border-color: #1f2937; color: #e2e8f0; box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
 		body.dark-mode .input::placeholder { color: #94a3b8; }
+		body.dark-mode .search-hint { color: #94a3b8; }
 		body.dark-mode select option { background: #0b1325; color: #e2e8f0; }
 		body.dark-mode .input:focus,
 		body.dark-mode select:focus { border-color: #f97316; box-shadow: 0 0 0 6px rgba(249,115,22,0.22); }
@@ -396,7 +418,10 @@
 				</div>
 			</div>
 			<div class="filters">
-				<input class="input search-input" id="shopSearch" placeholder="Search shops" aria-label="Search shops" />
+				<div class="search-input-wrap">
+					<input class="input search-input" id="shopSearch" placeholder=" " aria-label="Search shops" />
+					<span class="search-hint" id="shopSearchHint" aria-hidden="true">S</span>
+				</div>
 				<div class="filter-row">
 					<div style="flex:1; min-width: 140px; color:var(--subtle); font-weight:700;">Quick filters</div>
 					<div class="filter-box" aria-label="Sort and filter">
@@ -414,7 +439,10 @@
 				</div>
 			</div>
 			<div class="floating-search" id="floatingSearch" aria-hidden="true">
-				<input class="input search-input" id="floatingSearchInput" placeholder="Search shops" aria-label="Search shops when scrolling" />
+				<div class="search-input-wrap">
+					<input class="input search-input" id="floatingSearchInput" placeholder=" " aria-label="Search shops when scrolling" />
+					<span class="search-hint" id="floatingSearchHint" aria-hidden="true">S</span>
+				</div>
 			</div>
 		</div>
 
@@ -509,6 +537,8 @@
 		const languageSelect = document.getElementById('languageSelect');
 		const floatingSearch = document.getElementById('floatingSearch');
 		const floatingSearchInput = document.getElementById('floatingSearchInput');
+		const shopSearchHint = document.getElementById('shopSearchHint');
+		const floatingSearchHint = document.getElementById('floatingSearchHint');
 		const vendorsRef = collection(db, 'vendors');
 		const ratingsRef = collection(db, 'vendorRatings');
 		const MIN_LOAD = 450;
@@ -579,6 +609,27 @@
 		const debounce = (fn, wait = 160) => {
 			let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
 		};
+
+		function animateSearchHint() {
+			const suffix = 'earch shops';
+			let index = 0;
+			let deleting = false;
+			const tick = () => {
+				const hint = `S${suffix.slice(0, index)}`;
+				[shopSearchHint, floatingSearchHint].forEach((element) => {
+					if (element) element.textContent = hint;
+				});
+				if (!deleting && index === suffix.length) {
+					deleting = true;
+					setTimeout(tick, 1400);
+					return;
+				}
+				if (deleting && index === 0) deleting = false;
+				index += deleting ? -1 : 1;
+				setTimeout(tick, deleting ? 70 : 115);
+			};
+			tick();
+		}
 
 		const updateFloatingSearch = () => {
 			if (!floatingSearch || !filters) return;
@@ -820,9 +871,10 @@
 				return;
 			}
 			const card = e.target.closest('.card');
-			if (card && card.dataset.isOpen === 'true') {
+			if (card) {
 				const vendor = card.dataset.shopid;
-				if (vendor) window.location.href = `menu.html?vendor=${vendor}`;
+				const preview = card.dataset.isOpen === 'true' ? '' : '&preview=1';
+				if (vendor) window.location.href = `menu.html?vendor=${vendor}${preview}`;
 			}
 		});
 
@@ -950,6 +1002,7 @@
 		applyTheme();
 		bootI18n(['#languageSelect']);
 		updateFloatingSearch();
+		animateSearchHint();
 	</script>
 </body>
 </html>
