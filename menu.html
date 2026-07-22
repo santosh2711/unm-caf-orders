@@ -2197,7 +2197,10 @@ buildCategoryNav(sectionsInfo);
 				return;
 			}
 			loadingEl.classList.add("active");
-			if (menuUnsub) menuUnsub();
+			if (menuUnsub) {
+				menuUnsub();
+				menuUnsub = null;
+			}
 			menuUnsub = onSnapshot(collection(db, "vendors", vendorId, "menus"), (snap) => {
 				allItems = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 				applyAvailableToggleState();
@@ -2370,8 +2373,15 @@ buildCategoryNav(sectionsInfo);
 		checkoutBtn.addEventListener("click", goToCheckout);
 
 		renderCartDrawer();
-		window.addEventListener("pageshow", () => {
+		window.addEventListener("pagehide", () => {
+			if (menuUnsub) {
+				menuUnsub();
+				menuUnsub = null;
+			}
+		});
+		window.addEventListener("pageshow", (event) => {
 			renderCartDrawer();
+			if (event.persisted) startMenuListener();
 		});
 		applyDarkMode();
 		window.addEventListener("storage", (event) => {
